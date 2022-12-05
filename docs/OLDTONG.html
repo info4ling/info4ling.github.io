@@ -487,7 +487,8 @@
             var mtext = '';
             var ltext = '';
             glyph.innerHTML = '';
-            bool first = true;
+            var msep_after = ' + ';
+            var lsep_after = '-';
             for (var x = 0; x < seq.length; x++) {
                 var rec = seq[x];
                 var mval = rec[0];
@@ -500,22 +501,16 @@
                     glyph.appendChild(multobj);
                     mtext += msep + max_digit ** mult;
                     ltext += lsep + max_lit;
-                    first = false;
+                    msep = msep_after;
+                    lsep = lsep_after;
                 }
-
-                if (!first) {
-                    lsep = '-';
-                    msep = ' + ';
-                }
-
-                first = false;
 
                 mtext += msep + mval;
-
                 tlit = l_sounds[row][0] + r_sounds[col][0];
                 ltext += lsep + tlit;
 
-
+                msep = msep_after;
+                lsep = lsep_after;
 
                 var obj = mk_overlay(false, row & 8, row & 4, row & 2, row & 1, col & 4, col & 2, col & 1);
                 glyph.appendChild(obj);
