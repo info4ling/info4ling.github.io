@@ -31,6 +31,16 @@
             width: 100%;
         }
 
+        #glyph {
+            display : flex;
+            flex-direction: row;
+        }
+
+        #glyph > div {
+            border: none;
+            padding: 0;
+        }
+
         table {
             border-collapse: collapse;
         }
@@ -483,7 +493,7 @@
 
                 tlit = l_sounds[row][0] + r_sounds[col][0];
                 ltext += lsep + tlit;
-                lsep = ' ';
+                lsep = '';
 
                 var obj = mk_overlay(false, row & 8, row & 4, row & 2, row & 1, col & 4, col & 2, col & 1);
                 glyph.appendChild(obj);
