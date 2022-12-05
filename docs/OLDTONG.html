@@ -87,28 +87,33 @@
 </head>
 <body>
     <script>
-        var number1_row = 2;
-        var number1 = ['Number', '0',
+        const punct = ['Punctuation', "STOP '.'", "Start Paren '('", "Start Quote '\"'", "Question '?'", "Excitement '!'", "End Paren ')'", "Quote '\"'", "Elipses '...'", 'Sarcasm', 'Rhetoric'];
+        const stct = ['Structure', 'Verb', 'Subject', 'Object', 'Adjective', 'Adverb', 'Interjection', 'Conjunction', 'Question'];
+        const cat = ['Category', 'Plant', 'Animal', 'Color', 'Environment', 'Weather', 'Body of Water', 'Elevation', 'Temerature', 'Humidity', 'Magic Element'];
+        const pron = ['Pronoun', 'Ordinal Tag', 'Self', 'Other (you)', 'Possessive', 'Reflexive', 'Plural', 'Unknown', 'Neuter', 'Feminine', 'Masculine',];
+
+        const number1_row = 2;
+        const number1 = ['Number', '0',
             '1', '2', '3', '4', '5',
             '6', '12', '18', '24', '30',
             '36', '72', '108', '144', '180',
         ];
 
-        var number2_row = 5;
-        var number2 = ['Number2', '*46,656',
+        const number2_row = 5;
+        const number2 = ['Number2', '*46,656',
             '216', '432', '648', '864', '1,080',
             '1,296', '2,592', '3,888', '5,184', '6,480',
             '7,776', '15,552', '23,328', '31,104', '38,880',
         ];
 
-        var skip = [[], ''];
+        const skip = [[], ''];
 
         var ctext = [
-            [['Punctuation', "STOP '.'", "Start Paren '('", "Start Quote '\"'", "Question '?'", "Excitement '!'", "End Paren ')'", "Quote '\"'", "Elipses '...'", 'Sarcasm', 'Rhetoric'], 'Question/Excitement/Sarcasm/Rhetorical goes at the front'],
-            [['Structure', 'Verb', 'Subject', 'Object', 'Adjective', 'Adverb', 'Interjection', 'Conjunction', 'Question'], '[Punctuation: Question/Excitement/Sarcastic/Rhetorical] <BR><BR>Interjection<BR><BR>Verb (Adverb)<BR><BR>Subject (Subject-Adjective)...<BR><BR>(Conjunction Subject Subject-Adjective)... <BR><BR>Object (Object-Adjective)...<BR><BR>(Conjunction Object Object-Adjective)...<BR><BR>[Punctuation: STOP/Elipses/Repeat of punctuation at start for emphasis]'],
+            [punct, 'Question/Excitement/Sarcasm/Rhetorical goes at the front'],
+            [stct, '[Punctuation: Question/Excitement/Sarcastic/Rhetorical] <BR><BR>Interjection<BR><BR>Verb (Adverb)<BR><BR>Subject (Subject-Adjective)...<BR><BR>(Conjunction Subject Subject-Adjective)... <BR><BR>Object (Object-Adjective)...<BR><BR>(Conjunction Object Object-Adjective)...<BR><BR>[Punctuation: STOP/Elipses/Repeat of punctuation at start for emphasis]'],
             [number1, 'Numbers are formed by adding the included numbers, high to low. Note that 10 is 6+4 and 100 is 72+24+4'],
-            [['Category', 'Plant', 'Animal', 'Color', 'Environment', 'Weather', 'Body of Water', 'Elevation', 'Temerature', 'Humidity', 'Magic Element'], ''],
-            [['Pronoun', 'Ordinal Tag', 'Self', 'Other (you)', 'Possessive', 'Reflexive', 'Plural', 'Unknown', 'Neuter', 'Feminine', 'Masculine',], 'The "Ordinal Tag" can be associated with any noun: Pronoun, Subject, or Object by prepending it, followed by a number (usually 1,2,3). Afterwards the Ordinal Tag and the number can replace the noun until the number is associated with another noun.<BR><BR>Singular is the default.<BR>Pronouns are created by combining modifiers in the order presented, For "We" where it is a masculine person, with other males and one female, would be: "SelfMaleOtherPluralMaleFemale". <BR><BR>Note that: "Self/Other/Possessive/Reflexive" are only included once. Gender is one of: Unknown, Neuter, Feminine,  Masculine. Unkown is the default gender but may need to be explicitely included if it is needed to combine with other genders.<BR><BR>Other is only required after Self, by itself Other is the same as OtherPluralMalePluralFemale, and OtherPlural means more than one but genders are uncertain'],
+            [cat, ''],
+            [pron, 'The "Ordinal Tag" can be associated with any noun: Pronoun, Subject, or Object by prepending it, followed by a number (usually 1,2,3). Afterwards the Ordinal Tag and the number can replace the noun until the number is associated with another noun.<BR><BR>Singular is the default.<BR>Pronouns are created by combining modifiers in the order presented, For "We" where it is a masculine person, with other males and one female, would be: "SelfMaleOtherPluralMaleFemale". <BR><BR>Note that: "Self/Other/Possessive/Reflexive" are only included once. Gender is one of: Unknown, Neuter, Feminine,  Masculine. Unkown is the default gender but may need to be explicitely included if it is needed to combine with other genders.<BR><BR>Other is only required after Self, by itself Other is the same as OtherPluralMalePluralFemale, and OtherPlural means more than one but genders are uncertain'],
             [number2, '*46,656 is prepended to any number to make large numbers by multiplying the number by 46,656'],
             skip,
             skip,
@@ -144,6 +149,20 @@
             ['oo', 'bOOt'],
         ];
 
+        function get_ctext(row, col, is_data = true) {
+            if (row >= ctext.length) {
+                return '';
+            }
+            if (is_data) {
+                var crow = ctext[row][0];
+                if (col >= crow.length) {
+                    return '';
+                }
+                return crow[col]
+            }
+            return ctext[row][1];
+        }
+
         //Color Hue, Sat/Brightness -- 3 letters (Category:Color)(Hue)(B/S)
         // Hue: L1 of 127 is greyscale:
         //   Hue = 0
@@ -171,19 +190,6 @@
                 B = L2C * 100 / 15;
             }
             return color_div(H, S, B);
-        }
-        function get_ctext(row, col, is_data = true) {
-            if (row >= ctext.length) {
-                return '';
-            }
-            if (is_data) {
-                var crow = ctext[row][0];
-                if (col >= crow.length) {
-                    return '';
-                }
-                return crow[col]
-            }
-            return ctext[row][1];
         }
 
         var IMG_W = 40;
@@ -394,14 +400,63 @@
             return row;
         }
 
+        function getnumrow(which) {
+            if (which == 1) return number1_row;
+            return number2_row
+        }
+
+        function getnumdigit(which) {
+            if (which == 1) return number1.length-1;
+            return number2.length - 1;
+        }
+
+        function getnum(row, col) {
+            var num = get_ctext(row, col + 1, true);
+            var numval = Number(num.replace(',', ''));
+            return getnum;
+        }
+
+        const max_digit = getnum(getnumrow(2), 0);
+
+        function convertnum(lvl, row, val, ret) {
+            if (row == 0) {
+                return ret;
+            }
+            if (val == 0) {
+                return ret;
+            }
+            if (val >= max_digit) {
+                var nval = val / max_digit;
+                ret = convertnum(lvl + 1, 2, nval, ret);
+                val %= max_digit;
+            }
+            var crow = getnumrow(row);
+            var cdig = getnumdigit(row);
+
+            for (var v = cdig; c > 0; ++c) {
+                var n = getnum(crow, c);
+                if (n < val) {
+                    ret.append([lvl, crow, c]);
+                    val -= n;
+                }
+            }
+
+            return convertnum(
+        }
+
         function calc() {
             var number = document.getElementById('number');
             var glyph = document.getElementById('glyph');
             var lit = document.getElementById('lit');
             var val = number.valueAsNumber;
-            var seq = convert(val);
+            var seq = [];
+            if (val == 0) {
+                seq.append([0, getnumrow(1), 0]);
+            } else {
+                seq = convertnum(0, 2, val, []);
+            }
             var quick = seq.join(',');
-
+            lit.innerText = quick;
         }
 
     </script>
