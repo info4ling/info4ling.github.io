@@ -496,7 +496,7 @@
                 var row = rec[3];
 
                 for (mult = loops; mult > 0; mult--) {
-                    var multobj = max_glyph.cloneNode();
+                    var multobj = max_glyph.cloneNode(true); // deep copy
                     glyph.appendChild(multobj);
                     mtext += msep + (max_digit ** mult) + ' * ' + mval;
                     ltext += lsep + max_lit;
