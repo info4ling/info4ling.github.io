@@ -447,10 +447,12 @@
 
             return convertnum(lvl, row-1, val, ret);
         }
+        const zero = [0, 0, getnumrow(1), 0];
 
         function calc() {
             var number = document.getElementById('number');
             var glyph = document.getElementById('glyph');
+            var math = document.getElementById('math');
             var lit = document.getElementById('lit');
             var val_raw = number.value;
             var seq = [];
@@ -462,12 +464,34 @@
             }
 
             if (val == 0) {
-                seq.push([0, getnumrow(1), 0]);
+                seq.push(zero);
             } else {
                 seq = convertnum(0, 2, val, []);
             }
-            var quick = seq.join(',');
-            lit.innerText = quick;
+            var msep = '';
+            var lsep = '';
+            var mtext = '';
+            var ltext = '';
+            glyph.innerHTML = '';
+            for (var x = 0; x < seq.length; x++) {
+                var rec = seq[x];
+                var mval = rec[0];
+                var loops = rec[1]
+                var row = rec[2];
+                var col = rec[3];
+
+                mtext += msep + mval;
+                msep = ' + ';
+
+                tlit = l_sounds[row][0] + r_sounds[col][0];
+                ltext += lsep + tlit;
+                lsep = ' ';
+
+                var obj = mk_overlay(false, row & 8, row & 4, row & 2, row & 1, col & 4, col & 2, col & 1);
+                glyph.appendChild(obj);
+            }
+            math.innerText = mtext;
+            lit.innerText = ltext;
         }
 
     </script>
