@@ -448,8 +448,15 @@
             var number = document.getElementById('number');
             var glyph = document.getElementById('glyph');
             var lit = document.getElementById('lit');
-            var val = number.value;
+            var val_raw = number.value;
             var seq = [];
+            var val = Number(val_raw);
+
+            if (isNan(val)) {
+                lit.innerText = 'Please Enter a valid number';
+                glyph.innerHTML = '';
+            }
+
             if (val == 0) {
                 seq.append([0, getnumrow(1), 0]);
             } else {
