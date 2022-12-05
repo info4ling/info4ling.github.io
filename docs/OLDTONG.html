@@ -407,7 +407,7 @@
 
         function getnumdigit(which) {
             if (which == 1) return number1.length-1;
-            return number2.length - 1;
+            return number2.length - 2;
         }
 
         function getnum(row, col) {
@@ -433,7 +433,7 @@
             var crow = getnumrow(row);
             var cdig = getnumdigit(row);
 
-            for (var v = cdig; c > 0; ++c) {
+            for (var c = cdig; c > 0; ++c) {
                 var n = getnum(crow, c);
                 if (n < val) {
                     ret.push([lvl, crow, c]);
