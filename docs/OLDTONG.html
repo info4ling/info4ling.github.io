@@ -491,28 +491,27 @@
             for (var x = 0; x < seq.length; x++) {
                 var rec = seq[x];
                 var mval = rec[0];
-                var loops = rec[1]
+                var mult = rec[1]
                 var col = rec[2];
                 var row = rec[3];
 
-                for (mult = loops; mult > 0; mult--) {
-                    var multobj = max_glyph.cloneNode(true); // deep copy
-                    glyph.appendChild(multobj);
-                    mtext += msep + (max_digit ** mult) + ' * ' + mval;
-                    ltext += lsep + max_lit;
-                    msep = msep_after;
-                    lsep = lsep_after;
+                var obj = null;
+                if (mult > 0) {
+                    obj=max_glyph.cloneNode(true); // deep copy
+                    mtext += msep + (max_digit ** mult) + ' * ';
+                    ltext += lsep + max_lit + lsep_after;
+                } else {
+                    obj = mk_overlay(false, row & 8, row & 4, row & 2, row & 1, col & 4, col & 2, col & 1);
+                    mtext += msep;
+                    ltext += lsep;
                 }
-
-                mtext += msep + mval;
+                glyph.appendChild(obj);
+                mtext += mval;
                 tlit = l_sounds[row][0] + r_sounds[col][0];
-                ltext += lsep + tlit;
+                ltext += tlit;
 
                 msep = msep_after;
-                lsep = lsep_after;
-
-                var obj = mk_overlay(false, row & 8, row & 4, row & 2, row & 1, col & 4, col & 2, col & 1);
-                glyph.appendChild(obj);
+                lsep = lsep_after;               
             }
             math.innerText = mtext;
             lit.innerText = ltext;
