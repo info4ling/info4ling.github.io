@@ -436,7 +436,7 @@
             for (var v = cdig; c > 0; ++c) {
                 var n = getnum(crow, c);
                 if (n < val) {
-                    ret.append([lvl, crow, c]);
+                    ret.push([lvl, crow, c]);
                     val -= n;
                 }
             }
@@ -458,7 +458,7 @@
             }
 
             if (val == 0) {
-                seq.append([0, getnumrow(1), 0]);
+                seq.push([0, getnumrow(1), 0]);
             } else {
                 seq = convertnum(0, 2, val, []);
             }
