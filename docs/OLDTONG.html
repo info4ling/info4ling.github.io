@@ -225,6 +225,11 @@
         var Xc1 = null;
 
         var max_glyph = null;
+        const max_row = getnumrow(2);
+        const max_col = 0;
+        const max_digit = getnum(max_row, max_col);
+        const max_lit = l_sounds[max_row][0] + r_sounds[max_col][0];
+        const zero = [0, 0, getnumrow(1), 0];
 
         function mk_overlay(hdr, r8, r4, r2, r1, c4, c2, c1) {
             var img = [];
@@ -432,11 +437,6 @@
             return numval;
         }
 
-        const max_row = getnumrow(2);
-        const max_col = 0;
-        const max_digit = getnum(max_row, max_col);
-        const max_lit = l_sounds[max_row][0] + r_sounds[max_col][0];
-
         function convertnum(lvl, row, val, ret) {
             if (row == 0) {
                 return ret;
@@ -463,7 +463,6 @@
 
             return convertnum(lvl, row - 1, val, ret);
         }
-        const zero = [0, 0, getnumrow(1), 0];
 
         function calc() {
             var number = document.getElementById('number');
