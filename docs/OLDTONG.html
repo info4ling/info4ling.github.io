@@ -455,7 +455,7 @@
             var math = document.getElementById('math');
             var lit = document.getElementById('lit');
             var val_raw = number.value;
-            var seq = [];
+            var seq = zero;
             var val = Number(val_raw);
 
             if (isNaN(val)) {
@@ -463,9 +463,7 @@
                 glyph.innerHTML = '';
             }
 
-            if (val == 0) {
-                seq.push(zero);
-            } else {
+            if (val != 0) {
                 seq = convertnum(0, 2, val, []);
             }
             var msep = '';
