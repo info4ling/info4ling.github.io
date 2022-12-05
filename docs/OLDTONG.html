@@ -406,8 +406,11 @@
         }
 
         function getnumdigit(which) {
-            if (which == 1) return number1.length-1;
-            return number2.length - 2;
+            var what=number2;
+            if (which == 1) {
+                what = number1;
+            }
+            return what.length - 2;
         }
 
         function getnum(row, col) {
