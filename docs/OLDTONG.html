@@ -8,14 +8,14 @@
             padding: 10px;
         }
 
-        #cdiv th > div,
-        #cdiv td:not(:first-child) > div {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            align-items: center;
-            height: 100%;
-            vertical-align: top;
-        }
+            #cdiv th > div,
+            #cdiv td:not(:first-child) > div {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                align-items: center;
+                height: 100%;
+                vertical-align: top;
+            }
 
         td:has(div>div:only-child>span:only-child) {
             vertical-align: top;
@@ -32,14 +32,14 @@
         }
 
         #glyph {
-            display : flex;
+            display: flex;
             flex-direction: row;
         }
 
-        #glyph > div {
-            border: none !important;
-            padding: 4px !important;
-        }
+            #glyph > div {
+                border: none !important;
+                padding: 4px !important;
+            }
 
         table {
             border-collapse: collapse;
@@ -225,6 +225,7 @@
         var Xc1 = null;
 
         var max_glyph = null;
+        const mtlit = l_sounds[max_row][0] + r_sounds[max_col][0];
 
         function mk_overlay(hdr, r8, r4, r2, r1, c4, c2, c1) {
             var img = [];
@@ -284,7 +285,7 @@
             Xc4 = mk_layer('ZV4.png');
             Xc2 = mk_layer('ZV2.png');
             Xc1 = mk_layer('ZV1.png');
-            max_glyph=mk_overlay(false, max_row & 8, max_row & 4, max_row & 2, max_row & 1, max_col & 4, max_col & 2, max_col & 1);
+            max_glyph = mk_overlay(false, max_row & 8, max_row & 4, max_row & 2, max_row & 1, max_col & 4, max_col & 2, max_col & 1);
 
             var prepositions = ['Preposition', 'over (under)', 'in (out)', 'inside (outside)', 'front (back)', 'left (right)', 'up (down)'];
             var questions = ['Question', 'who', 'where', 'when', 'how', 'why	is true?', 'is known?'];
@@ -419,7 +420,7 @@
         }
 
         function getnumdigit(which) {
-            var what=number2;
+            var what = number2;
             if (which == 1) {
                 what = number1;
             }
@@ -460,7 +461,7 @@
                 }
             }
 
-            return convertnum(lvl, row-1, val, ret);
+            return convertnum(lvl, row - 1, val, ret);
         }
         const zero = [0, 0, getnumrow(1), 0];
 
@@ -493,9 +494,11 @@
                 var col = rec[2];
                 var row = rec[3];
 
-                for (mult = 0; mult < loops; mult++) {
+                for (mult = loops; mult > 0; mult--) {
                     var multobj = max_glyph.cloneNode();
-                    glyph.appendChild(obj);
+                    glyph.appendChild(multobj);
+                    mtext += msep + max_digit ** mult;
+                    ltext += lsep + mtlit;
                     msep = ' + ';
                     lsep = '';
                 }
