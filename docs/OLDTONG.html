@@ -225,7 +225,6 @@
         var Xc1 = null;
 
         var max_glyph = null;
-        const mtlit = l_sounds[max_row][0] + r_sounds[max_col][0];
 
         function mk_overlay(hdr, r8, r4, r2, r1, c4, c2, c1) {
             var img = [];
@@ -436,6 +435,7 @@
         const max_row = getnumrow(2);
         const max_col = 0;
         const max_digit = getnum(max_row, max_col);
+        const max_lit = l_sounds[max_row][0] + r_sounds[max_col][0];
 
         function convertnum(lvl, row, val, ret) {
             if (row == 0) {
@@ -487,6 +487,7 @@
             var mtext = '';
             var ltext = '';
             glyph.innerHTML = '';
+            bool first = true;
             for (var x = 0; x < seq.length; x++) {
                 var rec = seq[x];
                 var mval = rec[0];
@@ -498,17 +499,23 @@
                     var multobj = max_glyph.cloneNode();
                     glyph.appendChild(multobj);
                     mtext += msep + max_digit ** mult;
-                    ltext += lsep + mtlit;
-                    msep = ' + ';
-                    lsep = '';
+                    ltext += lsep + max_lit;
+                    first = false;
                 }
 
+                if (!first) {
+                    lsep = '-';
+                    msep = ' + ';
+                }
+
+                first = false;
+
                 mtext += msep + mval;
-                msep = ' + ';
 
                 tlit = l_sounds[row][0] + r_sounds[col][0];
                 ltext += lsep + tlit;
-                lsep = '';
+
+
 
                 var obj = mk_overlay(false, row & 8, row & 4, row & 2, row & 1, col & 4, col & 2, col & 1);
                 glyph.appendChild(obj);
