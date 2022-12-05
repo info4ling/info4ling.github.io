@@ -413,7 +413,7 @@
         function getnum(row, col) {
             var num = get_ctext(row, col + 1, true);
             var numval = Number(num.replace(',', ''));
-            return getnum;
+            return numval;
         }
 
         const max_digit = getnum(getnumrow(2), 0);
