@@ -38,7 +38,7 @@
 
         #glyph > div {
             border: none !important;
-            padding: 0 !important;
+            padding: 4px !important;
         }
 
         table {
@@ -224,6 +224,8 @@
         var Xc2 = null;
         var Xc1 = null;
 
+        var max_glyph = null;
+
         function mk_overlay(hdr, r8, r4, r2, r1, c4, c2, c1) {
             var img = [];
             if (!hdr) {
@@ -282,6 +284,7 @@
             Xc4 = mk_layer('ZV4.png');
             Xc2 = mk_layer('ZV2.png');
             Xc1 = mk_layer('ZV1.png');
+            max_glyph=mk_overlay(false, max_row & 8, max_row & 4, max_row & 2, max_row & 1, max_col & 4, max_col & 2, max_col & 1);
 
             var prepositions = ['Preposition', 'over (under)', 'in (out)', 'inside (outside)', 'front (back)', 'left (right)', 'up (down)'];
             var questions = ['Question', 'who', 'where', 'when', 'how', 'why	is true?', 'is known?'];
@@ -429,7 +432,9 @@
             return numval;
         }
 
-        const max_digit = getnum(getnumrow(2), 0);
+        const max_row = getnumrow(2);
+        const max_col = 0;
+        const max_digit = getnum(max_row, max_col);
 
         function convertnum(lvl, row, val, ret) {
             if (row == 0) {
@@ -487,6 +492,13 @@
                 var loops = rec[1]
                 var col = rec[2];
                 var row = rec[3];
+
+                for (mult = 0; mult < loops; mult++) {
+                    var multobj = max_glyph.cloneNode();
+                    glyph.appendChild(obj);
+                    msep = ' + ';
+                    lsep = '';
+                }
 
                 mtext += msep + mval;
                 msep = ' + ';
