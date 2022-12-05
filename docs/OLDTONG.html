@@ -1,415 +1,415 @@
 <html>
- <header>
-  <style>
+<header>
+    <style>
 
-#cdiv {
-  padding: 10px;
-}
+        #cdiv {
+            padding: 10px;
+        }
 
-#cdiv th>div,
-#cdiv td:not(:first-child)>div {
-   display: grid;
-   grid-template-columns: 1fr 1fr;
-   align-items:center;
-   height: 100%;
-   vertical-align: top;
-}
+            #cdiv th > div,
+            #cdiv td:not(:first-child) > div {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                align-items: center;
+                height: 100%;
+                vertical-align: top;
+            }
 
-td:has(div>div:only-child>span:only-child) {
-  vertical-align: top;
-}
+        td:has(div>div:only-child>span:only-child) {
+            vertical-align: top;
+        }
 
-#cdiv td>div>div:nth-child(2) {
-    max-width: min-content;
-}
+        #cdiv td > div > div:nth-child(2) {
+            max-width: min-content;
+        }
 
-#cdiv td div span {
-  white-space: pre-wrap;
-  overflow-wrap: break-word;
-  width: 100%;
-}
+        #cdiv td div span {
+            white-space: pre-wrap;
+            overflow-wrap: break-word;
+            width: 100%;
+        }
 
-table {
-  border-collapse: collapse;
-}
+        table {
+            border-collapse: collapse;
+        }
 
-td>div>div:has(>span:only-child) {
-  align-self: start;
-  max-width: 150px;
-  text-align: left;
-}
+        td > div > div:has(>span:only-child) {
+            align-self: start;
+            max-width: 150px;
+            text-align: left;
+        }
 
-td {
-  max-width: 150px;
-  border: solid #404040 2px;
-  text-align: center;
-}
+        td {
+            max-width: 150px;
+            border: solid #404040 2px;
+            text-align: center;
+        }
 
-thead>tr>th:not(:first-child),
-tbody>tr:nth-child(odd)>td:first-child,
-tbody>tr:nth-child(even)>td:first-child {
-  border: solid #202020 4px;
-  background-color: #C0C0C0;
-}
+        thead > tr > th:not(:first-child),
+        tbody > tr:nth-child(odd) > td:first-child,
+        tbody > tr:nth-child(even) > td:first-child {
+            border: solid #202020 4px;
+            background-color: #C0C0C0;
+        }
 
-tbody>tr>td:last-child {
-  border-right: solid #202020 4px;
-  padding-right: 8px;
-}
+        tbody > tr > td:last-child {
+            border-right: solid #202020 4px;
+            padding-right: 8px;
+        }
 
-tbody>tr>td:nth-child(2) {
-  padding-left: 8px;
-}
+        tbody > tr > td:nth-child(2) {
+            padding-left: 8px;
+        }
 
-tbody>tr:last-child>td {
- border-bottom: solid #202020 4px;
-}
+        tbody > tr:last-child > td {
+            border-bottom: solid #202020 4px;
+        }
 
-td,
-th {
-  padding: 4px;
-}
+        td,
+        th {
+            padding: 4px;
+        }
 
-th {
-  font-weight: normal;
-}
+        th {
+            font-weight: normal;
+        }
 
-tbody>tr:nth-child(odd)>td {
-   background-color: #E8E8E8;
-}
+        tbody > tr:nth-child(odd) > td {
+            background-color: #E8E8E8;
+        }
 
-tbody>tr:nth-child(even)>td {
-   background-color: #D0D0D0;
-}
+        tbody > tr:nth-child(even) > td {
+            background-color: #D0D0D0;
+        }
+    </style>
+</header>
+<body>
+    <script>
+        var number1_row = 2;
+        var number1 = ['Number', '0',
+            '1', '2', '3', '4', '5',
+            '6', '12', '18', '24', '30',
+            '36', '72', '108', '144', '180',
+        ];
 
-  </style>
- </header>
- <body>
-  <script>
-var number1=['Number', '0', 
-	'1', '2', '3', '4', '5',
-	'6', '12', '18', '24', '30',
-	'36', '72', '108', '144', '180',
-];
+        var number2_row = 5;
+        var number2 = ['Number2', '*46,656',
+            '216', '432', '648', '864', '1,080',
+            '1,296', '2,592', '3,888', '5,184', '6,480',
+            '7,776', '15,552', '23,328', '31,104', '38,880',
+        ];
 
-var number2=['Number2', '*46,656',
-	'216', '432', '648', '864', '1,080',
-	'1,296', '2,592', '3,888', '5,184', '6,480',
-	'7,776', '15,552', '23,328', '31,104', '38,880',
-];
+        var skip = [[], ''];
 
-var skip=[[],''];
+        var ctext = [
+            [['Punctuation', "STOP '.'", "Start Paren '('", "Start Quote '\"'", "Question '?'", "Excitement '!'", "End Paren ')'", "Quote '\"'", "Elipses '...'", 'Sarcasm', 'Rhetoric'], 'Question/Excitement/Sarcasm/Rhetorical goes at the front'],
+            [['Structure', 'Verb', 'Subject', 'Object', 'Adjective', 'Adverb', 'Interjection', 'Conjunction', 'Question'], '[Punctuation: Question/Excitement/Sarcastic/Rhetorical] <BR><BR>Interjection<BR><BR>Verb (Adverb)<BR><BR>Subject (Subject-Adjective)...<BR><BR>(Conjunction Subject Subject-Adjective)... <BR><BR>Object (Object-Adjective)...<BR><BR>(Conjunction Object Object-Adjective)...<BR><BR>[Punctuation: STOP/Elipses/Repeat of punctuation at start for emphasis]'],
+            [number1, 'Numbers are formed by adding the included numbers, high to low. Note that 10 is 6+4 and 100 is 72+24+4'],
+            [['Category', 'Plant', 'Animal', 'Color', 'Environment', 'Weather', 'Body of Water', 'Elevation', 'Temerature', 'Humidity', 'Magic Element'], ''],
+            [['Pronoun', 'Ordinal Tag', 'Self', 'Other (you)', 'Possessive', 'Reflexive', 'Plural', 'Unknown', 'Neuter', 'Feminine', 'Masculine',], 'The "Ordinal Tag" can be associated with any noun: Pronoun, Subject, or Object by prepending it, followed by a number (usually 1,2,3). Afterwards the Ordinal Tag and the number can replace the noun until the number is associated with another noun.<BR><BR>Singular is the default.<BR>Pronouns are created by combining modifiers in the order presented, For "We" where it is a masculine person, with other males and one female, would be: "SelfMaleOtherPluralMaleFemale". <BR><BR>Note that: "Self/Other/Possessive/Reflexive" are only included once. Gender is one of: Unknown, Neuter, Feminine,  Masculine. Unkown is the default gender but may need to be explicitely included if it is needed to combine with other genders.<BR><BR>Other is only required after Self, by itself Other is the same as OtherPluralMalePluralFemale, and OtherPlural means more than one but genders are uncertain'],
+            [number2, '*46,656 is prepended to any number to make large numbers by multiplying the number by 46,656'],
+            skip,
+            skip,
+        ];
 
- var ctext=[
-    [['Punctuation', "STOP '.'", "Start Paren '('", "Start Quote '\"'", "Question '?'", "Excitement '!'", "End Paren ')'", "Quote '\"'", "Elipses '...'", 'Sarcasm', 'Rhetoric'], 'Question/Excitement/Sarcasm/Rhetorical goes at the front'],
-    [['Structure', 'Verb', 'Subject', 'Object', 'Adjective', 'Adverb', 'Interjection', 'Conjunction', 'Question'], '[Punctuation: Question/Excitement/Sarcastic/Rhetorical] <BR><BR>Interjection<BR><BR>Verb (Adverb)<BR><BR>Subject (Subject-Adjective)...<BR><BR>(Conjunction Subject Subject-Adjective)... <BR><BR>Object (Object-Adjective)...<BR><BR>(Conjunction Object Object-Adjective)...<BR><BR>[Punctuation: STOP/Elipses/Repeat of punctuation at start for emphasis]'],
-    [number1, 'Numbers are formed by adding the included numbers, high to low. Note that 10 is 6+4 and 100 is 72+24+4'],
-    [['Category', 'Plant', 'Animal', 'Color', 'Environment', 'Weather', 'Body of Water', 'Elevation', 'Temerature', 'Humidity', 'Magic Element'], ''],
-    [['Pronoun', 'Ordinal Tag', 'Self', 'Other (you)', 'Possessive', 'Reflexive', 'Plural',  'Unknown', 'Neuter', 'Feminine',  'Masculine', ], 'The "Ordinal Tag" can be associated with any noun: Pronoun, Subject, or Object by prepending it, followed by a number (usually 1,2,3). Afterwards the Ordinal Tag and the number can replace the noun until the number is associated with another noun.<BR><BR>Singular is the default.<BR>Pronouns are created by combining modifiers in the order presented, For "We" where it is a masculine person, with other males and one female, would be: "SelfMaleOtherPluralMaleFemale". <BR><BR>Note that: "Self/Other/Possessive/Reflexive" are only included once. Gender is one of: Unknown, Neuter, Feminine,  Masculine. Unkown is the default gender but may need to be explicitely included if it is needed to combine with other genders.<BR><BR>Other is only required after Self, by itself Other is the same as OtherPluralMalePluralFemale, and OtherPlural means more than one but genders are uncertain'],
-    [number2, '*46,656 is prepended to any number to make large numbers by multiplying the number by 46,656'],
-    skip,
-    skip,
-];
+        var l_sounds = [
+            ['P', 'Pot'],
+            ['B', 'Boy'],
+            ['J', 'Jar'],
+            ['V', 'Vat'],
+            ['Sh', 'Shop'],
+            ['N', 'Not'],
+            ['T', 'Ton'],
+            ['R', 'Run'],
+            ['L', 'Lip'],
+            ['Ch', 'Chat'],
+            ['Z', 'Zip'],
+            ['K', 'Kid'],
+            ['D', 'Day'],
+            ['F', 'Fig'],
+            ['M', 'Man'],
+            ['Th', 'That'],
+        ];
 
-var l_sounds=[
-    ['P', 'Pot'],
-    ['B', 'Boy'],
-    ['J', 'Jar'],
-    ['V', 'Vat'],
-    ['Sh', 'Shop'],
-    ['N', 'Not'],
-    ['T', 'Ton'],
-    ['R', 'Run'],
-    ['L', 'Lip'],
-    ['Ch', 'Chat'],
-    ['Z', 'Zip'], 
-    ['K', 'Kid'],
-    ['D', 'Day'],
-    ['F', 'Fig'],
-    ['M', 'Man'],
-    ['Th', 'That'],
-]; 
+        var r_sounds = [
+            ['oy', 'plOY'],
+            ['ay', 'stAY'],
+            ['ie', 'tIE'],
+            ['oe', 'fOE'],
+            ['ah', 'blAH'],
+            ['eh', 'mEH'],
+            ['ee', 'fEEt'],
+            ['oo', 'bOOt'],
+        ];
 
-var r_sounds=[
-    ['oy', 'plOY'],
-    ['ay', 'stAY'],
-    ['ie', 'tIE'],
-    ['oe', 'fOE'],
-    ['ah', 'blAH'],
-    ['eh', 'mEH'],
-    ['ee', 'fEEt'],
-    ['oo', 'bOOt'],
-];
+        //Color Hue, Sat/Brightness -- 3 letters (Category:Color)(Hue)(B/S)
+        // Hue: L1 of 127 is greyscale:
+        //   Hue = 0
+        //   Sat = 0
+        //   Brightness = L2*100/127
+        // otherwise:
+        //   Hue = L1*360/126
+        //   Sat = L2:Vowel*100/7
+        //   Brightness = L2:Consonent*100/15
+        function color_div(h, s, b) {
+            var div = mk_div();
+            div.style.backgroundColor = "hsl(" + h + "," + s + "%," + b + "%)";
+            return div;
+        }
+        function create_color(L1, L2C, L2V) {
+            var H = 0;
+            var S = 0;
+            var B = 0;
+            if (L1 == 127) { // Greyscale
+                var L2 = L2C * 8 + L2V;
+                B = L2 * 100 / 127;
+            } else {
+                H = L1 * 360 / 16;
+                S = L2V * 100 / 7;
+                B = L2C * 100 / 15;
+            }
+            return color_div(H, S, B);
+        }
+        function get_ctext(row, col, is_data = true) {
+            if (row >= ctext.length) {
+                return '';
+            }
+            if (is_data) {
+                var crow = ctext[row][0];
+                if (col >= crow.length) {
+                    return '';
+                }
+                return crow[col]
+            }
+            return ctext[row][1];
+        }
 
-document.addEventListener('DOMContentLoaded', function() {
+        var IMG_W = 40;
+        var IMG_H = 40;
 
-//Color Hue, Sat/Brightness -- 3 letters (Category:Color)(Hue)(B/S)
-// Hue: L1 of 127 is greyscale:
-//   Hue = 0 
-//   Sat = 0
-//   Brightness = L2*100/127
-// otherwise:
-//   Hue = L1*360/126 
-//   Sat = L2:Vowel*100/7
-//   Brightness = L2:Consonent*100/15
- function color_div(h,s,b) {
-   var div=mk_div();
-   div.style.backgroundColor = "hsl("+h+","+s+"%,"+b+"%)";
-   return div;
-}
-function create_color(L1, L2C, L2V) {
-   var H=0;
-   var S=0;
-   var B=0;
-   if (L1==127) { // Greyscale
-       var L2=L2C*8+L2V;
-       B=L2*100/127;
-   } else {
-        H=L1*360/16;
-        S=L2V*100/7;
-        B=L2C*100/15;
-   }
-   return color_div(H,S,B);
-}
- function get_ctext(row, col, is_data=true) {
-   if (row>=ctext.length) {
-     return '';
-   }
-   if (is_data) {
-      var crow=ctext[row][0];
-      if (col>=crow.length) {
-         return '';
-      }
-      return crow[col]
-   }
-   return ctext[row][1];
-}
+        function mk_layer(nm) {
+            var img = mk_img(nm);
+            img.style.position = 'absolute';
+            img.style.left = 0;
+            img.style.top = 0;
+            img.style.width = IMG_W + 'px';
+            img.style.height = IMG_H + 'px';
+            return img;
+        }
 
-var IMG_W=40;
-var IMG_H=40;
+        function mk_overlay(hdr, r8, r4, r2, r1, c4, c2, c1) {
+            var img = [];
+            if (!hdr) {
+                img.push(Xcore.cloneNode());
+            }
+            if (r8) {
+                img.push(Xr8.cloneNode());
+            }
+            if (r4) {
+                img.push(Xr4.cloneNode());
+            }
+            if (r2) {
+                img.push(Xr2.cloneNode());
+            }
+            if (r1) {
+                img.push(Xr1.cloneNode());
+            }
+            if (c4) {
+                img.push(Xc4.cloneNode());
+            }
+            if (c2) {
+                img.push(Xc2.cloneNode());
+            }
+            if (c1) {
+                img.push(Xc1.cloneNode());
+            }
+            inner_div = mk_div(img);
+            //inner_div.style.backgroundColor='white';
+            inner_div.style.minHeight = IMG_H + 'px';
+            inner_div.style.minWidth = IMG_W + 'px';
+            inner_div.style.maxHeight = IMG_H + 'px';
+            inner_div.style.maxWidth = IMG_W + 'px';
+            mid_div = mk_div([inner_div]);
+            mid_div.style.position = 'relative';
+            mid_div.style.minHeight = IMG_H + 'px';
+            mid_div.style.minWidth = IMG_W + 'px';
+            mid_div.style.maxHeight = IMG_H + 'px';
+            mid_div.style.maxWidth = IMG_W + 'px';
+            outer_div = mk_div([mid_div]);
+            const padsz = (IMG_W + IMG_H) / 10;
+            outer_div.style.padding = padsz + 'px';
+            outer_div.style.minHeight = IMG_H + 'px';
+            outer_div.style.minWidth = IMG_W + 'px';
+            outer_div.style.maxHeight = IMG_H + 'px';
+            outer_div.style.maxWidth = IMG_W + 'px';
+            outer_div.style.border = '1px solid #808080';
+            return outer_div;
+        }
 
-var Xcore=mk_layer('ZBase.png');
-var Xr8=mk_layer('ZC8.png');
-var Xr4=mk_layer('ZC4.png');
-var Xr2=mk_layer('ZC2.png');
-var Xr1=mk_layer('ZC1.png');
-var Xc4=mk_layer('ZV4.png');
-var Xc2=mk_layer('ZV2.png');
-var Xc1=mk_layer('ZV1.png');
+        document.addEventListener('DOMContentLoaded', function () {
+            var Xcore = mk_layer('ZBase.png');
+            var Xr8 = mk_layer('ZC8.png');
+            var Xr4 = mk_layer('ZC4.png');
+            var Xr2 = mk_layer('ZC2.png');
+            var Xr1 = mk_layer('ZC1.png');
+            var Xc4 = mk_layer('ZV4.png');
+            var Xc2 = mk_layer('ZV2.png');
+            var Xc1 = mk_layer('ZV1.png')
 
-function mk_layer(nm) {
-  var img=mk_img(nm);
-  img.style.position = 'absolute';
-  img.style.left=0;
-  img.style.top=0;
-  img.style.width=IMG_W+'px';
-  img.style.height=IMG_H+'px';
-  return img;
-}
+            var prepositions = ['Preposition', 'over (under)', 'in (out)', 'inside (outside)', 'front (back)', 'left (right)', 'up (down)'];
+            var questions = ['Question', 'who', 'where', 'when', 'how', 'why	is true?', 'is known?'];
+            var conj = ['Conjunction', 'and', 'or', 'not (but)', 'because', 'then', 'iff'];
+            var interjection = ['Interjection', 'Happy', 'Suprise', 'Pain', 'Frustration', 'Sad', 'Love', 'Hate'];
 
-function mk_overlay(hdr, r8, r4, r2, r1, c4, c2, c1) {
-var img=[];
-  if (!hdr) {
-    img.push(Xcore.cloneNode());
-  }
-  if (r8) {
-    img.push(Xr8.cloneNode());
-  }
-  if (r4) {
-    img.push(Xr4.cloneNode());
-  }
-  if (r2) {
-    img.push(Xr2.cloneNode());
-  }
-  if (r1) {
-    img.push(Xr1.cloneNode());
-  }
-  if (c4) {
-    img.push(Xc4.cloneNode());
-  }
-  if (c2) {
-    img.push(Xc2.cloneNode());
-  }
-  if (c1) {
-    img.push(Xc1.cloneNode());
-  }
-  inner_div=mk_div(img);
-  //inner_div.style.backgroundColor='white';
-  inner_div.style.minHeight=IMG_H+'px';
-  inner_div.style.minWidth=IMG_W+'px';
-  inner_div.style.maxHeight=IMG_H+'px';
-  inner_div.style.maxWidth=IMG_W+'px';
-  mid_div=mk_div([inner_div]);
-  mid_div.style.position = 'relative';
-  mid_div.style.minHeight=IMG_H+'px';
-  mid_div.style.minWidth=IMG_W+'px';
-  mid_div.style.maxHeight=IMG_H+'px';
-  mid_div.style.maxWidth=IMG_W+'px';
-  outer_div=mk_div([mid_div]);
-  const padsz=(IMG_W+IMG_H)/10;
-  outer_div.style.padding=padsz+'px';
-  outer_div.style.minHeight=IMG_H+'px';
-  outer_div.style.minWidth=IMG_W+'px';
-  outer_div.style.maxHeight=IMG_H+'px';
-  outer_div.style.maxWidth=IMG_W+'px';
-  outer_div.style.border='1px solid #808080';
-  return outer_div;
-}
- 
- var prepositions= ['Preposition', 'over (under)', 'in (out)', 'inside (outside)', 'front (back)', 'left (right)', 'up (down)'];
- var questions=['Question', 'who', 'where', 'when', 'how', 'why	is true?', 'is known?'];
- var conj=['Conjunction', 'and', 'or', 'not (but)', 'because', 'then', 'iff'];
- var interjection= ['Interjection', 'Happy', 'Suprise', 'Pain', 'Frustration', 'Sad', 'Love', 'Hate'];
- 
- var cbody=document.getElementById("cbody");
- var chead=document.getElementById("chead");
- var blank=wrap('');
- var bool=[false, true];
- var all=[];
- var row=0;
- var header=false;
- var hdr_images=[blank];
- var ftr_images=[wrap('Comments:')];
- bool.forEach(r8 => {
-  bool.forEach(r4 => {
-   bool.forEach(r2=> {
-    bool.forEach(r1=> {
-    var col=0;
-    var lping=mk_overlay(true, r8, r4, r2, r1, false, false, false);
-    var images=[
-     mk_div([
-       mk_div([
-                 lping, bold(l_sounds[row][0]), wrap(' '), italic(l_sounds[row][1])
-       ])
-      ])
-    ];
-    bool.forEach(c4 => {
-     bool.forEach(c2 => {
-      bool.forEach(c1 => {
-      var rping=mk_overlay(false,r8, r4, r2, r1, c4, c2, c1);
-      if (!header) {
-          var hdr=mk_div([
-                      mk_overlay(true,false,false,false,false,c4, c2, c1), bold(r_sounds[col][0]), wrap(' '), italic(r_sounds[col][1])
-          ]);
-          hdr_images.push(mk_div([
-               hdr, mk_div([
-                         bold(get_ctext(col, 0))
-                        ])
-           ]));
-          var ftr=mk_div([
-              wrap(get_ctext(col, 0, false))
-          ]);
-          ftr_images.push(mk_div([ftr]));
-      }
-      var div=mk_div([
-       rping, italic(l_sounds[row][0] + r_sounds[col][0])
-      ]);
-      images.push(mk_div([
-        div,
-        mk_div([
-                  bold(get_ctext(col, row+1))
-        ])
-      ]));
-       col++;
-      }); // c1
-     }); // c2
-    }); // c4
-    if (!header) {
-     header=true;
-     chead.appendChild(mk_row('th', hdr_images));
-    }
-    cbody.appendChild(mk_row('td', images));
-    row++;
-    }); // r1
-   }); // r2
-  }); // r4
- }); // r8
-    cbody.appendChild(mk_row('td', ftr_images));
-});
+            var cbody = document.getElementById("cbody");
+            var chead = document.getElementById("chead");
+            var blank = wrap('');
+            var bool = [false, true];
+            var all = [];
+            var row = 0;
+            var header = false;
+            var hdr_images = [blank];
+            var ftr_images = [wrap('Comments:')];
+            bool.forEach(r8 => {
+                bool.forEach(r4 => {
+                    bool.forEach(r2 => {
+                        bool.forEach(r1 => {
+                            var col = 0;
+                            var lping = mk_overlay(true, r8, r4, r2, r1, false, false, false);
+                            var images = [
+                                mk_div([
+                                    mk_div([
+                                        lping, bold(l_sounds[row][0]), wrap(' '), italic(l_sounds[row][1])
+                                    ])
+                                ])
+                            ];
+                            bool.forEach(c4 => {
+                                bool.forEach(c2 => {
+                                    bool.forEach(c1 => {
+                                        var rping = mk_overlay(false, r8, r4, r2, r1, c4, c2, c1);
+                                        if (!header) {
+                                            var hdr = mk_div([
+                                                mk_overlay(true, false, false, false, false, c4, c2, c1), bold(r_sounds[col][0]), wrap(' '), italic(r_sounds[col][1])
+                                            ]);
+                                            hdr_images.push(mk_div([
+                                                hdr, mk_div([
+                                                    bold(get_ctext(col, 0))
+                                                ])
+                                            ]));
+                                            var ftr = mk_div([
+                                                wrap(get_ctext(col, 0, false))
+                                            ]);
+                                            ftr_images.push(mk_div([ftr]));
+                                        }
+                                        var div = mk_div([
+                                            rping, italic(l_sounds[row][0] + r_sounds[col][0])
+                                        ]);
+                                        images.push(mk_div([
+                                            div,
+                                            mk_div([
+                                                bold(get_ctext(col, row + 1))
+                                            ])
+                                        ]));
+                                        col++;
+                                    }); // c1
+                                }); // c2
+                            }); // c4
+                            if (!header) {
+                                header = true;
+                                chead.appendChild(mk_row('th', hdr_images));
+                            }
+                            cbody.appendChild(mk_row('td', images));
+                            row++;
+                        }); // r1
+                    }); // r2
+                }); // r4
+            }); // r8
+            cbody.appendChild(mk_row('td', ftr_images));
+        });
 
 
 
-function mk_img(img) {
- var elem=document.createElement("img");
- elem.src=img;
- return elem;
-}
+        function mk_img(img) {
+            var elem = document.createElement("img");
+            elem.src = img;
+            return elem;
+        }
 
-function wrap(text) {
-  var span=document.createElement("span");
-  span.innerHTML = text;
-  return span;	
-}
+        function wrap(text) {
+            var span = document.createElement("span");
+            span.innerHTML = text;
+            return span;
+        }
 
-function br() {
-  return wrap('<br>');
-}
+        function br() {
+            return wrap('<br>');
+        }
 
-function attr(x, text) {
-  return wrap('<'+x+'>'+text+'</'+x+'>');
-}
+        function attr(x, text) {
+            return wrap('<' + x + '>' + text + '</' + x + '>');
+        }
 
-function italic(text) {
-  return attr('i', text);   
-}
+        function italic(text) {
+            return attr('i', text);
+        }
 
-function bold(text) {
-   return attr('b', text);   
-}
+        function bold(text) {
+            return attr('b', text);
+        }
 
-function mk_span(items) {
-  return mk_container("span", items);
-}
+        function mk_span(items) {
+            return mk_container("span", items);
+        }
 
-function mk_div(items) {
-  return mk_container("div", items);
-}
+        function mk_div(items) {
+            return mk_container("div", items);
+        }
 
-function mk_container(container, items) {
-  var box=document.createElement(container);
-  items.forEach(i => {
-    box.appendChild(i);
-  });
-  return box;
-}
+        function mk_container(container, items) {
+            var box = document.createElement(container);
+            items.forEach(i => {
+                box.appendChild(i);
+            });
+            return box;
+        }
 
-function mk_row(tp, item) {
-  var row=document.createElement('tr');
-  item.forEach(i => {
-    var cell=document.createElement(tp);
-    cell.append(i);
-    row.append(cell);
-  });
-  return row;
-}
+        function mk_row(tp, item) {
+            var row = document.createElement('tr');
+            item.forEach(i => {
+                var cell = document.createElement(tp);
+                cell.append(i);
+                row.append(cell);
+            });
+            return row;
+        }
 
-function calc() {
-var number=document.getElementById('number');
-var glyph=document.getElementById('glyph');
-var lit=document.getElementById('lit');
-var val=number.valueAsNumber;
-var seq=convert(val);
-var quick=seq.join(',');
-gly
-}
+        function calc() {
+            var number = document.getElementById('number');
+            var glyph = document.getElementById('glyph');
+            var lit = document.getElementById('lit');
+            var val = number.valueAsNumber;
+            var seq = convert(val);
+            var quick = seq.join(',');
 
-  </script>
-  <div style='display: flex'>
-    <div>
-        <label for="number">Enter a Number:</label>
-        <input type="text" id="number" name="number"><br><br>
-        <button type="button" onclick="calc();">Calculate</button>
-        <div id='glyph'></div>
-        <div id='lit'></div>
+        }
+
+    </script>
+    <div style='display: flex'>
+        <div>
+            <label for="number">Enter a Number:</label>
+            <input type="text" id="number" name="number"><br><br>
+            <button type="button" onclick="calc();">Calculate</button>
+            <div id='glyph'></div>
+            <div id='lit'></div>
+        </div>
+        <div id='cdiv'>
+            <table id='ctable'>
+                <thead id='chead'>
+                </thead>
+                <tbody id='cbody'>
+                </tbody>
+            </table>
+        </div>
     </div>
-    <div id='cdiv'>
-     <table id='ctable'>
-      <thead id='chead'>
-      </thead>
-      <tbody id='cbody'>
-      </tbody>
-     </table>
-    </div>
-  </div>
- </body>
+</body>
 </html>
