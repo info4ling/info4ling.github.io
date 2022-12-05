@@ -415,7 +415,7 @@
 
         function getnum(row, col) {
             var num = get_ctext(row, col + 1, true);
-            var numval = Number(num.replace(',', ''));
+            var numval = Number(num.replace(/[*,]/g, ''));
             return numval;
         }
 
@@ -438,7 +438,7 @@
 
             for (var c = cdig; c > 0; --c) {
                 var n = getnum(crow, c);
-                if (n < val) {
+                if (n <= val) {
                     ret.push([lvl, crow, c]);
                     val -= n;
                 }
