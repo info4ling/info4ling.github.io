@@ -8,14 +8,14 @@
             padding: 10px;
         }
 
-            #cdiv th > div,
-            #cdiv td:not(:first-child) > div {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                align-items: center;
-                height: 100%;
-                vertical-align: top;
-            }
+        #cdiv th > div,
+        #cdiv td:not(:first-child) > div {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
+            height: 100%;
+            vertical-align: top;
+        }
 
         td:has(div>div:only-child>span:only-child) {
             vertical-align: top;
@@ -199,6 +199,15 @@
             return img;
         }
 
+        var Xcore = null;
+        var Xr8 = null;
+        var Xr4 = null;
+        var Xr2 = null;
+        var Xr1 = null;
+        var Xc4 = null;
+        var Xc2 = null;
+        var Xc1 = null;
+
         function mk_overlay(hdr, r8, r4, r2, r1, c4, c2, c1) {
             var img = [];
             if (!hdr) {
@@ -249,14 +258,14 @@
         }
 
         document.addEventListener('DOMContentLoaded', function () {
-            var Xcore = mk_layer('ZBase.png');
-            var Xr8 = mk_layer('ZC8.png');
-            var Xr4 = mk_layer('ZC4.png');
-            var Xr2 = mk_layer('ZC2.png');
-            var Xr1 = mk_layer('ZC1.png');
-            var Xc4 = mk_layer('ZV4.png');
-            var Xc2 = mk_layer('ZV2.png');
-            var Xc1 = mk_layer('ZV1.png')
+            Xcore = mk_layer('ZBase.png');
+            Xr8 = mk_layer('ZC8.png');
+            Xr4 = mk_layer('ZC4.png');
+            Xr2 = mk_layer('ZC2.png');
+            Xr1 = mk_layer('ZC1.png');
+            Xc4 = mk_layer('ZV4.png');
+            Xc2 = mk_layer('ZV2.png');
+            Xc1 = mk_layer('ZV1.png');
 
             var prepositions = ['Preposition', 'over (under)', 'in (out)', 'inside (outside)', 'front (back)', 'left (right)', 'up (down)'];
             var questions = ['Question', 'who', 'where', 'when', 'how', 'why	is true?', 'is known?'];
