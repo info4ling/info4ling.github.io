@@ -499,16 +499,17 @@
                 var col = rec[2];
                 var row = rec[3];
 
-                var obj = null;
                 if (mult > 0) {
-                    obj=max_glyph.cloneNode(true); // deep copy
+                    var mobj = max_glyph.cloneNode(true); // deep copy
+                    glyph.appendChild(mobj);
                     mtext += msep + (max_digit ** mult) + ' * ';
                     ltext += lsep + max_lit + lsep_after;
                 } else {
-                    obj = mk_overlay(false, row & 8, row & 4, row & 2, row & 1, col & 4, col & 2, col & 1);
+                    
                     mtext += msep;
                     ltext += lsep;
                 }
+                var obj = mk_overlay(false, row & 8, row & 4, row & 2, row & 1, col & 4, col & 2, col & 1);
                 glyph.appendChild(obj);
                 mtext += mval;
                 tlit = l_sounds[row][0] + r_sounds[col][0];
