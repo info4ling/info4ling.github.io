@@ -433,7 +433,7 @@
             var crow = getnumrow(row);
             var cdig = getnumdigit(row);
 
-            for (var c = cdig; c > 0; ++c) {
+            for (var c = cdig; c > 0; --c) {
                 var n = getnum(crow, c);
                 if (n < val) {
                     ret.push([lvl, crow, c]);
