@@ -439,7 +439,8 @@
             for (var c = cdig; c > 0; --c) {
                 var n = getnum(crow, c);
                 if (n <= val) {
-                    ret.push([lvl, crow, c]);
+                    var rec = [n, lvl, crow, c];
+                    ret.push(rec);
                     val -= n;
                 }
             }
@@ -475,6 +476,7 @@
             <label for="number">Enter a Number:</label>
             <input type="text" id="number" name="number"><br><br>
             <button type="button" onclick="calc();">Calculate</button>
+            <div id='math'></div>
             <div id='glyph'></div>
             <div id='lit'></div>
         </div>
