@@ -196,6 +196,7 @@
         ];
 
         var inf_val = getnum(number_digits) * 36;
+        var n_inf_val = -1 * inf_val;
 
         const IMG_W = 40;
         const IMG_H = 40;
@@ -535,7 +536,7 @@
 
             if (val <= 0) {
                 seq = zero_seq;
-                if (val < n_inf_val) {
+                if (val <= n_inf_val) {
                     seq = n_inf_seq;
                 } else if (val != 0) {
                     seq = convertnum(val, seq); // val is negative
