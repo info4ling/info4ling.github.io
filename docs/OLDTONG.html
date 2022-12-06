@@ -169,8 +169,10 @@
 
         const number_digits = number.length - 2;
         const zero_lit = row_sounds[0][0] + col_sounds[number_col][0];
-        const inf_lit = zero_lit + zero_lit;
-        const n_inf_lit = zero_lit + inf_lit;
+        const zero_rec = [0, 0];
+        const zero_seq = [zero_rec];
+        const inf_seq = [zero_rec, zero_rec];
+        const n_inf_seq = [zero_rec, zero_rec, zero_rec];
 
         const number_txt = 'Numbers are formed by adding the included numbers, high to low. Note that 10 is 6+4 and 100 is 36*2+24+4<BR><BR>'
             + 'Numbers ' + row_sounds[0][0] + col_sounds[number_col][0] + ' (36) and above are marked with a * to designate they are used as multipliers '
