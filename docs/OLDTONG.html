@@ -539,7 +539,7 @@
                 if (val <= n_inf_val) {
                     seq = n_inf_seq;
                 } else if (val != 0) {
-                    seq = convertnum(val, seq); // val is negative
+                    seq = convertnum(-1*val, seq); // val is negative
                 }
             } else if (val >= inf_val) {
                 seq = inf_seq;
