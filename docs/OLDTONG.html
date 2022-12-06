@@ -8,14 +8,14 @@
             padding: 10px;
         }
 
-        #cdiv th > div,
-        #cdiv td:not(:first-child) > div {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            align-items: center;
-            height: 100%;
-            vertical-align: top;
-        }
+            #cdiv th > div,
+            #cdiv td:not(:first-child) > div {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                align-items: center;
+                height: 100%;
+                vertical-align: top;
+            }
 
         td:has(div>div:only-child>span:only-child) {
             vertical-align: top;
@@ -41,10 +41,10 @@
             flex-direction: row;
         }
 
-        #glyph > div {
-            border: none !important;
-            padding: 4px !important;
-        }
+            #glyph > div {
+                border: none !important;
+                padding: 4px !important;
+            }
 
         table {
             border-collapse: collapse;
@@ -193,14 +193,14 @@
             skip,
         ];
 
-        var inf_val = getnum(number_digits)*36;
+        var inf_val = getnum(number_digits) * 36;
 
         const IMG_W = 40;
         const IMG_H = 40;
 
         const padsz = (IMG_W + IMG_H) / 10;
 
-        const SB = [[100,80], [100,50], [100,25], [100,10], [40,80], [40,50], [40,25], [40,10]];
+        const SB = [[100, 80], [100, 50], [100, 25], [100, 10], [40, 80], [40, 50], [40, 25], [40, 10]];
 
         // Globals set after document.ready()
 
@@ -469,7 +469,10 @@
             var num = get_ctext(row, number_col + 1, true);
             return num.includes('*');
         }
-      
+        function mk_numglyph(row) {
+            mk_overlay(false, row & 8, row & 4, row & 2, row & 1, number_col & 4, number_col & 2, number_col & 1);
+        }
+
         function convertnum(lvl, val, ret) {
             if (val == 0) {
                 return ret;
@@ -477,15 +480,24 @@
 
             for (var c = number_digits; c > 0; --c) {
                 var n = getnum(c);
+                var x = n;
+                var p = 0;
+                var skip = false;
                 if (ismult(c)) {
-                    var q = Math.floor(val / n);
-                    if (q > 0) {
-                        var x = n * q;
-                        var rec = [x, lvl, number_col, c];
-                        ret.push(rec);
-                        val -= x;
+                    p = Math.floor(val / n);
+                    x = n * p;
+                    if (p == 0) {
+                        skip = true;
                     }
+                } else if (n > val) {
+                    skip = true;
                 }
+                if (skip) {
+                    continue;
+                }
+                var rec = [p, c];
+                ret.push(rec);
+                val -= x;
             }
 
             return ret;
@@ -535,25 +547,43 @@
                 var rec = seq[x];
                 var prow = rec[0];
                 var nrow = rec[1];
+                var close = '';
 
                 var nval = getnum(nrow);
-                if (prow > 0) {
-                    var pval = getnum(prow);
-                    mtext += msep + (pval ** nval) + ' * ';
-                    var plit = num_sound(prow);
-                    ltext += lsep + plit;
-                } else {                   
+                if (prow > 0) { // using a multiplier
+                    if (prow > 6) { // it's on the second hand
+                        var prowA = 5 + Math.floor(prow / 6);
+                        var pvalA = getnum(prowA);
+                        mtext += msep + '(' + pvalA;
+                        msep = msep_after;
+                        close = ')';
+                        var plitA = num_sound(prowA);
+                        ltext += lsep + plitA;
+                        pobjA = mk_numglyph(prowA);
+                        glyph.appendChild(pobjA);
+                        prow -= (prowA * 6);
+                    }
+                    if (prow > 0) { // it has something on the first hand
+                        var prowB = prow;
+                        var pvalB = getnum(prowB);
+                        mtext += msep + pvalB + close + ' * ';
+                        var plitB = num_sound(prowB);
+                        ltext += lsep + plit;
+                        pobjB = mk_numglyph(prowB);
+                        glyph.appendChild(pobjB);
+                    }
+                } else {
                     mtext += msep;
                     ltext += lsep;
                 }
-                var nobj = mk_overlay(false, row & 8, row & 4, row & 2, row & 1, col & 4, col & 2, col & 1);
+                var nobj = mk_numglyph(nrow);
                 glyph.appendChild(nobj);
                 mtext += mval;
                 nlit = num_sound(nrow);
                 ltext += nlit;
 
                 msep = msep_after;
-                lsep = lsep_after;               
+                lsep = lsep_after;
             }
             math.innerText = mtext;
             lit.innerText = ltext;
