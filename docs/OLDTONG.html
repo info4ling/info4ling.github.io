@@ -559,14 +559,18 @@
                     if (prow > 6) { // it's on the second hand
                         var prowA = 5 + Math.floor(prow / 6);
                         var pvalA = getnum(prowA);
-                        mtext += msep + '(' + pvalA;
-                        msep = msep_after;
-                        close = ')';
                         var plitA = num_sound(prowA);
                         ltext += lsep + plitA;
                         var pobjA = mk_numglyph(prowA);
                         glyph.appendChild(pobjA);
-                        prow -= (prowA * 6);
+                        prow -= (pvalA);
+                        if (prow > 0) {
+                            mtext += msep + '(' + pvalA;
+                            close = ')';
+                        } else {
+                            mtext += msep + pvalA;
+                        }
+                        msep = msep_after;
                     }
                     if (prow > 0) { // it has something on the first hand
                         var prowB = prow;
