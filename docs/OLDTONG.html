@@ -232,7 +232,7 @@
         }
 
         function num_sound(row) {
-            var ret = row_sounds[row] + col_sounds[number_col][0];
+            var ret = row_sounds[row][0] + col_sounds[number_col][0];
             return ret;
         }
 
@@ -568,7 +568,7 @@
                         var pvalB = getnum(prowB);
                         mtext += msep + pvalB + close + ' * ';
                         var plitB = num_sound(prowB);
-                        ltext += lsep + plit;
+                        ltext += lsep + plitB;
                         var pobjB = mk_numglyph(prowB);
                         glyph.appendChild(pobjB);
                     }
@@ -578,10 +578,11 @@
                 }
                 var nval = getnum(nrow);
                 var nobj = mk_numglyph(nrow);
-                glyph.appendChild(nobj);
-                mtext += nval;
                 var nlit = num_sound(nrow);
+                
+                mtext += nval;
                 ltext += nlit;
+                glyph.appendChild(nobj);
 
                 msep = msep_after;
                 lsep = lsep_after;
