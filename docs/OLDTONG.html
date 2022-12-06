@@ -418,6 +418,7 @@
             return numval;
         }
 
+        const crow = number_col;
         function convertnum(lvl, val, ret) {
             if (val == 0) {
                 return ret;
@@ -427,8 +428,8 @@
                 ret = convertnum(lvl + 1, 2, nval, ret);
                 val %= max_digit;
             }
-            var crow = getnumrow(row);
-            var cdig = getnumdigit(row);
+
+            var cdig = getnumdigit();
 
             for (var c = cdig; c > 0; --c) {
                 var n = getnum(crow, c);
