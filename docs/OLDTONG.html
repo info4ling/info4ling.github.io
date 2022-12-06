@@ -460,7 +460,7 @@
         }
 
         function getnum(row) {
-            var num = get_ctext(row+1, number_col, true);
+            var num = get_ctext(row + 1, number_col, true);
             var numval = Number(num.replace(/[*,]/g, ''));
             return numval;
         }
@@ -469,8 +469,9 @@
             var num = get_ctext(row, number_col + 1, true);
             return num.includes('*');
         }
+
         function mk_numglyph(row) {
-            mk_overlay(false, row & 8, row & 4, row & 2, row & 1, number_col & 4, number_col & 2, number_col & 1);
+            return mk_overlay(false, row & 8, row & 4, row & 2, row & 1, number_col & 4, number_col & 2, number_col & 1);
         }
 
         function convertnum(val, ret) {
