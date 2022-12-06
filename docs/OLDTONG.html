@@ -553,45 +553,52 @@
                 var rec = seq[x];
                 var prow = rec[0];
                 var nrow = rec[1];
-                var close = '';
+                var nval = getnum(nrow);
+                var prowA = 0;
+                var prowB = prow;
+                var pvalA = 0;
+                var pvalB = 0;
 
                 if (prow > 0) { // using a multiplier
                     if (prow > 6) { // it's on the second hand
-                        var prowA = 5 + Math.floor(prow / 6);
-                        var pvalA = getnum(prowA);
-                        var plitA = num_sound(prowA);
-                        ltext += lsep + plitA;
-                        var pobjA = mk_numglyph(prowA);
-                        glyph.appendChild(pobjA);
-                        prow -= (pvalA);
-                        if (prow > 0) {
-                            mtext += msep + '(' + pvalA;
-                            close = ')';
-                        } else {
-                            mtext += msep + pvalA;
-                        }
-                        msep = msep_after;
+                        prowA = 5 + Math.floor(prow / 6);
+                        pvalA = getnum(prowA);
+                        prowB = prow - pvalA;
                     }
-                    if (prow > 0) { // it has something on the first hand
-                        var prowB = prow;
-                        var pvalB = getnum(prowB);
-                        mtext += msep + pvalB + close + ' * ';
-                        var plitB = num_sound(prowB);
-                        ltext += lsep + plitB;
-                        var pobjB = mk_numglyph(prowB);
-                        glyph.appendChild(pobjB);
-                    }
-                } else {
-                    mtext += msep;
-                    ltext += lsep;
+                    pvalB = getnum(prowB);
                 }
-                var nval = getnum(nrow);
-                var nobj = mk_numglyph(nrow);
+
                 var nlit = num_sound(nrow);
-                
-                mtext += nval;
-                ltext += nlit;
+                var nobj = mk_numglyph(nrow);
+                mtext += msep + nval;
+                ltext += lsep + nlit;
+
                 glyph.appendChild(nobj);
+                if (pvalA > 0) {
+                    var plitA = num_sound(prowA);
+                    var pobjA = mk_numglyph(prowA);
+                    if (pvalB > 0) {
+                        var plitB = num_sound(prowB);
+                        var pobjB = mk_numglyph(prowB);
+                        mtext += ' * (' + pvalA + msep_after + pvalB + ')';
+                        ltext += lsep_after + plitA + lsep_after + plitB;
+
+                        glyph.appendChild(pobjA);
+                        glyph.appendChild(pobjB);
+                    } else {
+                        mtext +=  ' * ' + pvalA;
+                        ltext += lsep_after + plitA;
+
+                        glyph.appendChild(pobjA);
+                    }
+                } else if (pvalB > 0) {
+                    var plitB = num_sound(prowB);
+                    var pobjB = mk_numglyph(prowB);
+                    mtext += ' * ' + pvalB;
+                    ltext += lsep_after + plitB;
+
+                    glyph.appendChild(pobjB);
+                }
 
                 msep = msep_after;
                 lsep = lsep_after;
