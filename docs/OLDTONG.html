@@ -102,32 +102,9 @@
 </head>
 <body>
     <script>
-        const punct = ['Punctuation', "STOP '.'", "Start Paren '('", "Start Quote '\"'", "Question '?'", "Excitement '!'", "End Paren ')'", "Quote '\"'", "Elipses '...'", 'Sarcasm', 'Rhetoric'];
-        const stct = ['Structure', 'Verb', 'Subject', 'Object', 'Adjective', 'Adverb', 'Interjection', 'Conjunction', 'Question'];
-        const cat = ['Category', 'Plant', 'Animal', 'Color', 'Environment', 'Weather', 'Body of Water', 'Elevation', 'Temerature', 'Humidity', 'Magic Element'];
-        const pron = ['Pronoun', 'Ordinal Tag', 'Self', 'Other (you)', 'Possessive', 'Reflexive', 'Plural', 'Unknown', 'Neuter', 'Feminine', 'Masculine',];
+        //////////////////////// Globals
 
-        const number_col = 2;
-        const number = ['Number', '*216',
-            '1', '2', '3', '4', '5',
-            '6', '12', '18', '24', '30',
-            '36', '72', '108', '144', '180',
-        ];
-
-        const skip = [[], ''];
-
-        var ctext = [
-            [punct, 'Question/Excitement/Sarcasm/Rhetorical goes at the front'],
-            [stct, '[Punctuation: Question/Excitement/Sarcastic/Rhetorical] <BR><BR>Interjection<BR><BR>Verb (Adverb)<BR><BR>Subject (Subject-Adjective)...<BR><BR>(Conjunction Subject Subject-Adjective)... <BR><BR>Object (Object-Adjective)...<BR><BR>(Conjunction Object Object-Adjective)...<BR><BR>[Punctuation: STOP/Elipses/Repeat of punctuation at start for emphasis]'],
-            [number, 'Numbers are formed by adding the included numbers, high to low. Note that 10 is 6+4 and 100 is 72+24+4<BR>*216 is prepended repeatedly to any number to make large numbers by multiplying the number by 256, twice by 46,656...'],
-            [cat, ''],
-            [pron, 'The "Ordinal Tag" can be associated with any noun: Pronoun, Subject, or Object by prepending it, followed by a number (usually 1,2,3). Afterwards the Ordinal Tag and the number can replace the noun until the number is associated with another noun.<BR><BR>Singular is the default.<BR>Pronouns are created by combining modifiers in the order presented, For "We" where it is a masculine person, with other males and one female, would be: "SelfMaleOtherPluralMaleFemale". <BR><BR>Note that: "Self/Other/Possessive/Reflexive" are only included once. Gender is one of: Unknown, Neuter, Feminine,  Masculine. Unkown is the default gender but may need to be explicitely included if it is needed to combine with other genders.<BR><BR>Other is only required after Self, by itself Other is the same as OtherPluralMalePluralFemale, and OtherPlural means more than one but genders are uncertain'],
-            skip,
-            skip,
-            skip,
-        ];
-
-        var row_sounds = [
+        const row_sounds = [
             ['P', 'Pot'],
             ['B', 'Boy'],
             ['J', 'Jar'],
@@ -146,7 +123,7 @@
             ['Th', 'That'],
         ];
 
-        var col_sound = [
+        const col_sound = [
             ['oy', 'plOY'],
             ['ay', 'stAY'],
             ['ie', 'tIE'],
@@ -157,16 +134,100 @@
             ['oo', 'bOOt'],
         ];
 
+        const punct = ['Punctuation', "STOP '.'", "Start Paren '('", "Start Quote '\"'", "Question '?'", "Excitement '!'", "End Paren ')'", "Quote '\"'", "Elipses '...'", 'Sarcasm', 'Rhetoric'];
+        const punct_txt = 'Question/Excitement/Sarcasm/Rhetorical goes at the front';
+
+        const strct = ['Structure', 'Verb', 'Subject', 'Object', 'Adjective', 'Adverb', 'Interjection', 'Conjunction', 'Question'];
+        const strct_txt = '[Punctuation: Question/Excitement/Sarcastic/Rhetorical] <BR><BR>'
+            + 'Interjection <BR><BR>'
+            + 'Verb(Adverb) <BR><BR>'
+            + 'Subject(Subject - Adjective)...<BR><BR>'
+            + '(Conjunction Subject Subject - Adjective)... <BR><BR>'
+            + 'Object(Object - Adjective)...<BR><BR>'
+            + '(Conjunction Object Object - Adjective)...<BR><BR>'
+            + '[Punctuation: STOP/Elipses/Repeat of punctuation at start for emphasis]';
+
+        const cat = ['Category', 'Plant', 'Animal', 'Color', 'Environment', 'Weather', 'Body of Water', 'Elevation', 'Temerature', 'Humidity', 'Magic Element'];
+        const cat_txt = '';
+
+        const pron = ['Pronoun', 'Ordinal Tag', 'Self', 'Other (you)', 'Possessive', 'Reflexive', 'Plural', 'Unknown', 'Neuter', 'Feminine', 'Masculine',];
+        const pron_txt = 'The "Ordinal Tag" can be associated with any noun: Pronoun, Subject, or Object by prepending it, followed by a number (usually 1,2,3). '
+            + 'Afterwards the Ordinal Tag and the number can replace the noun until the number is associated with another noun.<BR><BR>'
+            + 'Singular is the default.<BR>Pronouns are created by combining modifiers in the order presented. '
+            + 'For "We" where it is a masculine person, with other males and one female, would be: "SelfMaleOtherPluralMaleFemale". <BR><BR>'
+            + 'Note that: "Self/Other/Possessive/Reflexive" are only included once.Gender is one of: Unknown, Neuter, Feminine, Masculine. '
+            + 'Unkown is the default gender but may need to be explicitely included if it is needed to combine with other genders.<BR><BR>'
+            + 'Other is only required after Self, by itself Other is the same as OtherPluralMalePluralFemale, '
+            + 'and OtherPlural means more than one but genders are uncertain';
+
+        const number_col = 2;
+        const number = ['Number', '0',
+            '1', '2', '3', '4', '5',
+            '6', '12', '18', '24', '30',
+            '*36', '*1,296', '*46,656', '*1,679,616', '*60,466,176',
+        ];
+
+        const zero_lit = row_sounds[0][0] + col_sounds[number_col][0];
+        const inf_lit = zero_lit + zero_lit;
+        const n_inf_lit = zero_lit + inf_lit;
+
+        const number_txt = 'Numbers are formed by adding the included numbers, high to low. Note that 10 is 6+4 and 100 is 36*2+24+4<BR><BR>'
+            + 'Numbers ' + row_sounds[0][0] + col_sounds[number_col][0] + ' (36) and above are marked with a * to designate they are used as multipliers '
+            + '(they must have a ' + row_sounds[1][0] + col_sounds[number_col][0] + '(1) after to represent their value) < BR > <BR>'
+            + 'This means that the highest possible number is 2,176,782,335 -- Numbers above this are limitless'
+            + zero_lit + ' means "Not". By itself, it means 0. '
+            + zero_lit + zero_lit + ' means limitless (above 2,176,782,335) and Pie before any other number means negative. '
+            + zero_lit + zero_lit + zero_lit + ' means below -2,176,782,335)'
+
+        const skip = [[], ''];
+
+        const ctext = [
+            [punct, punct_txt],
+            [strct, strct_txt],
+            [number, number_txt],
+            [cat, cat_txt],
+            [pron, pron_txt],
+            skip,
+            skip,
+            skip,
+        ];
+
+        var inf_val = getnum(number_col, number.length - 2);
+
+        const max_row = 0;
+        const max_col = number_col;
+        const max_digit = getnum(max_row, max_col);
+        const max_lit = row_sounds[max_row][0] + col_sound[max_col][0];
+
+        const IMG_W = 40;
+        const IMG_H = 40;
+
+        const padsz = (IMG_W + IMG_H) / 10;
+
+        // Globals set after document.ready()
+
+        var Xcore = null;
+        var Xr8 = null;
+        var Xr4 = null;
+        var Xr2 = null;
+        var Xr1 = null;
+        var Xc4 = null;
+        var Xc2 = null;
+        var Xc1 = null;
+        var max_glyph = null;
+
+        //////////////////////////////// Functions
+
         function get_ctext(row, col, is_data = true) {
             if (row >= ctext.length) {
                 return '';
             }
             if (is_data) {
-                var crow = ctext[row][0];
-                if (col >= crow.length) {
+                var number_col = ctext[row][0];
+                if (col >= number_col.length) {
                     return '';
                 }
-                return crow[col]
+                return number_col[col]
             }
             return ctext[row][1];
         }
@@ -200,9 +261,6 @@
             return color_div(H, S, B);
         }
 
-        var IMG_W = 40;
-        var IMG_H = 40;
-
         function mk_layer(nm) {
             var img = mk_img(nm);
             img.style.position = 'absolute';
@@ -212,21 +270,6 @@
             img.style.height = IMG_H + 'px';
             return img;
         }
-
-        var Xcore = null;
-        var Xr8 = null;
-        var Xr4 = null;
-        var Xr2 = null;
-        var Xr1 = null;
-        var Xc4 = null;
-        var Xc2 = null;
-        var Xc1 = null;
-
-        var max_glyph = null;
-        const max_row = 0;
-        const max_col = number_col;
-        const max_digit = getnum(max_row, max_col);
-        const max_lit = row_sounds[max_row][0] + col_sound[max_col][0];
 
         function mk_overlay(hdr, r8, r4, r2, r1, c4, c2, c1) {
             var img = [];
@@ -255,11 +298,11 @@
                 img.push(Xc1.cloneNode());
             }
             inner_div = mk_div(img);
-            //inner_div.style.backgroundColor='white';
             inner_div.style.minHeight = IMG_H + 'px';
             inner_div.style.minWidth = IMG_W + 'px';
             inner_div.style.maxHeight = IMG_H + 'px';
             inner_div.style.maxWidth = IMG_W + 'px';
+
             mid_div = mk_div([inner_div]);
             mid_div.style.position = 'relative';
             mid_div.style.minHeight = IMG_H + 'px';
@@ -267,13 +310,14 @@
             mid_div.style.maxHeight = IMG_H + 'px';
             mid_div.style.maxWidth = IMG_W + 'px';
             outer_div = mk_div([mid_div]);
-            const padsz = (IMG_W + IMG_H) / 10;
+
             outer_div.style.padding = padsz + 'px';
             outer_div.style.minHeight = IMG_H + 'px';
             outer_div.style.minWidth = IMG_W + 'px';
             outer_div.style.maxHeight = IMG_H + 'px';
             outer_div.style.maxWidth = IMG_W + 'px';
             outer_div.style.border = '1px solid #808080';
+
             return outer_div;
         }
 
@@ -422,8 +466,7 @@
             var numval = Number(num.replace(/[*,]/g, ''));
             return numval;
         }
-
-        const crow = number_col;
+      
         function convertnum(lvl, val, ret) {
             if (val == 0) {
                 return ret;
@@ -437,9 +480,9 @@
             var cdig = getnumdigit();
 
             for (var c = cdig; c > 0; --c) {
-                var n = getnum(crow, c);
+                var n = getnum(number_col, c);
                 if (n <= val) {
-                    var rec = [n, lvl, crow, c];
+                    var rec = [n, lvl, number_col, c];
                     ret.push(rec);
                     val -= n;
                 }
@@ -454,23 +497,39 @@
             var math = document.getElementById('math');
             var lit = document.getElementById('lit');
             var val_raw = number.value;
-            var val_strip = val_raw.replace(/,/g, ''); // remove all ,
+            var val_strip = val_raw.replace(/[,*]/g, ''); // remove all ,
             var val = Number(val_strip); // convert to number
 
             glyph.innerHTML = '';
             math.innerHTML = '';
             lit.innerHTML = '';
 
-            if (isNaN(val) || val <= 0) {
+            var msep = '[' + val.toString(6) + '] ';
+            var lsep = '';
+            var mtext = '';
+            var ltext = '';
+
+            if (isNaN(val)) {
                 lit.innerText = 'Please Enter a Valid Number > 0';
                 return;
             }
 
-            var seq = convertnum(0, val, []);
-            var msep = '['+val.toString(6)+'] ';
-            var lsep = '';
-            var mtext = '';
-            var ltext = '';
+            var seq = null;
+
+            if (val <= 0) {
+                seq = zero_seq;
+
+                if (val < 0) {
+                    seq = convertnum(val, seq)
+                }
+            }
+
+            else if (val >= inf_val) {
+                seq = inf_seq;
+            }
+
+            var seq = convertnum(val, []);
+
             glyph.innerHTML = '';
             var msep_after = ' + ';
             var lsep_after = '';
