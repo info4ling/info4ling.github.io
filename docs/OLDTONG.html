@@ -471,7 +471,8 @@
             var lit = document.getElementById('lit');
             var val_raw = number.value;
             var seq = zero;
-            var val = Number(val_raw.replace(',', '')); // remove , and convert to number
+            var val_strip = val_raw.replace(',', '');
+            var val = Number(val_strip); // remove , and convert to number
 
             glyph.innerHTML = '';
             math.innerHTML = '';
@@ -485,7 +486,7 @@
             if (val != 0) {
                 seq = convertnum(0, 2, val, []);
             }
-            var msep = '';
+            var msep = '['+val.toString(6)+'] ';
             var lsep = '';
             var mtext = '';
             var ltext = '';
