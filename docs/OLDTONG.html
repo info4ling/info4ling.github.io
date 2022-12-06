@@ -550,7 +550,6 @@
                 var nrow = rec[1];
                 var close = '';
 
-                var nval = getnum(nrow);
                 if (prow > 0) { // using a multiplier
                     if (prow > 6) { // it's on the second hand
                         var prowA = 5 + Math.floor(prow / 6);
@@ -560,7 +559,7 @@
                         close = ')';
                         var plitA = num_sound(prowA);
                         ltext += lsep + plitA;
-                        pobjA = mk_numglyph(prowA);
+                        var pobjA = mk_numglyph(prowA);
                         glyph.appendChild(pobjA);
                         prow -= (prowA * 6);
                     }
@@ -570,17 +569,18 @@
                         mtext += msep + pvalB + close + ' * ';
                         var plitB = num_sound(prowB);
                         ltext += lsep + plit;
-                        pobjB = mk_numglyph(prowB);
+                        var pobjB = mk_numglyph(prowB);
                         glyph.appendChild(pobjB);
                     }
                 } else {
                     mtext += msep;
                     ltext += lsep;
                 }
+                var nval = getnum(nrow);
                 var nobj = mk_numglyph(nrow);
                 glyph.appendChild(nobj);
-                mtext += mval;
-                nlit = num_sound(nrow);
+                mtext += nval;
+                var nlit = num_sound(nrow);
                 ltext += nlit;
 
                 msep = msep_after;
