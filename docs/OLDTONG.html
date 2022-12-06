@@ -167,6 +167,7 @@
             '*36', '*1,296', '*46,656', '*1,679,616', '*60,466,176',
         ];
 
+        const number_digits = number.length - 2;
         const zero_lit = row_sounds[0][0] + col_sounds[number_col][0];
         const inf_lit = zero_lit + zero_lit;
         const n_inf_lit = zero_lit + inf_lit;
@@ -192,17 +193,14 @@
             skip,
         ];
 
-        var inf_val = getnum(number_col, number.length - 2);
-
-        const max_row = 0;
-        const max_col = number_col;
-        const max_digit = getnum(max_row, max_col);
-        const max_lit = row_sounds[max_row][0] + col_sound[max_col][0];
+        var inf_val = getnum(number_digits)*36;
 
         const IMG_W = 40;
         const IMG_H = 40;
 
         const padsz = (IMG_W + IMG_H) / 10;
+
+        const SB = [[100,80], [100,50], [100,25], [100,10], [40,80], [40,50], [40,25], [40,10]];
 
         // Globals set after document.ready()
 
@@ -232,6 +230,11 @@
             return ctext[row][1];
         }
 
+        function num_sound(row) {
+            var ret = row_sounds[row] + col_sounds[number_col][0];
+            return ret;
+        }
+
         //Color Hue, Sat/Brightness -- 3 letters (Category:Color)(Hue)(B/S)
         // Hue: L1 of 127 is greyscale:
         //   Hue = 0
@@ -246,17 +249,16 @@
             div.style.backgroundColor = "hsl(" + h + "," + s + "%," + b + "%)";
             return div;
         }
-        function create_color(L1, L2C, L2V) {
+        function create_color(row, col) {
             var H = 0;
             var S = 0;
             var B = 0;
-            if (L1 == 127) { // Greyscale
-                var L2 = L2C * 8 + L2V;
-                B = L2 * 100 / 127;
+            if (row == 0) { // Greyscale
+                B = col * 100 / 7;
             } else {
-                H = L1 * 360 / 16;
-                S = L2V * 100 / 7;
-                B = L2C * 100 / 15;
+                H = row * 360 / 16;
+                S = SB[col][0];
+                B = SB[col][1];
             }
             return color_div(H, S, B);
         }
@@ -457,34 +459,32 @@
             return row;
         }
 
-        function getnumdigit() {
-            return number.length - 2;
-        }
-
-        function getnum(row, col) {
-            var num = get_ctext(row, col + 1, true);
+        function getnum(row) {
+            var num = get_ctext(row, number_col + 1, true);
             var numval = Number(num.replace(/[*,]/g, ''));
             return numval;
+        }
+
+        function ismult(row) {
+            var num = get_ctext(row, number_col + 1, true);
+            return num.includes('*');
         }
       
         function convertnum(lvl, val, ret) {
             if (val == 0) {
                 return ret;
             }
-            if (val >= max_digit) {
-                var nval = val / max_digit;
-                ret = convertnum(lvl + 1, 2, nval, ret);
-                val %= max_digit;
-            }
 
-            var cdig = getnumdigit();
-
-            for (var c = cdig; c > 0; --c) {
-                var n = getnum(number_col, c);
-                if (n <= val) {
-                    var rec = [n, lvl, number_col, c];
-                    ret.push(rec);
-                    val -= n;
+            for (var c = number_digits; c > 0; --c) {
+                var n = getnum(c);
+                if (ismult(c)) {
+                    var q = Math.floor(val / n);
+                    if (q > 0) {
+                        var x = n * q;
+                        var rec = [x, lvl, number_col, c];
+                        ret.push(rec);
+                        val -= x;
+                    }
                 }
             }
 
@@ -504,59 +504,53 @@
             math.innerHTML = '';
             lit.innerHTML = '';
 
-            var msep = '[' + val.toString(6) + '] ';
-            var lsep = '';
-            var mtext = '';
-            var ltext = '';
-
             if (isNaN(val)) {
-                lit.innerText = 'Please Enter a Valid Number > 0';
+                lit.innerText = 'Please Enter a Valid Number';
                 return;
             }
 
+            var lsep = '';
+            var mtext = '';
+            var ltext = '';
+            var msep = '[' + val.toString(6) + '] ';
             var seq = null;
 
             if (val <= 0) {
                 seq = zero_seq;
-
-                if (val < 0) {
+                if (val < n_inf_val) {
+                    seq = n_inf_seq;
+                } else if (val != 0) {
                     seq = convertnum(val, seq)
                 }
-            }
-
-            else if (val >= inf_val) {
+            } else if (val >= inf_val) {
                 seq = inf_seq;
+            } else {
+                seq = convertnum(val, []);
             }
-
-            var seq = convertnum(val, []);
 
             glyph.innerHTML = '';
             var msep_after = ' + ';
             var lsep_after = '';
-            var col = number_col;
             for (var x = 0; x < seq.length; x++) {
                 var rec = seq[x];
-                var mval = rec[0];
-                var mult = rec[1]
-                var row = rec[3];
+                var prow = rec[0];
+                var nrow = rec[1];
 
-                if (mult > 0) {
-                    mtext += msep + (max_digit ** mult) + ' * ';
-                    ltext += lsep;
-                    for (var m = 0; m < mult; ++m) {
-                        var mobj = max_glyph.cloneNode(true); // deep copy
-                        glyph.appendChild(mobj);
-                        ltext += max_lit + lsep_after;
-                    }
+                var nval = getnum(nrow);
+                if (prow > 0) {
+                    var pval = getnum(prow);
+                    mtext += msep + (pval ** nval) + ' * ';
+                    var plit = num_sound(prow);
+                    ltext += lsep + plit;
                 } else {                   
                     mtext += msep;
                     ltext += lsep;
                 }
-                var obj = mk_overlay(false, row & 8, row & 4, row & 2, row & 1, col & 4, col & 2, col & 1);
-                glyph.appendChild(obj);
+                var nobj = mk_overlay(false, row & 8, row & 4, row & 2, row & 1, col & 4, col & 2, col & 1);
+                glyph.appendChild(nobj);
                 mtext += mval;
-                tlit = row_sounds[row][0] + col_sound[col][0];
-                ltext += tlit;
+                nlit = num_sound(nrow);
+                ltext += nlit;
 
                 msep = msep_after;
                 lsep = lsep_after;               
