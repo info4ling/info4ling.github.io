@@ -501,12 +501,14 @@
                 var row = rec[3];
 
                 if (mult > 0) {
-                    var mobj = max_glyph.cloneNode(true); // deep copy
-                    glyph.appendChild(mobj);
                     mtext += msep + (max_digit ** mult) + ' * ';
-                    ltext += lsep + max_lit + lsep_after;
-                } else {
-                    
+                    ltext += lsep;
+                    for (var m = 0; m < mult; ++m) {
+                        var mobj = max_glyph.cloneNode(true); // deep copy
+                        glyph.appendChild(mobj);
+                        ltext += max_lit + lsep_after;
+                    }
+                } else {                   
                     mtext += msep;
                     ltext += lsep;
                 }
