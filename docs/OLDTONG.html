@@ -31,9 +31,14 @@
             width: 100%;
         }
 
-        #glyph {
+        body > div {
             display: flex;
             flex-direction: column;
+        }
+
+        #glyph {
+            display: flex;
+            flex-direction: row;
         }
 
         #glyph > div {
@@ -502,7 +507,7 @@
         }
 
     </script>
-    <div style='display: flex'>
+    <div>
         <div>
             <label for="number">Enter a Number:</label>
             <input type="text" id="number" name="number"><br><br>
