@@ -459,14 +459,19 @@
             return row;
         }
 
+        function getnum_txt(row) {
+            var txt = get_ctext(row + 1, number_col, true);
+            return txt;
+        }
+
         function getnum(row) {
-            var num = get_ctext(row + 1, number_col, true);
+            var num = getnum_txt(row);
             var numval = Number(num.replace(/[*,]/g, ''));
             return numval;
         }
 
         function ismult(row) {
-            var num = get_ctext(row, number_col + 1, true);
+            var num = getnum_txt(row);
             return num.includes('*');
         }
 
