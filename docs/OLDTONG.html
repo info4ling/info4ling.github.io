@@ -218,17 +218,17 @@
         //////////////////////////////// Functions
 
         function get_ctext(row, col, is_data = true) {
-            if (row >= ctext.length) {
+            if (col >= ctext.length) {
                 return '';
             }
             if (is_data) {
-                var number_col = ctext[row][0];
-                if (col >= number_col.length) {
+                var number_col = ctext[col][0];
+                if (row >= number_col.length) {
                     return '';
                 }
-                return number_col[col]
+                return number_col[row]
             }
-            return ctext[row][1];
+            return ctext[col][1];
         }
 
         function num_sound(row) {
@@ -371,11 +371,11 @@
                                             ]);
                                             hdr_images.push(mk_div([
                                                 hdr, mk_div([
-                                                    bold(get_ctext(col, 0))
+                                                    bold(get_ctext(0, col))
                                                 ])
                                             ]));
                                             var ftr = mk_div([
-                                                wrap(get_ctext(col, 0, false))
+                                                wrap(get_ctext(0, col, false))
                                             ]);
                                             ftr_images.push(mk_div([ftr]));
                                         }
@@ -385,7 +385,7 @@
                                         images.push(mk_div([
                                             div,
                                             mk_div([
-                                                bold(get_ctext(col, row + 1))
+                                                bold(get_ctext(row + 1, col))
                                             ])
                                         ]));
                                         col++;
