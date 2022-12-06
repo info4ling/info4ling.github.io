@@ -8,14 +8,14 @@
             padding: 10px;
         }
 
-            #cdiv th > div,
-            #cdiv td:not(:first-child) > div {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                align-items: center;
-                height: 100%;
-                vertical-align: top;
-            }
+        #cdiv th > div,
+        #cdiv td:not(:first-child) > div {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
+            height: 100%;
+            vertical-align: top;
+        }
 
         td:has(div>div:only-child>span:only-child) {
             vertical-align: top;
@@ -33,13 +33,13 @@
 
         #glyph {
             display: flex;
-            flex-direction: row;
+            flex-direction: column;
         }
 
-            #glyph > div {
-                border: none !important;
-                padding: 4px !important;
-            }
+        #glyph > div {
+            border: none !important;
+            padding: 4px !important;
+        }
 
         table {
             border-collapse: collapse;
@@ -102,18 +102,11 @@
         const cat = ['Category', 'Plant', 'Animal', 'Color', 'Environment', 'Weather', 'Body of Water', 'Elevation', 'Temerature', 'Humidity', 'Magic Element'];
         const pron = ['Pronoun', 'Ordinal Tag', 'Self', 'Other (you)', 'Possessive', 'Reflexive', 'Plural', 'Unknown', 'Neuter', 'Feminine', 'Masculine',];
 
-        const number1_row = 2;
-        const number1 = ['Number', '0',
+        const number_col = 2;
+        const number = ['Number', '*216',
             '1', '2', '3', '4', '5',
             '6', '12', '18', '24', '30',
             '36', '72', '108', '144', '180',
-        ];
-
-        const number2_row = 4;
-        const number2 = ['Number2', '*46,656',
-            '216', '432', '648', '864', '1,080',
-            '1,296', '2,592', '3,888', '5,184', '6,480',
-            '7,776', '15,552', '23,328', '31,104', '38,880',
         ];
 
         const skip = [[], ''];
@@ -121,15 +114,15 @@
         var ctext = [
             [punct, 'Question/Excitement/Sarcasm/Rhetorical goes at the front'],
             [stct, '[Punctuation: Question/Excitement/Sarcastic/Rhetorical] <BR><BR>Interjection<BR><BR>Verb (Adverb)<BR><BR>Subject (Subject-Adjective)...<BR><BR>(Conjunction Subject Subject-Adjective)... <BR><BR>Object (Object-Adjective)...<BR><BR>(Conjunction Object Object-Adjective)...<BR><BR>[Punctuation: STOP/Elipses/Repeat of punctuation at start for emphasis]'],
-            [number1, 'Numbers are formed by adding the included numbers, high to low. Note that 10 is 6+4 and 100 is 72+24+4'],
+            [number1, 'Numbers are formed by adding the included numbers, high to low. Note that 10 is 6+4 and 100 is 72+24+4<BR>*216 is prepended repeatedly to any number to make large numbers by multiplying the number by 256, twice by 46,656...'],
             [cat, ''],
-            [number2, '*46,656 is prepended to any number to make large numbers by multiplying the number by 46,656'],
             [pron, 'The "Ordinal Tag" can be associated with any noun: Pronoun, Subject, or Object by prepending it, followed by a number (usually 1,2,3). Afterwards the Ordinal Tag and the number can replace the noun until the number is associated with another noun.<BR><BR>Singular is the default.<BR>Pronouns are created by combining modifiers in the order presented, For "We" where it is a masculine person, with other males and one female, would be: "SelfMaleOtherPluralMaleFemale". <BR><BR>Note that: "Self/Other/Possessive/Reflexive" are only included once. Gender is one of: Unknown, Neuter, Feminine,  Masculine. Unkown is the default gender but may need to be explicitely included if it is needed to combine with other genders.<BR><BR>Other is only required after Self, by itself Other is the same as OtherPluralMalePluralFemale, and OtherPlural means more than one but genders are uncertain'],
+            skip,
             skip,
             skip,
         ];
 
-        var l_sounds = [
+        var row_sounds = [
             ['P', 'Pot'],
             ['B', 'Boy'],
             ['J', 'Jar'],
@@ -148,7 +141,7 @@
             ['Th', 'That'],
         ];
 
-        var r_sounds = [
+        var col_sound = [
             ['oy', 'plOY'],
             ['ay', 'stAY'],
             ['ie', 'tIE'],
@@ -225,11 +218,10 @@
         var Xc1 = null;
 
         var max_glyph = null;
-        const max_row = getnumrow(2);
-        const max_col = 0;
+        const max_row = 0;
+        const max_col = number_col;
         const max_digit = getnum(max_row, max_col);
-        const max_lit = l_sounds[max_col][0] + r_sounds[max_row][0];
-        const zero = [[0, 0, getnumrow(1), 0]];
+        const max_lit = row_sounds[max_row][0] + col_sound[max_col][0];
 
         function mk_overlay(hdr, r8, r4, r2, r1, c4, c2, c1) {
             var img = [];
@@ -314,7 +306,7 @@
                             var images = [
                                 mk_div([
                                     mk_div([
-                                        lping, bold(l_sounds[row][0]), wrap(' '), italic(l_sounds[row][1])
+                                        lping, bold(row_sounds[row][0]), wrap(' '), italic(row_sounds[row][1])
                                     ])
                                 ])
                             ];
@@ -324,7 +316,7 @@
                                         var rping = mk_overlay(false, r8, r4, r2, r1, c4, c2, c1);
                                         if (!header) {
                                             var hdr = mk_div([
-                                                mk_overlay(true, false, false, false, false, c4, c2, c1), bold(r_sounds[col][0]), wrap(' '), italic(r_sounds[col][1])
+                                                mk_overlay(true, false, false, false, false, c4, c2, c1), bold(col_sound[col][0]), wrap(' '), italic(col_sound[col][1])
                                             ]);
                                             hdr_images.push(mk_div([
                                                 hdr, mk_div([
@@ -337,7 +329,7 @@
                                             ftr_images.push(mk_div([ftr]));
                                         }
                                         var div = mk_div([
-                                            rping, italic(l_sounds[row][0] + r_sounds[col][0])
+                                            rping, italic(row_sounds[row][0] + col_sound[col][0])
                                         ]);
                                         images.push(mk_div([
                                             div,
@@ -361,8 +353,6 @@
             }); // r8
             cbody.appendChild(mk_row('td', ftr_images));
         });
-
-
 
         function mk_img(img) {
             var elem = document.createElement("img");
@@ -418,17 +408,8 @@
             return row;
         }
 
-        function getnumrow(which) {
-            if (which == 1) return number1_row;
-            return number2_row
-        }
-
-        function getnumdigit(which) {
-            var what = number2;
-            if (which == 1) {
-                what = number1;
-            }
-            return what.length - 2;
+        function getnumdigit() {
+            return number1.length - 2;
         }
 
         function getnum(row, col) {
@@ -437,10 +418,7 @@
             return numval;
         }
 
-        function convertnum(lvl, row, val, ret) {
-            if (row == 0) {
-                return ret;
-            }
+        function convertnum(lvl, val, ret) {
             if (val == 0) {
                 return ret;
             }
@@ -461,7 +439,7 @@
                 }
             }
 
-            return convertnum(lvl, row - 1, val, ret);
+            return ret;
         }
 
         function calc() {
@@ -470,7 +448,6 @@
             var math = document.getElementById('math');
             var lit = document.getElementById('lit');
             var val_raw = number.value;
-            var seq = zero;
             var val_strip = val_raw.replace(/,/g, ''); // remove all ,
             var val = Number(val_strip); // convert to number
 
@@ -478,14 +455,12 @@
             math.innerHTML = '';
             lit.innerHTML = '';
 
-            if (isNaN(val)) {
-                lit.innerText = 'Please Enter a valid number';
+            if (isNaN(val) || val <= 0) {
+                lit.innerText = 'Please Enter a Valid Number > 0';
                 return;
             }
 
-            if (val != 0) {
-                seq = convertnum(0, 2, val, []);
-            }
+            var seq = convertnum(0, val, []);
             var msep = '['+val.toString(6)+'] ';
             var lsep = '';
             var mtext = '';
@@ -493,11 +468,11 @@
             glyph.innerHTML = '';
             var msep_after = ' + ';
             var lsep_after = '';
+            var col = number_col;
             for (var x = 0; x < seq.length; x++) {
                 var rec = seq[x];
                 var mval = rec[0];
                 var mult = rec[1]
-                var col = rec[2];
                 var row = rec[3];
 
                 if (mult > 0) {
@@ -515,7 +490,7 @@
                 var obj = mk_overlay(false, row & 8, row & 4, row & 2, row & 1, col & 4, col & 2, col & 1);
                 glyph.appendChild(obj);
                 mtext += mval;
-                tlit = l_sounds[row][0] + r_sounds[col][0];
+                tlit = row_sounds[row][0] + col_sound[col][0];
                 ltext += tlit;
 
                 msep = msep_after;
