@@ -460,7 +460,7 @@
         }
 
         function getnum(row) {
-            var num = get_ctext(row, number_col + 1, true);
+            var num = get_ctext(row+1, number_col, true);
             var numval = Number(num.replace(/[*,]/g, ''));
             return numval;
         }
