@@ -17,7 +17,7 @@
                 vertical-align: top;
             }
 
-        td:has(div>div:only-child>span:only-child) {
+        #cdiv td:has(div>div:only-child>span:only-child) {
             vertical-align: top;
         }
 
@@ -58,32 +58,35 @@
 
         td {
             max-width: 150px;
+        }
+
+        #cdiv td {
             border: solid #404040 2px;
             text-align: center;
         }
 
-        thead > tr > th:not(:first-child),
-        tbody > tr:nth-child(odd) > td:first-child,
-        tbody > tr:nth-child(even) > td:first-child {
+        #cdiv thead > tr > th:not(:first-child),
+        #cdiv tbody > tr:nth-child(odd) > td:first-child,
+        #cdiv tbody > tr:nth-child(even) > td:first-child {
             border: solid #202020 4px;
             background-color: #C0C0C0;
         }
 
-        tbody > tr > td:last-child {
+        #cdiv tbody > tr > td:last-child {
             border-right: solid #202020 4px;
             padding-right: 8px;
         }
 
-        tbody > tr > td:nth-child(2) {
+        #cdiv tbody > tr > td:nth-child(2) {
             padding-left: 8px;
         }
 
-        tbody > tr:last-child > td {
+        #cdiv tbody > tr:last-child > td {
             border-bottom: solid #202020 4px;
         }
 
-        td,
-        th {
+        #cdiv td,
+        #cdiv th {
             padding: 4px;
         }
 
@@ -91,11 +94,11 @@
             font-weight: normal;
         }
 
-        tbody > tr:nth-child(odd) > td {
+        #cdiv tbody > tr:nth-child(odd) > td {
             background-color: #E8E8E8;
         }
 
-        tbody > tr:nth-child(even) > td {
+        #cdiv tbody > tr:nth-child(even) > td {
             background-color: #D0D0D0;
         }
     </style>
