@@ -217,7 +217,7 @@
 
         const PAD_SZ = (IMG_W + IMG_H) / 10;
 
-        const SB = [[100, 90], [100, 80], [40, 80], [100, 60], [40, 60], [100, 30], [40, 20], [80, 5]];
+        const SB = [[100, 90], [100, 80], [100, 60], [60, 70], [40, 50], [100, 30], [60, 20], [80, 8]];
 
         // Globals set after document.ready()
 
@@ -255,23 +255,18 @@
             return ret;
         }
 
-        //Color Hue, Sat/Brightness -- 3 letters (Category:Color)(Hue)(B/S)
-        // Hue: L1 of 127 is greyscale:
-        //   Hue = 0
-        //   Sat = 0
-        //   Brightness = L2*100/127
-        // otherwise:
-        //   Hue = L1*360/126
-        //   Sat = L2:Vowel*100/7
-        //   Brightness = L2:Consonent*100/15
         function create_color(row, col) {
             var H = 0;
             var S = 0;
             var B = 0;
+            var adj = 0;
             if (row == 0) { // Greyscale
-                B = col * 100 / 7;
+                B = (7-col) * 100 / 7;
             } else {
-                H = (row - 1) * 360 / 15;
+                if (row > 6) {
+                    adj = 15;
+                }
+                H = adj+((row - 1) * 360 / 18);
                 S = SB[col][0];
                 B = SB[col][1];
             }
