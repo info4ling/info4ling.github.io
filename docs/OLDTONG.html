@@ -352,71 +352,116 @@
             var questions = ['Question', 'who', 'where', 'when', 'how', 'why	is true?', 'is known?'];
             var conj = ['Conjunction', 'and', 'or', 'not (but)', 'because', 'then', 'iff'];
             var interjection = ['Interjection', 'Happy', 'Suprise', 'Pain', 'Frustration', 'Sad', 'Love', 'Hate'];
-
-            var cbody = document.getElementById("cbody");
-            var chead = document.getElementById("chead");
-            var blank = wrap('');
-            var bool = [false, true];
-            var all = [];
-            var row = 0;
-            var header = false;
-            var hdr_images = [blank];
-            var ftr_images = [wrap('Comments:')];
-            bool.forEach(r8 => {
-                bool.forEach(r4 => {
-                    bool.forEach(r2 => {
-                        bool.forEach(r1 => {
-                            var col = 0;
-                            var lping = mk_overlay(true, r8, r4, r2, r1, false, false, false);
-                            var images = [
-                                mk_div([
+            {
+                var cbody = document.getElementById("cbody");
+                var chead = document.getElementById("chead");
+                var blank = wrap('');
+                var bool = [false, true];
+                var all = [];
+                var row = 0;
+                var header = false;
+                var hdr_images = [blank];
+                var ftr_images = [wrap('Comments:')];
+                bool.forEach(r8 => {
+                    bool.forEach(r4 => {
+                        bool.forEach(r2 => {
+                            bool.forEach(r1 => {
+                                var col = 0;
+                                var lping = mk_overlay(true, r8, r4, r2, r1, false, false, false);
+                                var images = [
                                     mk_div([
-                                        lping, bold(row_sounds[row][0]), wrap(' '), italic(row_sounds[row][1])
+                                        mk_div([
+                                            lping, bold(row_sounds[row][0]), wrap(' '), italic(row_sounds[row][1])
+                                        ])
                                     ])
-                                ])
-                            ];
-                            bool.forEach(c4 => {
-                                bool.forEach(c2 => {
-                                    bool.forEach(c1 => {
-                                        var rping = mk_overlay(false, r8, r4, r2, r1, c4, c2, c1);
-                                        if (!header) {
-                                            var hdr = mk_div([
-                                                mk_overlay(true, false, false, false, false, c4, c2, c1), bold(col_sounds[col][0]), wrap(' '), italic(col_sounds[col][1])
+                                ];
+                                bool.forEach(c4 => {
+                                    bool.forEach(c2 => {
+                                        bool.forEach(c1 => {
+                                            var rping = mk_overlay(false, r8, r4, r2, r1, c4, c2, c1);
+                                            if (!header) {
+                                                var hdr = mk_div([
+                                                    mk_overlay(true, false, false, false, false, c4, c2, c1), bold(col_sounds[col][0]), wrap(' '), italic(col_sounds[col][1])
+                                                ]);
+                                                hdr_images.push(mk_div([
+                                                    hdr, mk_div([
+                                                        bold(get_ctext(0, col))
+                                                    ])
+                                                ]));
+                                                var ftr = mk_div([
+                                                    wrap(get_ctext(0, col, false))
+                                                ]);
+                                                ftr_images.push(mk_div([ftr]));
+                                            }
+                                            var div = mk_div([
+                                                rping, italic(row_sounds[row][0] + col_sounds[col][0])
                                             ]);
-                                            hdr_images.push(mk_div([
-                                                hdr, mk_div([
-                                                    bold(get_ctext(0, col))
+                                            images.push(mk_div([
+                                                div,
+                                                mk_div([
+                                                    bold(get_ctext(row + 1, col))
                                                 ])
                                             ]));
-                                            var ftr = mk_div([
-                                                wrap(get_ctext(0, col, false))
-                                            ]);
-                                            ftr_images.push(mk_div([ftr]));
-                                        }
-                                        var div = mk_div([
-                                            rping, italic(row_sounds[row][0] + col_sounds[col][0])
-                                        ]);
-                                        images.push(mk_div([
-                                            div,
-                                            mk_div([
-                                                bold(get_ctext(row + 1, col))
-                                            ])
-                                        ]));
-                                        col++;
-                                    }); // c1
-                                }); // c2
-                            }); // c4
-                            if (!header) {
-                                header = true;
-                                chead.appendChild(mk_row('th', hdr_images));
-                            }
-                            cbody.appendChild(mk_row('td', images));
-                            row++;
-                        }); // r1
-                    }); // r2
-                }); // r4
-            }); // r8
-            cbody.appendChild(mk_row('td', ftr_images));
+                                            col++;
+                                        }); // c1
+                                    }); // c2
+                                }); // c4
+                                if (!header) {
+                                    header = true;
+                                    chead.appendChild(mk_row('th', hdr_images));
+                                }
+                                cbody.appendChild(mk_row('td', images));
+                                row++;
+                            }); // r1
+                        }); // r2
+                    }); // r4
+                }); // r8
+            }
+            {
+                cbody.appendChild(mk_row('td', ftr_images));
+                var xbody = document.getElementById("xbody");
+                var xhead = document.getElementById("xhead");
+                var xbool = [false, true];
+                var row = 0;
+                var header = false;
+                var hdr_images = [blank];
+                var ftr_images = [wrap('Comments:')];
+                xbool.forEach(r8 => {
+                    xbool.forEach(r4 => {
+                        xbool.forEach(r2 => {
+                            xbool.forEach(r1 => {
+                                var col = 0;
+                                var lping = mk_overlay(true, r8, r4, r2, r1, false, false, false);
+                                var images = [
+                                    mk_div([lping])
+                                ];
+                                xbool.forEach(c4 => {
+                                    xbool.forEach(c2 => {
+                                        xbool.forEach(c1 => {
+                                            var rping = mk_overlay(false, r8, r4, r2, r1, c4, c2, c1);
+                                            if (!header) {
+                                                var hdr = mk_div([
+                                                    mk_overlay(true, false, false, false, false, c4, c2, c1)
+                                                ]);
+                                                hdr_images.push(hdr);
+                                            }
+                                            var div = mk_div([rping]);
+                                            images.push(div);
+                                            col++;
+                                        }); // c1
+                                    }); // c2
+                                }); // c4
+                                if (!header) {
+                                    header = true;
+                                    xhead.appendChild(mk_row('th', hdr_images));
+                                }
+                                xbody.appendChild(mk_row('td', images));
+                                row++;
+                            }); // r1
+                        }); // r2
+                    }); // r4
+                }); // r8
+            }
         });
 
         function mk_img(img) {
@@ -654,6 +699,14 @@
                 <thead id='chead'>
                 </thead>
                 <tbody id='cbody'>
+                </tbody>
+            </table>
+        </div>
+        <div id='xdiv'>
+            <table id='xtable'>
+                <thead id='xhead'>
+                </thead>
+                <tbody id='xbody'>
                 </tbody>
             </table>
         </div>
