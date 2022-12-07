@@ -258,10 +258,9 @@
         //   Hue = L1*360/126
         //   Sat = L2:Vowel*100/7
         //   Brightness = L2:Consonent*100/15
-        function color_div(h, s, b) {
-            var div = mk_div();
-            div.style.backgroundColor = "hsl(" + h + "," + s + "%," + b + "%)";
-            return div;
+        function hsb(h, s, b) {
+            var color = "hsl(" + h + "," + s + "%," + b + "%)";
+            return color;
         }
         function create_color(row, col) {
             var H = 0;
@@ -274,7 +273,7 @@
                 S = SB[col][0];
                 B = SB[col][1];
             }
-            return color_div(H, S, B);
+            return hsb(H, S, B);
         }
 
         function mk_layer(nm) {
