@@ -104,7 +104,7 @@
 
         #xdiv table {
             -webkit-border-horizontal-spacing: 0;
-            -webkit-border-verticle-spacing: 0;
+            -webkit-border-vertical-spacing: 0;
             border-spacing: 0;
         }
     </style>
@@ -288,7 +288,7 @@
             return img;
         }
 
-        function mk_overlay(hdr, r8, r4, r2, r1, c4, c2, c1) {
+        function mk_overlay(hdr, r8, r4, r2, r1, c4, c2, c1, border=true) {
             var img = [];
             if (!hdr) {
                 img.push(Xcore.cloneNode());
@@ -328,12 +328,15 @@
             mid_div.style.maxWidth = IMG_W + 'px';
             outer_div = mk_div([mid_div]);
 
-            outer_div.style.padding = PAD_SZ + 'px';
+
             outer_div.style.minHeight = IMG_H + 'px';
             outer_div.style.minWidth = IMG_W + 'px';
             outer_div.style.maxHeight = IMG_H + 'px';
             outer_div.style.maxWidth = IMG_W + 'px';
-            outer_div.style.border = '1px solid #808080';
+            if (border) {
+                outer_div.style.padding = PAD_SZ + 'px';
+                outer_div.style.border = '1px solid #808080';
+            }
 
             return outer_div;
         }
@@ -435,18 +438,18 @@
                         xbool.forEach(r2 => {
                             xbool.forEach(r1 => {
                                 var col = 0;
-                                var lping = mk_overlay(true, r8, r4, r2, r1, false, false, false);
+                                var lping = mk_overlay(true, r8, r4, r2, r1, false, false, false, false);
                                 var images = [
                                     mk_div([lping])
                                 ];
                                 xbool.forEach(c4 => {
                                     xbool.forEach(c2 => {
                                         xbool.forEach(c1 => {
-                                            var rping = mk_overlay(false, r8, r4, r2, r1, c4, c2, c1);
+                                            var rping = mk_overlay(false, r8, r4, r2, r1, c4, c2, c1, false);
                                             rping.style.backgroundColor = create_color(row, col);
                                             if (!header) {
                                                 var hdr = mk_div([
-                                                    mk_overlay(true, false, false, false, false, c4, c2, c1)
+                                                    mk_overlay(true, false, false, false, false, c4, c2, c1, false)
                                                 ]);
                                                 hdr_images.push(hdr);
                                             }
