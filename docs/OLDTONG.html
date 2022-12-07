@@ -195,8 +195,11 @@
             skip,
         ];
 
-        var inf_val = getnum(number_digits) * 36;
-        var n_inf_val = -1 * inf_val;
+        const inf_val = getnum(number_digits) * 36;
+        const n_inf_val = -1 * inf_val;
+
+        const msep_after = ' + ';
+        const lsep_after = '';
 
         const IMG_W = 40;
         const IMG_H = 40;
@@ -558,31 +561,40 @@
             }
 
             glyph.innerHTML = '';
-            var msep_after = ' + ';
-            var lsep_after = '';
+
             for (var x = 0; x < seq.length; x++) {
                 var rec = seq[x];
-                var prow = rec[0];
-                var nrow = rec[1];
-                var nval = getnum(nrow);
+
                 var prowA = 0;
-                var prowB = prow;
+                var prowB = rec[0];
+
                 var pvalA = 0;
                 var pvalB = 0;
 
-                if (prow > 0) { // using a multiplier
-                    if (prow > 6) { // it's on the second hand
-                        prowA = 5 + Math.floor(prow / 6);
+                var nrow = rec[1];
+                var nval = getnum(nrow);
+ 
+                if (prowB > 0) { // using a multiplier
+                    if (prowB > 6) { // it's on the second hand
+                        prowA = 5 + Math.floor(prowB / 6);
                         pvalA = getnum(prowA);
-                        prowB = prow - pvalA;
+                        prowB -= pvalA;
                     }
                     pvalB = getnum(prowB);
                 }
 
                 var nlit = num_sound(nrow);
                 var nobj = mk_numglyph(nrow);
-                mtext += msep + nval;
+                if (msep == '-') { // negative
+                    mtext += msep;
+                    msep = '';
+                } else {
+                    mtext += msep + nval;
+                    msep = msep_after;
+                }
+                
                 ltext += lsep + nlit;
+                lsep = lsep_after;
 
                 glyph.appendChild(nobj);
                 if (pvalA > 0) {
@@ -609,16 +621,7 @@
                     ltext += lsep_after + plitB;
 
                     glyph.appendChild(pobjB);
-                }
-
-                if (msep == '-') {
-                    mtext += msep;
-                    msep = '';
-                } else {
-                    msep = msep_after;
-                }
-              
-                lsep = lsep_after;
+                }   
             }
             if (alt == '') {
                 math.innerText = mtext;
