@@ -207,7 +207,7 @@
 
         // Globals set after document.ready()
 
-        var number = null;
+        var input = null;
         var glyph = null;
         var math = null;
         var lit = null;
@@ -330,7 +330,7 @@
         }
 
         document.addEventListener('DOMContentLoaded', function () {
-            number = document.getElementById('number');
+            input = document.getElementById('number');
             glyph = document.getElementById('glyph');
             math = document.getElementById('math');
             lit = document.getElementById('lit');
@@ -519,7 +519,7 @@
         }
 
         function calc() {
-            const val_raw = number.value;
+            const val_raw = input.value;
             const val_strip = val_raw.replace(/[,*]/g, ''); // remove all ,
             const val = Number(val_strip); // convert to number
 
