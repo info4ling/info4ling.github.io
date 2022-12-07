@@ -442,6 +442,7 @@
                                     xbool.forEach(c2 => {
                                         xbool.forEach(c1 => {
                                             var rping = mk_overlay(false, r8, r4, r2, r1, c4, c2, c1);
+                                            rping.backgroundColor = create_color(row, col);
                                             if (!header) {
                                                 var hdr = mk_div([
                                                     mk_overlay(true, false, false, false, false, c4, c2, c1)
