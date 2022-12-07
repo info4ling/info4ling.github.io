@@ -265,7 +265,7 @@
             if (row == 0) { // Greyscale
                 B = col * 100 / 7;
             } else {
-                H = row * 360 / 16;
+                H = (row - 1) * 360 / 15;
                 S = SB[col][0];
                 B = SB[col][1];
             }
