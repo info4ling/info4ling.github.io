@@ -461,6 +461,10 @@
             return box;
         }
 
+        function cp(obj) {
+            return JSON.parse(JSON.stringify(obj));
+        }
+
         function mk_row(tp, item) {
             var row = document.createElement('tr');
             item.forEach(i => {
@@ -543,14 +547,14 @@
             var seq = null;
 
             if (val <= 0) {
-                seq = zero_seq;
+                seq = cp(zero_seq); // copy so zero_seq doesn't get modified
                 if (val <= n_inf_val) {
                     seq = n_inf_seq;
                     alt = 'Too Low';
                 } else if (val == 0) {
                     alt = 'Zero';
                 } else {
-                    seq = convertnum(-1 * val, seq); // val is negative
+                    seq = convertnum(-1 * val, seq); // val is negative, copy seq so it 
                     msep = '-';
                 }
             } else if (val >= inf_val) {
