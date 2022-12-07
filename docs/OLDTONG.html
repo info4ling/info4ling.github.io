@@ -198,7 +198,8 @@
         const inf_val = getnum(number_digits) * 36;
         const n_inf_val = -1 * inf_val;
 
-        const msep_after = ' + ';
+        const msep_after_pos = ' + ';
+        const msep_after_neg = ' - ';
         const lsep_after = '';
 
         const IMG_W = 40;
@@ -544,6 +545,7 @@
             var ltext = '';
             var alt = '';
             var msep = '';
+            var msep_after = msep_after_pos;
             var seq = null;
 
             if (val <= 0) {
@@ -556,6 +558,7 @@
                 } else {
                     seq = convertnum(-1 * val, seq); // val is negative, copy seq so it 
                     msep = '-';
+                    msep_after = msep_after_neg;
                 }
             } else if (val >= inf_val) {
                 seq = inf_seq;
@@ -607,7 +610,7 @@
                     if (pvalB > 0) {
                         var plitB = num_sound(prowB);
                         var pobjB = mk_numglyph(prowB);
-                        mtext += ' * (' + pvalA + msep_after + pvalB + ')';
+                        mtext += ' * (' + pvalA + msep_after_pos + pvalB + ')';
                         ltext += lsep_after + plitA + lsep_after + plitB;
 
                         glyph.appendChild(pobjA);
