@@ -201,12 +201,16 @@
         const IMG_W = 40;
         const IMG_H = 40;
 
-        const padsz = (IMG_W + IMG_H) / 10;
+        const PAD_SZ = (IMG_W + IMG_H) / 10;
 
         const SB = [[100, 80], [100, 50], [100, 25], [100, 10], [40, 80], [40, 50], [40, 25], [40, 10]];
 
         // Globals set after document.ready()
 
+        var number = null;
+        var glyph = null;
+        var math = null;
+        var lit = null;
         var Xcore = null;
         var Xr8 = null;
         var Xr4 = null;
@@ -315,7 +319,7 @@
             mid_div.style.maxWidth = IMG_W + 'px';
             outer_div = mk_div([mid_div]);
 
-            outer_div.style.padding = padsz + 'px';
+            outer_div.style.padding = PAD_SZ + 'px';
             outer_div.style.minHeight = IMG_H + 'px';
             outer_div.style.minWidth = IMG_W + 'px';
             outer_div.style.maxHeight = IMG_H + 'px';
@@ -326,6 +330,10 @@
         }
 
         document.addEventListener('DOMContentLoaded', function () {
+            number = document.getElementById('number');
+            glyph = document.getElementById('glyph');
+            math = document.getElementById('math');
+            lit = document.getElementById('lit');
             Xcore = mk_layer('ZBase.png');
             Xr8 = mk_layer('ZC8.png');
             Xr4 = mk_layer('ZC4.png');
@@ -511,13 +519,9 @@
         }
 
         function calc() {
-            var number = document.getElementById('number');
-            var glyph = document.getElementById('glyph');
-            var math = document.getElementById('math');
-            var lit = document.getElementById('lit');
-            var val_raw = number.value;
-            var val_strip = val_raw.replace(/[,*]/g, ''); // remove all ,
-            var val = Number(val_strip); // convert to number
+            const val_raw = number.value;
+            const val_strip = val_raw.replace(/[,*]/g, ''); // remove all ,
+            const val = Number(val_strip); // convert to number
 
             glyph.innerHTML = '';
             math.innerHTML = '';
@@ -529,20 +533,26 @@
             }
 
             var lsep = '';
-            var mtext = '';
+            var mtext = '[' + val.toString(6) + '] ';
             var ltext = '';
-            var msep = '[' + val.toString(6) + '] ';
+            var alt = '';
+            var msep = '';
             var seq = null;
 
             if (val <= 0) {
                 seq = zero_seq;
                 if (val <= n_inf_val) {
                     seq = n_inf_seq;
-                } else if (val != 0) {
-                    seq = convertnum(-1*val, seq); // val is negative
+                    alt = 'Too Low';
+                } else if (val == 0) {
+                    alt = 'Zero';
+                } else {
+                    seq = convertnum(-1 * val, seq); // val is negative
+                    msep = '-';
                 }
             } else if (val >= inf_val) {
                 seq = inf_seq;
+                alt = 'Too High';
             } else {
                 seq = convertnum(val, []);
             }
@@ -587,7 +597,7 @@
                         glyph.appendChild(pobjA);
                         glyph.appendChild(pobjB);
                     } else {
-                        mtext +=  ' * ' + pvalA;
+                        mtext += ' * ' + pvalA;
                         ltext += lsep_after + plitA;
 
                         glyph.appendChild(pobjA);
@@ -601,10 +611,20 @@
                     glyph.appendChild(pobjB);
                 }
 
-                msep = msep_after;
+                if (msep == '-') {
+                    mtext += msep;
+                    msep = '';
+                } else {
+                    msep = msep_after;
+                }
+              
                 lsep = lsep_after;
             }
-            math.innerText = mtext;
+            if (alt == '') {
+                math.innerText = mtext;
+            } else {
+                math.innerText = alt;
+            }
             lit.innerText = ltext;
         }
 
@@ -628,4 +648,4 @@
         </div>
     </div>
 </body>
-</html>
+</html>nnn                             
