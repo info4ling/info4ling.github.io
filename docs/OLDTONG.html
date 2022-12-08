@@ -8,7 +8,20 @@
             padding: 10px;
         }
 
-            #cdiv th > div {
+            #cdiv th:not(:first-child) {
+                min-width: 150px;
+            }
+
+                #cdiv th > div {
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    grid-template-rows: 2fr 1fr;
+                    align-items: center;
+                    height: 100%;
+                    vertical-align: middle;
+                }
+
+            #cdiv td:not(:first-child):not(empty) > div {
                 display: grid;
                 grid-template-columns: 1fr 1fr;
                 grid-template-rows: 2fr 1fr;
@@ -16,51 +29,77 @@
                 height: 100%;
                 vertical-align: middle;
             }
-            #cdiv td:not(:first-child):not(:last-child):not(empty) > div {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                grid-template-rows: 3fr 1fr;
-                align-items: center;
-                height: 100%;
-                vertical-align: middle;
-            }
 
             #cdiv td:first-child > div {
                 display: grid;
-                grid-template-columns: 1fr;
-                grid-template-rows: 3fr 1fr;
+                grid-template-columns: auto;
+                grid-template-rows: 2fr 1fr;
                 align-items: center;
                 height: 100%;
                 vertical-align: middle;
-            }
-
-            #cdiv td:first-child > div {
-                display: grid;
-                grid-template-columns: 1fr;
-                grid-template-rows: 1fr;
-                align-items: center;
-                height: 100%;
-                vertical-align: top;
             }
 
             #cdiv td:has(div>div:only-child>span:only-child) {
                 vertical-align: top;
             }
 
-        #cdiv td > div > div:nth-child(2) {
-            max-width: min-content;
-        }
+            #cdiv td {
+                border: solid #404040 2px;
+                text-align: center;
+                max-width: 150px;
+            }
 
-        #cdiv td div span {
-            white-space: pre-wrap;
-            overflow-wrap: break-word;
-            width: 100%;
-        }
+                #cdiv td > div > div:nth-child(2) {
+                    max-width: min-content;
+                }
 
-        body > div {
-            display: flex;
-            flex-direction: column;
-        }
+                #cdiv td div span {
+                    white-space: pre-wrap;
+                    overflow-wrap: break-word;
+                    width: 100%;
+                }
+
+                #cdiv td > div > div:has(>span:only-child) {
+                    align-self: start;
+                    max-width: 150px;
+                    text-align: left;
+                }
+
+            #cdiv td,
+            #cdiv th {
+                padding: 4px;
+            }
+
+            #cdiv thead > tr > th:not(:first-child),
+            #cdiv tbody > tr:nth-child(odd) > td:first-child,
+            #cdiv tbody > tr:nth-child(even) > td:first-child {
+                border: solid #202020 4px;
+                background-color: #C0C0C0;
+            }
+
+            #cdiv tbody {
+            }
+
+                #cdiv tbody > tr > td:last-child {
+                    border-right: solid #202020 4px;
+                    padding-right: 8px;
+                }
+
+                #cdiv tbody > tr > td:nth-child(2) {
+                    padding-left: 8px;
+                }
+
+                #cdiv tbody > tr:last-child > td {
+                    border-bottom: solid #202020 4px;
+                }
+
+                #cdiv tbody > tr:nth-child(odd) > td {
+                    background-color: #E8E8E8;
+                }
+
+                #cdiv tbody > tr:nth-child(even) > td {
+                    background-color: #D0D0D0;
+                }
 
         #glyph {
             display: flex;
@@ -72,66 +111,17 @@
                 padding: 4px !important;
             }
 
+        body > div {
+            display: flex;
+            flex-direction: column;
+        }
+
         table {
             border-collapse: collapse;
         }
 
-        td > div > div:has(>span:only-child) {
-            align-self: start;
-            max-width: 150px;
-            text-align: left;
-        }
-
-        td {
-            max-width: 150px;
-        }
-
-        #cdiv td {
-            border: solid #404040 2px;
-            text-align: center;
-        }
-
-        #cdiv thead > tr > th:not(:first-child),
-        #cdiv tbody > tr:nth-child(odd) > td:first-child,
-        #cdiv tbody > tr:nth-child(even) > td:first-child {
-            border: solid #202020 4px;
-            background-color: #C0C0C0;
-        }
-
-        #cdiv tbody > tr > td:last-child {
-            border-right: solid #202020 4px;
-            padding-right: 8px;
-        }
-
-        #cdiv tbody > tr > td:nth-child(2) {
-            padding-left: 8px;
-        }
-
-        #cdiv tbody > tr:last-child > td {
-            border-bottom: solid #202020 4px;
-        }
-
-        #cdiv td,
-        #cdiv th {
-            padding: 4px;
-        }
-
         th {
             font-weight: normal;
-        }
-
-        #cdiv tbody > tr:nth-child(odd) > td {
-            background-color: #E8E8E8;
-        }
-
-        #cdiv tbody > tr:nth-child(even) > td {
-            background-color: #D0D0D0;
-        }
-
-        #xdiv table {
-            -webkit-border-horizontal-spacing: 0;
-            -webkit-border-vertical-spacing: 0;
-            border-spacing: 0;
         }
     </style>
 </head>
@@ -167,7 +157,7 @@
             ['oe', 'fOE'],
             ['eh', 'mEH'],
             ['ah', 'blAH'],
-            ['ee', 'fEEt'],        
+            ['ee', 'fEEt'],
         ];
 
         const punct = ['Punctuation', "STOP '.'", "Start Paren '('", "Start Quote '\"'", "Question '?'", "Excitement '!'", "End Paren ')'", "Quote '\"'", "Elipses '...'", 'Sarcasm', 'Rhetoric'];
@@ -218,7 +208,9 @@
             + zero_lit + zero_lit + ' means limitless (above 2,176,782,335)<BR><BR>'
             + zero_lit + zero_lit + zero_lit + ' means below -2,176,782,335)'
 
-        const skip = [[], ''];
+        const spaces = ' &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp';
+
+        const skip = [[], spaces];
 
         const ctext = [
             [punct, punct_txt],
@@ -230,8 +222,6 @@
             skip,
             skip,
         ];
-
-        const spaces = ' &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp';
 
         const inf_val = getnum(number_digits) * 36;
         const n_inf_val = -1 * inf_val;
@@ -266,12 +256,12 @@
 
         function get_ctext(row, col, is_data = true) {
             if (col >= ctext.length) {
-                return '';
+                return spaces;
             }
             if (is_data) {
                 var number_col = ctext[col][0];
                 if (row >= number_col.length) {
-                    return '';
+                    return spaces;
                 }
                 return number_col[row]
             }
@@ -289,12 +279,12 @@
             var B = 0;
             var adj = 0;
             if (row == 0) { // Greyscale
-                B = (7-col) * 100 / 7;
+                B = (7 - col) * 100 / 7;
             } else {
                 if (row > 6) {
                     adj = 15;
                 }
-                H = adj+((row - 1) * 360 / 18);
+                H = adj + ((row - 1) * 360 / 18);
                 S = SB[col][0];
                 B = SB[col][1];
             }
@@ -325,7 +315,7 @@
             return img;
         }
 
-        function mk_overlay(hdr, r8, r4, r2, r1, c4, c2, c1, padding=true) {
+        function mk_overlay(hdr, r8, r4, r2, r1, c4, c2, c1, padding = true) {
             var img = [];
             if (!hdr) {
                 img.push(Xcore.cloneNode());
@@ -432,16 +422,16 @@
                                                     italic(col_sounds[col][1]),
                                                 ]));
                                                 ftr_images.push(mk_div([ // double div to control overflow
-                                                        mk_div([
-                                                            wrap(get_ctext(0, col, false)),
-                                                            ]),
+                                                    mk_div([
+                                                        wrap(get_ctext(0, col, false)),
+                                                    ]),
                                                 ]));
                                             }
                                             images.push(mk_div([
                                                 mk_overlay(false, r8, r4, r2, r1, c4, c2, c1),
                                                 color_circle(row, col),
                                                 italic(row_sounds[row][0] + col_sounds[col][0]),
-                                                bold(get_ctext(row + 1, col)+spaces),                                                                                                  
+                                                bold(get_ctext(row + 1, col) + spaces),
                                             ]));
                                             col++;
                                         }); // c1
@@ -599,7 +589,7 @@
                 } else if (val == 0) {
                     alt = 'Zero';
                 } else {
-                    seq = convertnum(-1 * val, seq); // val is negative, copy seq so it 
+                    seq = convertnum(-1 * val, seq); // val is negative, copy seq so it
                     msep = '-';
                     msep_after = msep_after_neg;
                 }
@@ -623,7 +613,7 @@
 
                 var nrow = rec[1];
                 var nval = getnum(nrow);
- 
+
                 if (prowB > 0) { // using a multiplier
                     if (prowB > 6) { // it's on the second hand
                         prowA = 5 + Math.floor(prowB / 6);
@@ -642,7 +632,7 @@
                     mtext += msep + nval;
                     msep = msep_after;
                 }
-                
+
                 ltext += lsep + nlit;
                 lsep = lsep_after;
 
@@ -671,7 +661,7 @@
                     ltext += lsep_after + plitB;
 
                     glyph.appendChild(pobjB);
-                }   
+                }
             }
             if (alt == '') {
                 math.innerText = mtext;
