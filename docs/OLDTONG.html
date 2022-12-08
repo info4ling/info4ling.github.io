@@ -8,18 +8,44 @@
             padding: 10px;
         }
 
-            #cdiv th > div,
-            #cdiv td:not(:first-child) > div {
+            #cdiv th > div {
                 display: grid;
                 grid-template-columns: 1fr 1fr;
+                grid-template-rows: 2fr 1fr;
+                align-items: center;
+                height: 100%;
+                vertical-align: middle;
+            }
+            #cdiv td:not(:first-child):not(:last-child):not(empty) > div {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                grid-template-rows: 3fr 1fr;
+                align-items: center;
+                height: 100%;
+                vertical-align: middle;
+            }
+
+            #cdiv td:first-child > div {
+                display: grid;
+                grid-template-columns: 1fr;
+                grid-template-rows: 3fr 1fr;
+                align-items: center;
+                height: 100%;
+                vertical-align: middle;
+            }
+
+            #cdiv td:first-child > div {
+                display: grid;
+                grid-template-columns: 1fr;
+                grid-template-rows: 1fr;
                 align-items: center;
                 height: 100%;
                 vertical-align: top;
             }
 
-        #cdiv td:has(div>div:only-child>span:only-child) {
-            vertical-align: top;
-        }
+            #cdiv td:has(div>div:only-child>span:only-child) {
+                vertical-align: top;
+            }
 
         #cdiv td > div > div:nth-child(2) {
             max-width: min-content;
@@ -205,6 +231,8 @@
             skip,
         ];
 
+        const spaces = ' &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp';
+
         const inf_val = getnum(number_digits) * 36;
         const n_inf_val = -1 * inf_val;
 
@@ -273,6 +301,20 @@
             return `hsl(${H} ${S}% ${B}%)`;
         }
 
+        function color_circle(row, col) {
+            var circle = document.createElement('div');
+            circle.style.borderRadius = '50% 5% 50%'; // elliptical
+            circle.style.backgroundColor = create_color(row, col);
+            circle.style.border = '5px ridge grey';
+            circle.style.minHeight = IMG_H + 'px';
+            circle.style.minWidth = IMG_W + 'px';
+            circle.style.maxHeight = IMG_H + 'px';
+            circle.style.maxWidth = IMG_W + 'px';
+            circle.margin = 'auto';
+            return circle;
+        }
+
+
         function mk_layer(nm) {
             var img = mk_img(nm);
             img.style.position = 'absolute';
@@ -323,7 +365,6 @@
             mid_div.style.maxWidth = IMG_W + 'px';
             outer_div = mk_div([mid_div]);
 
-
             outer_div.style.minHeight = IMG_H + 'px';
             outer_div.style.minWidth = IMG_W + 'px';
             outer_div.style.maxHeight = IMG_H + 'px';
@@ -370,40 +411,37 @@
                         bool.forEach(r2 => {
                             bool.forEach(r1 => {
                                 var col = 0;
-                                var lping = mk_overlay(true, r8, r4, r2, r1, false, false, false);
                                 var images = [
                                     mk_div([
+                                        mk_overlay(true, r8, r4, r2, r1, false, false, false),
                                         mk_div([
-                                            lping, bold(row_sounds[row][0]), wrap(' '), italic(row_sounds[row][1])
-                                        ])
+                                            bold(row_sounds[row][0]),
+                                            wrap(' '),
+                                            italic(row_sounds[row][1]),
+                                        ]),
                                     ])
                                 ];
                                 bool.forEach(c4 => {
                                     bool.forEach(c2 => {
                                         bool.forEach(c1 => {
-                                            var rping = mk_overlay(false, r8, r4, r2, r1, c4, c2, c1);
                                             if (!header) {
-                                                var hdr = mk_div([
-                                                    mk_overlay(true, false, false, false, false, c4, c2, c1), bold(col_sounds[col][0]), wrap(' '), italic(col_sounds[col][1])
-                                                ]);
                                                 hdr_images.push(mk_div([
-                                                    hdr, mk_div([
-                                                        bold(get_ctext(0, col))
-                                                    ])
+                                                    mk_overlay(true, false, false, false, false, c4, c2, c1),
+                                                    bold(get_ctext(0, col)),
+                                                    bold(col_sounds[col][0]),
+                                                    italic(col_sounds[col][1]),
                                                 ]));
-                                                var ftr = mk_div([
-                                                    wrap(get_ctext(0, col, false))
-                                                ]);
-                                                ftr_images.push(mk_div([ftr]));
+                                                ftr_images.push(mk_div([ // double div to control overflow
+                                                        mk_div([
+                                                            wrap(get_ctext(0, col, false)),
+                                                            ]),
+                                                ]));
                                             }
-                                            var div = mk_div([
-                                                rping, italic(row_sounds[row][0] + col_sounds[col][0])
-                                            ]);
                                             images.push(mk_div([
-                                                div,
-                                                mk_div([
-                                                    bold(get_ctext(row + 1, col))
-                                                ])
+                                                mk_overlay(false, r8, r4, r2, r1, c4, c2, c1),
+                                                color_circle(row, col),
+                                                italic(row_sounds[row][0] + col_sounds[col][0]),
+                                                bold(get_ctext(row + 1, col)+spaces),                                                                                                  
                                             ]));
                                             col++;
                                         }); // c1
@@ -420,51 +458,6 @@
                     }); // r4
                 }); // r8
                 cbody.appendChild(mk_row('td', ftr_images));
-            }
-            {
-                var xbody = document.getElementById("xbody");
-                var xhead = document.getElementById("xhead");
-                var xbool = [false, true];
-                var row = 0;
-                var header = false;
-                var hdr_images = [blank];
-                var ftr_images = [wrap('Comments:')];
-                xbool.forEach(r8 => {
-                    xbool.forEach(r4 => {
-                        xbool.forEach(r2 => {
-                            xbool.forEach(r1 => {
-                                var col = 0;
-                                var lping = mk_overlay(true, r8, r4, r2, r1, false, false, false, false);
-                                var images = [
-                                    mk_div([lping])
-                                ];
-                                xbool.forEach(c4 => {
-                                    xbool.forEach(c2 => {
-                                        xbool.forEach(c1 => {
-                                            var rping = mk_overlay(false, r8, r4, r2, r1, c4, c2, c1, false);
-                                            rping.style.backgroundColor = create_color(row, col);
-                                            if (!header) {
-                                                var hdr = mk_div([
-                                                    mk_overlay(true, false, false, false, false, c4, c2, c1, false)
-                                                ]);
-                                                hdr_images.push(hdr);
-                                            }
-                                            var div = mk_div([rping]);
-                                            images.push(div);
-                                            col++;
-                                        }); // c1
-                                    }); // c2
-                                }); // c4
-                                if (!header) {
-                                    header = true;
-                                    xhead.appendChild(mk_row('th', hdr_images));
-                                }
-                                xbody.appendChild(mk_row('td', images));
-                                row++;
-                            }); // r1
-                        }); // r2
-                    }); // r4
-                }); // r8
             }
         });
 
