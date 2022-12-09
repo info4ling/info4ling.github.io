@@ -43,7 +43,7 @@
                 vertical-align: top;
             }
 
-            #cdiv td {
+            td {
                 border: solid #404040 2px;
                 text-align: center;
                 max-width: 150px;
@@ -70,12 +70,13 @@
                 padding: 4px;
             }
 
-            #cdiv thead > tr > th:not(:first-child),
-            #cdiv tbody > tr:nth-child(odd) > td:first-child,
-            #cdiv tbody > tr:nth-child(even) > td:first-child {
-                border: solid #202020 4px;
-                background-color: #C0C0C0;
-            }
+        #count_body > tr > td:nth-child(odd),
+        thead > tr > th:not(:first-child),
+        tbody > tr:nth-child(odd) > td:first-child,
+        tbody > tr:nth-child(even) > td:first-child {
+            border: solid #202020 4px;
+            background-color: #C0C0C0;
+        }
 
             #cdiv tbody {
             }
@@ -93,11 +94,11 @@
                     border-bottom: solid #202020 4px;
                 }
 
-                #cdiv tbody > tr:nth-child(odd) > td {
+                tbody > tr:nth-child(odd) > td {
                     background-color: #E8E8E8;
                 }
 
-                #cdiv tbody > tr:nth-child(even) > td {
+                tbody > tr:nth-child(even) > td {
                     background-color: #D0D0D0;
                 }
 
@@ -105,11 +106,17 @@
             display: flex;
             flex-direction: row;
         }
-
             .glyph > div {
                 border: none !important;
-                padding: 4px !important;
             }
+
+        #glyph > div {
+            padding: 4px !important;
+        }
+
+        #count {
+            margin-top: 25px;
+        }
 
         body > div {
             display: flex;
@@ -296,6 +303,7 @@
             circle.style.borderRadius = '50% 5% 50%'; // elliptical
             circle.style.backgroundColor = create_color(row, col);
             circle.style.border = '5px ridge grey';
+            force_size(circle, IMG_H, IMG_W);
             circle.style.minHeight = IMG_H + 'px';
             circle.style.minWidth = IMG_W + 'px';
             circle.style.maxHeight = IMG_H + 'px';
@@ -310,12 +318,22 @@
             img.style.position = 'absolute';
             img.style.left = 0;
             img.style.top = 0;
-            img.style.width = IMG_W + 'px';
-            img.style.height = IMG_H + 'px';
+            img.style.width = '100%';
+            img.style.height = '100%';
+
+         //   img.style.width = IMG_W + 'px';
+         //   img.style.height = IMG_H + 'px';
             return img;
         }
 
-        function mk_overlay(hdr, r8, r4, r2, r1, c4, c2, c1, padding = true) {
+        function force_size(node, img_h, img_w) {
+            node.style.minHeight = img_h + 'px';
+            node.style.minWidth = img_w + 'px';
+            node.style.maxHeight = img_h + 'px';
+            node.style.maxWidth = img_w + 'px';
+        }
+
+        function mk_overlay(hdr, r8, r4, r2, r1, c4, c2, c1, padding = true, img_h=IMG_H, img_w=IMG_W, pad_sz=PAD_SZ) {
             var img = [];
             if (!hdr) {
                 img.push(Xcore.cloneNode());
@@ -342,26 +360,17 @@
                 img.push(Xc1.cloneNode());
             }
             inner_div = mk_div(img);
-            inner_div.style.minHeight = IMG_H + 'px';
-            inner_div.style.minWidth = IMG_W + 'px';
-            inner_div.style.maxHeight = IMG_H + 'px';
-            inner_div.style.maxWidth = IMG_W + 'px';
+            force_size(inner_div, img_h, img_w);
 
             mid_div = mk_div([inner_div]);
             mid_div.style.position = 'relative';
-            mid_div.style.minHeight = IMG_H + 'px';
-            mid_div.style.minWidth = IMG_W + 'px';
-            mid_div.style.maxHeight = IMG_H + 'px';
-            mid_div.style.maxWidth = IMG_W + 'px';
+            force_size(mid_div, img_h, img_w);
+
             outer_div = mk_div([mid_div]);
+            force_size(outer_div, img_h, img_w);
 
-            outer_div.style.minHeight = IMG_H + 'px';
-            outer_div.style.minWidth = IMG_W + 'px';
-            outer_div.style.maxHeight = IMG_H + 'px';
-            outer_div.style.maxWidth = IMG_W + 'px';
             if (padding) {
-                outer_div.style.padding = PAD_SZ + 'px';
-
+                outer_div.style.padding = pad_sz + 'px';
             }
             outer_div.style.border = '1px solid #808080';
 
@@ -454,7 +463,8 @@
             for (var cnt = 1; cnt < 36; ++cnt) {
                 var count_glyph = document.createElement('div');
                 count_glyph.classList.add('glyph');
-                do_calc(cnt, count_glyph);
+                count_glyph.title = cnt.toString();
+                do_calc(cnt, count_glyph, null, null, IMG_H/2.5, IMG_W/2.5, PAD_SZ/4);
                 count_images.push(count_glyph);
             }
             counter.appendChild(mk_row('td', count_images));
@@ -534,8 +544,11 @@
             return num.includes('*');
         }
 
-        function mk_numglyph(row) {
-            return mk_overlay(false, row & 8, row & 4, row & 2, row & 1, number_col & 4, number_col & 2, number_col & 1);
+        function mk_numglyph(row, cond, h, w, p) {
+            if (cond) {
+                return mk_overlay(false, row & 8, row & 4, row & 2, row & 1, number_col & 4, number_col & 2, number_col & 1, true, h, w, p);
+            }
+            return null;
         }
 
         function convertnum(val, ret) {
@@ -575,7 +588,7 @@
 
             do_calc(val, calc_glyph, calc_math, calc_lit);
         }
-        function do_calc(val, glyph=null, math = null, lit = null) {
+        function do_calc(val, glyph=null, math = null, lit = null, h=IMG_H, w=IMG_W, p=PAD_SZ) {
             if (glyph != null) {
                 glyph.innerHTML = '';
             }
@@ -641,8 +654,10 @@
                     pvalB = getnum(prowB);
                 }
 
+                args = [glyph != null, h, w, p];
+
                 var nlit = num_sound(nrow);
-                var nobj = mk_numglyph(nrow);
+                var nobj = mk_numglyph(nrow, ...args);
                 if (msep == '-') { // negative
                     mtext += msep;
                     msep = '';
@@ -659,10 +674,10 @@
                 }
                 if (pvalA > 0) {
                     var plitA = num_sound(prowA);
-                    var pobjA = mk_numglyph(prowA);
+                    var pobjA = mk_numglyph(prowA, ...args);
                     if (pvalB > 0) {
                         var plitB = num_sound(prowB);
-                        var pobjB = mk_numglyph(prowB);
+                        var pobjB = mk_numglyph(prowB, ...args);
                         mtext += ' * (' + pvalA + msep_after_pos + pvalB + ')';
                         ltext += lsep_after + plitA + lsep_after + plitB;
 
@@ -673,12 +688,13 @@
                     } else {
                         mtext += ' * ' + pvalA;
                         ltext += lsep_after + plitA;
-
-                        glyph.appendChild(pobjA);
+                        if (glyph != null) {
+                            glyph.appendChild(pobjA);
+                        }
                     }
                 } else if (pvalB > 0) {
                     var plitB = num_sound(prowB);
-                    var pobjB = mk_numglyph(prowB);
+                    var pobjB = mk_numglyph(prowB, ...args);
                     mtext += ' * ' + pvalB;
                     ltext += lsep_after + plitB;
                     if (glyph != null) {
