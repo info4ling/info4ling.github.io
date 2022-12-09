@@ -12,14 +12,14 @@
                 min-width: 150px;
             }
 
-                #cdiv th > div {
-                    display: grid;
-                    grid-template-columns: 1fr 1fr;
-                    grid-template-rows: 2fr 1fr;
-                    align-items: center;
-                    height: 100%;
-                    vertical-align: middle;
-                }
+            #cdiv th > div {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                grid-template-rows: 2fr 1fr;
+                align-items: center;
+                height: 100%;
+                vertical-align: middle;
+            }
 
             #cdiv td:not(:first-child):not(empty) > div {
                 display: grid;
@@ -101,12 +101,12 @@
                     background-color: #D0D0D0;
                 }
 
-        #glyph {
+        .glyph {
             display: flex;
             flex-direction: row;
         }
 
-            #glyph > div {
+            .glyph > div {
                 border: none !important;
                 padding: 4px !important;
             }
@@ -240,9 +240,9 @@
         // Globals set after document.ready()
 
         var input = null;
-        var glyph = null;
-        var math = null;
-        var lit = null;
+        var calc_glyph = null;
+        var calc_math = null;
+        var calc_lit = null;
         var Xcore = null;
         var Xr8 = null;
         var Xr4 = null;
@@ -370,9 +370,9 @@
 
         document.addEventListener('DOMContentLoaded', function () {
             input = document.getElementById('number');
-            glyph = document.getElementById('glyph');
-            math = document.getElementById('math');
-            lit = document.getElementById('lit');
+            calc_glyph = document.getElementById('glyph');
+            calc_math = document.getElementById('math');
+            calc_lit = document.getElementById('lit');
             Xcore = mk_layer('ZBase.png');
             Xr8 = mk_layer('ZC8.png');
             Xr4 = mk_layer('ZC4.png');
@@ -449,6 +449,15 @@
                 }); // r8
                 cbody.appendChild(mk_row('td', ftr_images));
             }
+            var counter = document.getElementById('count_body');
+            var count_images = []
+            for (var cnt = 1; cnt < 36; ++cnt) {
+                var count_glyph = document.createElement('div');
+                count_glyph.classList.add('glyph');
+                do_calc(cnt, count_glyph);
+                count_images.push(count_glyph);
+            }
+            counter.appendChild(mk_row('td', count_images));
         });
 
         function mk_img(img) {
@@ -564,9 +573,20 @@
             const val_strip = val_raw.replace(/[,*]/g, ''); // remove all ,
             const val = Number(val_strip); // convert to number
 
-            glyph.innerHTML = '';
-            math.innerHTML = '';
-            lit.innerHTML = '';
+            do_calc(val, calc_glyph, calc_math, calc_lit);
+        }
+        function do_calc(val, glyph=null, math = null, lit = null) {
+            if (glyph != null) {
+                glyph.innerHTML = '';
+            }
+
+            if (math != null) {
+                math.innerHTML = '';
+            }
+
+            if (lit != null) {
+                lit.innerHTML = '';
+            }
 
             if (isNaN(val)) {
                 lit.innerText = 'Please Enter a Valid Number';
@@ -599,8 +619,6 @@
             } else {
                 seq = convertnum(val, []);
             }
-
-            glyph.innerHTML = '';
 
             for (var x = 0; x < seq.length; x++) {
                 var rec = seq[x];
@@ -636,7 +654,9 @@
                 ltext += lsep + nlit;
                 lsep = lsep_after;
 
-                glyph.appendChild(nobj);
+                if (glyph != null) {
+                    glyph.appendChild(nobj);
+                }
                 if (pvalA > 0) {
                     var plitA = num_sound(prowA);
                     var pobjA = mk_numglyph(prowA);
@@ -646,8 +666,10 @@
                         mtext += ' * (' + pvalA + msep_after_pos + pvalB + ')';
                         ltext += lsep_after + plitA + lsep_after + plitB;
 
-                        glyph.appendChild(pobjA);
-                        glyph.appendChild(pobjB);
+                        if (glyph != null) {
+                            glyph.appendChild(pobjA);
+                            glyph.appendChild(pobjB);
+                        }
                     } else {
                         mtext += ' * ' + pvalA;
                         ltext += lsep_after + plitA;
@@ -659,27 +681,37 @@
                     var pobjB = mk_numglyph(prowB);
                     mtext += ' * ' + pvalB;
                     ltext += lsep_after + plitB;
-
-                    glyph.appendChild(pobjB);
+                    if (glyph != null) {
+                        glyph.appendChild(pobjB);
+                    }
                 }
             }
-            if (alt == '') {
-                math.innerText = mtext;
-            } else {
-                math.innerText = alt;
+            if (math != null) {
+                if (alt == '') {
+                    math.innerText = mtext;
+                } else {
+                    math.innerText = alt;
+                }
             }
-            lit.innerText = ltext;
+            if (lit != null) {
+                lit.innerText = ltext;
+            }
         }
 
     </script>
     <div>
         <div>
-            <label for="number">Enter a Number:</label>
-            <input type="text" id="number" name="number"><br><br>
-            <button type="button" onclick="calc();">Calculate</button>
-            <div id='math'></div>
-            <div id='glyph'></div>
-            <div id='lit'></div>
+            <div>
+                <label for="number">Enter a Number:</label>
+                <input type="text" id="number" name="number"><br><br>
+                <button type="button" onclick="calc();">Calculate</button>
+                <div id='math'></div>
+                <div id='glyph' class="glyph"></div>
+                <div id='lit'></div>
+            </div>
+            <div>
+                <table id="count"><tbody id="count_body"></tbody></table>
+            </div>
         </div>
         <div id='cdiv'>
             <table id='ctable'>
