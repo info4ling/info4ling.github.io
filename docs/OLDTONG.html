@@ -1,18 +1,23 @@
 <header>
 </header>
-<html>
+<html style="background-color: #c0c0d0">
 <head>
     <style>
+        .tab_button {
+            border: 0 none;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+        }
 
-        #cdiv {
+        #glyphmap {
             padding: 10px;
         }
 
-            #cdiv th:not(:first-child) {
+            #glyphmap th:not(:first-child) {
                 min-width: 150px;
             }
 
-            #cdiv th > div {
+            #glyphmap th > div {
                 display: grid;
                 grid-template-columns: 1fr 1fr;
                 grid-template-rows: 2fr 1fr;
@@ -21,7 +26,7 @@
                 vertical-align: middle;
             }
 
-            #cdiv td:not(:first-child):not(empty) > div {
+            #glyphmap td:not(:first-child):not(empty) > div {
                 display: grid;
                 grid-template-columns: 1fr 1fr;
                 grid-template-rows: 2fr 1fr;
@@ -30,7 +35,7 @@
                 vertical-align: middle;
             }
 
-            #cdiv td:first-child > div {
+            #glyphmap td:first-child > div {
                 display: grid;
                 grid-template-columns: auto;
                 grid-template-rows: 2fr 1fr;
@@ -39,83 +44,98 @@
                 vertical-align: middle;
             }
 
-            #cdiv td:has(div>div:only-child>span:only-child) {
+            #glyphmap td:has(div>div:only-child>span:only-child) {
                 vertical-align: top;
             }
 
-            td {
-                border: solid #404040 2px;
-                text-align: center;
-                max-width: 150px;
-            }
+        td {
+            border: solid #404040 2px;
+            text-align: center;
+            max-width: 150px;
+        }
 
-                #cdiv td > div > div:nth-child(2) {
-                    max-width: min-content;
-                }
+        #glyphmap td > div > div:nth-child(2) {
+            max-width: min-content;
+        }
 
-                #cdiv td div span {
-                    white-space: pre-wrap;
-                    overflow-wrap: break-word;
-                    width: 100%;
-                }
+        #glyphmap td div span {
+            white-space: pre-wrap;
+            overflow-wrap: break-word;
+            width: 100%;
+        }
 
-                #cdiv td > div > div:has(>span:only-child) {
-                    align-self: start;
-                    max-width: 150px;
-                    text-align: left;
-                }
+        #glyphmap td > div > div:has(>span:only-child) {
+            align-self: start;
+            max-width: 150px;
+            text-align: left;
+        }
 
-            #cdiv td,
-            #cdiv th {
-                padding: 4px;
-            }
+        #glyphmap td,
+        #glyphmap th {
+            padding: 4px;
+        }
 
         #count_body > tr > td:nth-child(odd),
-        thead > tr > th:not(:first-child),
-        tbody > tr:nth-child(odd) > td:first-child,
-        tbody > tr:nth-child(even) > td:first-child {
+        #count_body2 > tr > td:nth-child(odd),
+        #glyphmap thead > tr > th:not(:first-child),
+        #glyphmap tbody > tr:nth-child(odd) > td:first-child,
+        #glyphmap tbody > tr:nth-child(even) > td:first-child {
             border: solid #202020 4px;
             background-color: #C0C0C0;
         }
 
-            #cdiv tbody {
+        #glyphmap tbody {
+        }
+
+            #glyphmap tbody > tr > td:last-child {
+                border-right: solid #202020 4px;
+                padding-right: 8px;
             }
 
-                #cdiv tbody > tr > td:last-child {
-                    border-right: solid #202020 4px;
-                    padding-right: 8px;
-                }
+            #glyphmap tbody > tr > td:nth-child(2) {
+                padding-left: 8px;
+            }
 
-                #cdiv tbody > tr > td:nth-child(2) {
-                    padding-left: 8px;
-                }
+            #glyphmap tbody > tr:last-child > td {
+                border-bottom: solid #202020 4px;
+            }
 
-                #cdiv tbody > tr:last-child > td {
-                    border-bottom: solid #202020 4px;
-                }
+        tbody > tr:nth-child(odd) > td {
+            background-color: #E8E8E8;
+        }
 
-                tbody > tr:nth-child(odd) > td {
-                    background-color: #E8E8E8;
-                }
-
-                tbody > tr:nth-child(even) > td {
-                    background-color: #D0D0D0;
-                }
+        tbody > tr:nth-child(even) > td {
+            background-color: #D0D0D0;
+        }
 
         .glyph {
             display: flex;
             flex-direction: row;
         }
+
             .glyph > div {
                 border: none !important;
             }
+
+        #glyph {
+            min-height: 50px;
+            margin-left: 10px;
+        }
+
+        #math,
+        #lit {
+            min-height: 3ex;
+            margin: 20px;
+        }
 
         #glyph > div {
             padding: 4px !important;
         }
 
-        #count {
+        #count,
+        #count2 {
             margin-top: 25px;
+            margin-bottom: 25px;
         }
 
         body > div {
@@ -321,8 +341,8 @@
             img.style.width = '100%';
             img.style.height = '100%';
 
-         //   img.style.width = IMG_W + 'px';
-         //   img.style.height = IMG_H + 'px';
+            //   img.style.width = IMG_W + 'px';
+            //   img.style.height = IMG_H + 'px';
             return img;
         }
 
@@ -333,7 +353,7 @@
             node.style.maxWidth = img_w + 'px';
         }
 
-        function mk_overlay(hdr, r8, r4, r2, r1, c4, c2, c1, padding = true, img_h=IMG_H, img_w=IMG_W, pad_sz=PAD_SZ) {
+        function mk_overlay(hdr, r8, r4, r2, r1, c4, c2, c1, padding = true, img_h = IMG_H, img_w = IMG_W, pad_sz = PAD_SZ) {
             var img = [];
             if (!hdr) {
                 img.push(Xcore.cloneNode());
@@ -459,15 +479,29 @@
                 cbody.appendChild(mk_row('td', ftr_images));
             }
             var counter = document.getElementById('count_body');
-            var count_images = []
-            for (var cnt = 1; cnt < 36; ++cnt) {
-                var count_glyph = document.createElement('div');
-                count_glyph.classList.add('glyph');
-                count_glyph.title = cnt.toString();
-                do_calc(cnt, count_glyph, null, null, IMG_H/2.5, IMG_W/2.5, PAD_SZ/4);
-                count_images.push(count_glyph);
+            var counter2 = document.getElementById('count_body2');
+
+            var valc = 0;
+            var idiv = 2.5;
+            var pdiv = 4;
+            var maxc = 36;
+            for (rowc = 0; rowc < 79; ++rowc) {
+                var count_images = [];
+                for (var cnt = 1; cnt < maxc; ++cnt) {
+                    var count_glyph = document.createElement('div');
+                    count_glyph.classList.add('glyph');
+                    valc++;
+                    var tooltip = valc.toString();
+                    tooltip += ' ' + do_calc(valc, count_glyph, null, null, IMG_H / idiv, IMG_W / idiv, PAD_SZ / pdiv);
+                    count_glyph.title = tooltip;
+                    count_images.push(count_glyph);
+                }
+                counter.appendChild(mk_row('td', count_images));
+                counter = counter2;
+                maxc = 18;
+                idiv = 4;
+                pdiv = 7;
             }
-            counter.appendChild(mk_row('td', count_images));
         });
 
         function mk_img(img) {
@@ -588,7 +622,7 @@
 
             do_calc(val, calc_glyph, calc_math, calc_lit);
         }
-        function do_calc(val, glyph=null, math = null, lit = null, h=IMG_H, w=IMG_W, p=PAD_SZ) {
+        function do_calc(val, glyph = null, math = null, lit = null, h = IMG_H, w = IMG_W, p = PAD_SZ) {
             if (glyph != null) {
                 glyph.innerHTML = '';
             }
@@ -603,7 +637,7 @@
 
             if (isNaN(val)) {
                 lit.innerText = 'Please Enter a Valid Number';
-                return;
+                return '';
             }
 
             var lsep = '';
@@ -712,38 +746,59 @@
             if (lit != null) {
                 lit.innerText = ltext;
             }
+
+            return ltext;
+        }
+        function fake_tabs(tab_name, tab_class, tab_button) {
+            tabcontent = document.getElementsByClassName(tab_class);
+            for (var i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            tabbuttons = document.getElementsByClassName(tab_button);
+
+            for (var j = 0; j < tabcontent.length; j++) {
+                tabbuttons[j].style.backgroundColor = "buttonface";
+            }
+            tab = document.getElementById(tab_name);
+            tab.style.display = "block";
+        }
+
+        function show_tab(btn, name) {
+            fake_tabs(name, "display_tab", "tab_button");
+            btn.style.backgroundColor = '#e8e8ff';
         }
 
     </script>
     <div>
-        <div>
-            <div>
-                <label for="number">Enter a Number:</label>
-                <input type="text" id="number" name="number"><br><br>
-                <button type="button" onclick="calc();">Calculate</button>
-                <div id='math'></div>
-                <div id='glyph' class="glyph"></div>
-                <div id='lit'></div>
-            </div>
-            <div>
-                <table id="count"><tbody id="count_body"></tbody></table>
-            </div>
+        <div id="buttons">
+            <button class="tab_button" onclick="show_tab(this, 'glyphmap');" style="background-color: #e8e8ff">Glyph Map</button>
+            <button class="tab_button" onclick="show_tab(this, 'num');">Numbers</button>
         </div>
-        <div id='cdiv'>
-            <table id='ctable'>
-                <thead id='chead'>
-                </thead>
-                <tbody id='cbody'>
-                </tbody>
-            </table>
-        </div>
-        <div id='xdiv'>
-            <table id='xtable'>
-                <thead id='xhead'>
-                </thead>
-                <tbody id='xbody'>
-                </tbody>
-            </table>
+        <div id="container" style="background-color: #e0e0ff">
+            <div id="num" style="display:none" class="display_tab">
+                <div>
+                    <table id="count"><tbody id="count_body"></tbody></table>
+                </div>
+                <div>
+                    <label for="number">Enter a Number:</label>
+                    <input type="text" id="number" name="number"><br><br>
+                    <button type="button" onclick="calc();">Calculate</button>
+                    <div id='math'></div>
+                    <div id='glyph' class="glyph"></div>
+                    <div id='lit'></div>
+                </div>
+                <div>
+                    <table id="count2"><tbody id="count_body2"></tbody></table>
+                </div>
+            </div>
+            <div id='glyphmap' class="display_tab">
+                <table id='ctable'>
+                    <thead id='chead'>
+                    </thead>
+                    <tbody id='cbody'>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </body>
