@@ -17,6 +17,7 @@
                 min-width: 150px;
             }
 
+            /* header */
             #glyphmap th > div {
                 display: grid;
                 grid-template-columns: 1fr 1fr;
@@ -26,26 +27,35 @@
                 vertical-align: middle;
             }
 
+            /* Normal cell */
             #glyphmap td:not(:first-child):not(empty) > div {
                 display: grid;
                 grid-template-columns: 1fr 1fr;
-                grid-template-rows: 2fr 1fr;
+                grid-template-rows: 2fr 2fr 1fr;
                 align-items: center;
                 height: 100%;
                 vertical-align: middle;
             }
 
+            /* left (header type) cell */
             #glyphmap td:first-child > div {
                 display: grid;
                 grid-template-columns: auto;
-                grid-template-rows: 2fr 1fr;
+                grid-template-rows: 2fr 2fr 1fr;
                 align-items: center;
                 height: 100%;
                 vertical-align: middle;
             }
 
+            /* comment */
             #glyphmap td:has(div>div:only-child>span:only-child) {
                 vertical-align: top;
+            }
+
+            /* inner subcell */
+            #glyphmap th > div > div,
+            #glyphmap td > div > div {
+                margin: auto;
             }
 
         td {
@@ -203,7 +213,7 @@
         const cat = ['Category', 'Plant', 'Animal', 'Color', 'Environment', 'Weather', 'Body of Water', 'Elevation', 'Temerature', 'Humidity', 'Magic Element'];
         const cat_txt = '';
 
-        const pron = ['Pronoun', 'Ordinal Tag', 'Self', 'Other (you)', 'Possessive', 'Reflexive', 'Plural', 'Unknown', 'Neuter', 'Feminine', 'Masculine',];
+        const pron = ['Pronoun', 'Ordinal Tag', 'Self', 'You', 'Other', 'Possessive', 'Reflexive', 'Plural', 'Unknown', 'Neuter', 'Feminine', 'Masculine',];
         const pron_txt = 'The "Ordinal Tag" can be associated with any noun: Pronoun, Subject, or Object by prepending it, followed by a number (usually 1,2,3). '
             + 'Afterwards the Ordinal Tag and the number can replace the noun until the number is associated with another noun.<BR><BR>'
             + 'Singular is the default.<BR>Pronouns are created by combining modifiers in the order presented. '
@@ -250,6 +260,42 @@
             skip,
         ];
 
+        // [category, 1/0 creation/destruction, description, group, word1, word2, ...]
+        const mtext = [
+            ['healer', 1, 'repairs the living', 'lifecycle',
+                'cure', 'heal', 'repair', 'youthen', 'clense', 'knit', 'regrow', ''],
+            ['necromancer', 0, 'controls the dead', 'lifecycle',
+                'speak', 'raise', 'age', 'explode', 'see', 'sense', 'hear', ''],
+            ['porter', 1, 'move from place to place', 'space',
+                'drag', 'carry', 'flip', 'tumble', 'jump', 'fly', 'swim', 'climb'],
+            ['jailor', 0, 'keeps in place', 'space',
+                'trap', '', 'block', 'brace', 'surround', 'entrench', 'grab', 'fortify'],
+            ['farmer', 1, 'adds to the soil', 'soil',
+                'till', 'plow', 'harvest', '', 'sow', 'reap', 'gather', 'plant'],
+            ['miner', 0, 'removes from the soil', 'soil',
+                'dig', 'extract', 'appraise', '', '', '', '', ''],
+            ['smith', 1, 'creates using tools', 'tools',
+                'bend', 'straigten', 'wrap', 'seal', 'forge', 'shape', 'strengthen', 'color'],
+            ['torturer', 0, 'destroys using tools', 'tools',
+                'flay', 'peel', 'pinch', 'expose', 'eviscerate', 'pierce', '', ''],
+            ['fae walker', 1, 'works with forces of creation', 'creature',
+                'avatar', 'dance', 'sing', 'embue', '', '', '', ''],
+            ['summoner', 0, 'controls forces of destruction', 'creature',
+                'summon', 'banish', 'protect', 'command', '', '', '', ''], // volcano fire sprites/elementals - desert djinn - water sirens
+            ['cook', 1, 'nourishes the living', 'time',
+                'boil', 'bake', 'fry', 'salt', 'brown', 'slice', 'dice', 'peel'],
+            ['decay', 0, 'destroys the living', 'time',
+                'rot', 'spoil', 'infect', 'infest', '', '', '', ''],
+            ['herder', 1, 'managing herds', 'manage',
+                'herd', 'count', 'cull', '', '', '', '', ''],
+            ['soldier', 0, 'managing war', 'manage',
+                'march', 'attack', 'guard', 'parry', 'rally', 'flank', 'retreat', 'turtle'],
+            ['potionist', 1, 'makes benefitial potions', 'elixer',
+                'grow', 'shrink', '', '', '', '', '', ''],
+            ['assassin', 0, 'poison and stealth', 'elixer',
+                'poison', 'kill', 'sneak', 'backstab', 'hide', '', '', ''],
+        ];
+
         const inf_val = getnum(number_digits) * 36;
         const n_inf_val = -1 * inf_val;
 
@@ -293,6 +339,28 @@
                 return number_col[row]
             }
             return ctext[col][1];
+        }
+
+        function get_mtext(row, col, is_data = true) {
+            if (col >= mtext.length) {
+                return spaces;
+            }
+            if (is_data) {
+                if (col == 0) {
+                    return mtext[row][0];
+                }
+                var number_row = mtext[row];
+                col += 3;
+                if (col >= number_col.length) {
+                    return spaces;
+                }
+                var ret = number_row[col];
+                if (ret == '') {
+                    return spaces;
+                }
+                return ret;
+            }
+            return mtext[row][2];
         }
 
         function num_sound(row) {
@@ -411,6 +479,16 @@
             Xc2 = mk_layer('ZV2.png');
             Xc1 = mk_layer('ZV1.png');
 
+            numtxt = document.getElementById('number_txt');
+            numtxt.innerHTML = number_txt;
+            numtxt.style.border = '2px solid black';
+            numtxt.style.marginBottom = '25px';
+
+            protxt = document.getElementById('pron_txt');
+            protxt.innerHTML = pron_txt;
+            protxt.style.border = '2px solid black';
+            protxt.style.marginBottom = '25px';
+
             var prepositions = ['Preposition', 'over (under)', 'in (out)', 'inside (outside)', 'front (back)', 'left (right)', 'up (down)'];
             var questions = ['Question', 'who', 'where', 'when', 'how', 'why	is true?', 'is known?'];
             var conj = ['Conjunction', 'and', 'or', 'not (but)', 'because', 'then', 'iff'];
@@ -436,8 +514,9 @@
                                         mk_div([
                                             bold(row_sounds[row][0]),
                                             wrap(' '),
-                                            italic(row_sounds[row][1]),
+                                            italic(row_sounds[row][1]),                                          
                                         ]),
+                                        mk_div([bold(get_mtext(row, 0))]),
                                     ])
                                 ];
                                 bool.forEach(c4 => {
@@ -461,6 +540,7 @@
                                                 color_circle(row, col),
                                                 italic(row_sounds[row][0] + col_sounds[col][0]),
                                                 bold(get_ctext(row + 1, col) + spaces),
+                                                mk_div([bold(get_mtext(row, col + 1))]),
                                             ]));
                                             col++;
                                         }); // c1
@@ -773,9 +853,19 @@
         <div id="buttons">
             <button class="tab_button" onclick="show_tab(this, 'glyphmap');" style="background-color: #e8e8ff">Glyph Map</button>
             <button class="tab_button" onclick="show_tab(this, 'num');">Numbers</button>
+            <button class="tab_button" onclick="show_tab(this, 'pronoun');">Pronouns</button>
         </div>
         <div id="container" style="background-color: #e0e0ff">
+            <div id='glyphmap' class="display_tab">
+                <table id='ctable'>
+                    <thead id='chead'>
+                    </thead>
+                    <tbody id='cbody'>
+                    </tbody>
+                </table>
+            </div>
             <div id="num" style="display:none" class="display_tab">
+                <div id="number_txt"></div>
                 <div>
                     <table id="count"><tbody id="count_body"></tbody></table>
                 </div>
@@ -791,13 +881,80 @@
                     <table id="count2"><tbody id="count_body2"></tbody></table>
                 </div>
             </div>
-            <div id='glyphmap' class="display_tab">
-                <table id='ctable'>
-                    <thead id='chead'>
-                    </thead>
-                    <tbody id='cbody'>
-                    </tbody>
-                </table>
+            <div id="pronoun" style="display:none" class="display_tab">
+                <div>
+                    <div id="pron_txt"></div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>None</th>
+                                <th>Female</th>
+                                <th>Male</th>
+                                <th>Neuter</th>
+                                <th>Unknown</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span>1st Person - Self: </span></td>
+                                <td><input type="radio" id="i0" name="icb" value="i0" /></td>
+                                <td>
+                                    <input type="radio" id="if" name="icb" value="if" checked>
+                                </td>
+                                <td>
+                                    <input type="radio" id="im" name="icb" value="im" checked>
+                                </td>
+                                <td>
+                                    <input type="radio" id="in" name="icb" value="in" checked>
+                                </td>
+                                <td>
+                                    <input type="radio" id="iq" name="icb" value="iq" checked>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span>2nd Person - You: </span></td>
+                                <td>
+                                    <input type="radio" id="u0" name="ucb" value="u0" />
+                                </td>
+                                <td><input type="radio" id="uf" name="ucb" value="uf" checked>
+                                <td>
+                                    <input type="radio" id="um" name="ucb" value="um" checked>
+                                </td>
+                                <td>
+                                    <input type="radio" id="un" name="ucb" value="un" checked>
+                                </td>
+                                <td>
+                                    <input type="radio" id="uq" name="ucb" value="uq" checked>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span>3rd Person - Other</span></td>
+                                <td></td>
+                                <td>
+                                    <input type="checkbox" id="m" name="pronoun-cb" value="m" />
+                                    <input type="checkbox" id="m2" name="pronoun-cb" value="m2" />
+                                </td>
+                                <td>
+                                    <input type="checkbox" id="f" name="pronoun-cb" value="f" />
+                                    <input type="checkbox" id="f2" name="pronoun-cb" value="f2" />
+                                </td>
+                                <td>
+                                    <input type="checkbox" id="n" name="pronoun-cb" value="n" />
+                                    <input type="checkbox" id="n2" name="pronoun-cb" value="n2" />
+                                </td>
+                                <td>
+                                    <input type="checkbox" id="q" name="pronoun-cb" value="q" />
+                                    <input type="checkbox" id="q2" name="pronoun-cb" value="q2" />
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div id="pro-eng"></div>
+                    <div id="pro-glyph" class="glyph"></div>
+                    <div id="pro-lit"></div>
+                </div>
+                <div id="list_all"></div>
             </div>
         </div>
     </div>
