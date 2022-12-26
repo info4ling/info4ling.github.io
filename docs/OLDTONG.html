@@ -531,7 +531,7 @@
                                         mk_div([
                                             bold(row_sounds[row][0]),
                                             wrap(' '),
-                                            italic(row_sounds[row][1]),                                          
+                                            italic(row_sounds[row][1]),
                                         ]),
                                         mk_div([bold(get_mtext(row, 0))]),
                                     ])
@@ -755,7 +755,7 @@
         }
 
         function mk_pronoun(what, prow = pronoun_row(what)) {
-            // 'Self' i, 'You' u, 'Other' o, 'Possessive' p, 'Reflexive' r, 'Plural' x, 'Unknown' q 'Neuter' n, 'Feminine' f, 'Masculine' m 
+            // 'Self' i, 'You' u, 'Other' o, 'Possessive' p, 'Reflexive' r, 'Plural' x, 'Unknown' q 'Neuter' n, 'Feminine' f, 'Masculine' m
             return mk_overlay(false, prow & 8, prow & 4, prow & 2, prow & 1, pronoun_col & 4, pronoun_col & 2, pronoun_col & 1, true, IMG_H / 3, IMG_W / 3, PAD_SZ / 4);
         }
 
@@ -985,17 +985,17 @@
 
         function handle_pronoun(glist, ltext, etext, txt, pre, esep) {
             switch (txt) {
-                case pre+'0':
+                case pre + '0':
                     return esep;
-                case pre + 'F': // Plural 
+                case pre + 'F': // Plural
                     do_pronoun(glist, ltext, etext, 'f', true, 'fff');
                     esep = ' ';
                     break;
-                case pre+'f':
+                case pre + 'f':
                     do_pronoun(glist, ltext, etext, 'f', false, 'f');
                     esep = ' ';
                     break;
-                case pre + 'M': // Plural 
+                case pre + 'M': // Plural
                     do_pronoun(glist, ltext, etext, 'm', true, 'mmm');
                     esep = ' ';
                     break;
@@ -1003,7 +1003,7 @@
                     do_pronoun(glist, ltext, etext, 'm', false, 'm');
                     esep = ' ';
                     break;
-                case pre +'N': // Plural
+                case pre + 'N': // Plural
                     do_pronoun(glist, ltext, etext, 'n', true, 'nnn');
                     esep = ' ';
                     break;
@@ -1015,7 +1015,7 @@
                     do_pronoun(glist, ltext, etext, 'q', true, '???');
                     esep = ' ';
                     break;
-                case pre +'q':
+                case pre + 'q':
                     do_pronoun(glist, ltext, etext, 'q', false, '?');
                     esep = ' ';
                     break;
@@ -1057,7 +1057,7 @@
                 esep = handle_pronoun(glist, ltext, etext, self, 'i', esep);
                 etext[0] += ')';
             }
-            
+
             if (person == '1') {
                 if (!has_self) {
                     etext[0] = "You must select something...";
@@ -1071,7 +1071,7 @@
                     document.getElementById('q').checked = false;
                     document.getElementById('q2').checked = false;
                 }
-            } else {               
+            } else {
                 if (xf + xm + xn + xq == 0) {
                     var none = document.getElementById('p1');
                     none.checked = true;
@@ -1086,9 +1086,9 @@
                         need_other = false;
                         pre = 'u';
                         txt = 'You';
-                        put_pronoun(glist, ltext, 'u');
+                        put_pronoun(glist, ltext, 'u'); // always need you
                     } else if (!has_self) {
-                        need_other = false;                       
+                        need_other = false;
                     } if (mix_plural) {
                         need_other = true;
                     }
@@ -1100,14 +1100,30 @@
                     if (xq == 2) { // special case -- unkown plural overrides
                         put_pronoun(glist, ltext, 'x');
                         etext[0] += txt + '(unkown plural)'
-                    } else if (mix_plural) {  // special case -- other/you implies mixed plural 
+                    } else if (mix_plural) {  // special case -- other/you implies mixed plural
                         etext[0] += txt + '(plural)';
+                    } else if (xq == 1) { // special case -- single unknown covers all other singles
+                        etext[0] += txt + '(';
+                        var plus = '';
+                        if (xf == 2) {
+                            esep = handle_sub_pronoun(glist, ltext, etext, xf, 'f', 'F', esep);
+                            plus = '+';
+                        }
+                        if (xm == 2) {
+                            esep = handle_sub_pronoun(glist, ltext, etext, xm, 'm', 'M', esep);
+                            plus = '+';
+                        }
+                        if (xn == 2) {
+                            esep = handle_sub_pronoun(glist, ltext, etext, xn, 'n', 'N', esep);
+                            plus = '+';
+                        }
+                        put_pronoun(glist, ltext, 'q');
+                        etext[0] += plus + 'unkown single)'
                     } else {
-                        etext[0] += txt+'(';
-                        esep = handle_sub_pronoun(glist, ltext, etext, xf, 'f', 'F', esep); 
+                        etext[0] += txt + '(';
+                        esep = handle_sub_pronoun(glist, ltext, etext, xf, 'f', 'F', esep);
                         esep = handle_sub_pronoun(glist, ltext, etext, xm, 'm', 'M', esep);
                         esep = handle_sub_pronoun(glist, ltext, etext, xn, 'n', 'N', esep);
-                        esep = handle_sub_pronoun(glist, ltext, etext, xq, 'q', 'Q', esep);
                         etext[0] += ')';
                     }
                 }
