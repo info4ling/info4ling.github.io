@@ -310,6 +310,11 @@
 
         const SB = [[100, 60], [100, 90], [100, 80], [60, 70], [40, 50], [100, 30], [60, 20], [80, 8]];
 
+        // Globals that change
+
+        var valc = 0;
+        var count_in_glyphs_row = 0;
+
         // Globals set after document.ready()
 
         var input = null;
@@ -558,31 +563,59 @@
                 }); // r8
                 cbody.appendChild(mk_row('td', ftr_images));
             }
-            var counter = document.getElementById('count_body');
-            var counter2 = document.getElementById('count_body2');
+            var counter = document.getElementById('count_body2');
 
-            var valc = 0;
+            show_count_big();
+            for (rowc = 1; rowc < 5; ++rowc) {
+                show_count_small(counter);
+            }
+            count_in_glyphs_row = 5;
+        });
+
+        function show_count_big() {
+            var maxc = 36;
             var idiv = 2.5;
             var pdiv = 4;
-            var maxc = 36;
-            for (rowc = 0; rowc < 79; ++rowc) {
-                var count_images = [];
-                for (var cnt = 1; cnt < maxc; ++cnt) {
-                    var count_glyph = document.createElement('div');
-                    count_glyph.classList.add('glyph');
-                    valc++;
-                    var tooltip = valc.toString();
-                    tooltip += ' ' + do_calc(valc, count_glyph, null, null, IMG_H / idiv, IMG_W / idiv, PAD_SZ / pdiv);
-                    count_glyph.title = tooltip;
-                    count_images.push(count_glyph);
-                }
-                counter.appendChild(mk_row('td', count_images));
-                counter = counter2;
-                maxc = 18;
-                idiv = 4;
-                pdiv = 7;
+
+            var counter = document.getElementById('count_body');
+
+            return show_count(counter, maxc, idiv, pdiv);
+        }
+
+        function show_count_small(counter) {
+            var maxc = 18;
+            var idiv = 4;
+            var pdiv = 7;
+
+            return show_count(counter, maxc, idiv, pdiv);
+        }
+
+        function show_count(counter, maxc, idiv, pdiv) {
+            var count_images = [];
+            for (var cnt = 1; cnt < maxc; ++cnt) {
+                var count_glyph = document.createElement('div');
+                count_glyph.classList.add('glyph');
+                valc++;
+                var tooltip = valc.toString();
+                tooltip += ' ' + do_calc(valc, count_glyph, null, null, IMG_H / idiv, IMG_W / idiv, PAD_SZ / pdiv);
+                count_glyph.title = tooltip;
+                count_images.push(count_glyph);
             }
-        });
+            counter.appendChild(mk_row('td', count_images));
+        }
+
+        function count_more() {
+            var counter = document.getElementById('count_body2');
+
+            var rowc = count_in_glyphs_row;
+            count_in_glyphs_row += 10;
+            while (rowc < count_in_glyphs_row) {
+                show_count_small(counter);
+                ++rowc;
+            }
+            // var butn = document.getElementById('count_more');
+            // butn.style.dsplay = 'none';
+        }
 
         function mk_img(img) {
             var elem = document.createElement("img");
@@ -879,6 +912,7 @@
                 </div>
                 <div>
                     <table id="count2"><tbody id="count_body2"></tbody></table>
+                    <button id="count_more" type="button" onclick="count_more();">More...</button>
                 </div>
             </div>
             <div id="pronoun" style="display:none" class="display_tab">
