@@ -127,17 +127,20 @@
                 border: none !important;
             }
 
+        #pro-glyph,
         #glyph {
             min-height: 50px;
             margin-left: 10px;
         }
 
+        #pro-lit,
         #math,
         #lit {
             min-height: 3ex;
             margin: 20px;
         }
 
+        #pro-glyph > div,
         #glyph > div {
             padding: 4px !important;
         }
@@ -165,6 +168,8 @@
 <body>
     <script>
         //////////////////////// Globals
+
+        const BOOL = [false, true];
 
         const row_sounds = [
             ['N', 'Not', true],
@@ -259,6 +264,8 @@
             skip,
             skip,
         ];
+
+        const pronoun_col = 4;
 
         // [category, 1/0 creation/destruction, description, group, word1, word2, ...]
         const mtext = [
@@ -502,16 +509,15 @@
                 var cbody = document.getElementById("cbody");
                 var chead = document.getElementById("chead");
                 var blank = wrap('');
-                var bool = [false, true];
                 var all = [];
                 var row = 0;
                 var header = false;
                 var hdr_images = [blank];
                 var ftr_images = [wrap('Comments:')];
-                bool.forEach(r8 => {
-                    bool.forEach(r4 => {
-                        bool.forEach(r2 => {
-                            bool.forEach(r1 => {
+                BOOL.forEach(r8 => {
+                    BOOL.forEach(r4 => {
+                        BOOL.forEach(r2 => {
+                            BOOL.forEach(r1 => {
                                 var col = 0;
                                 var images = [
                                     mk_div([
@@ -524,9 +530,9 @@
                                         mk_div([bold(get_mtext(row, 0))]),
                                     ])
                                 ];
-                                bool.forEach(c4 => {
-                                    bool.forEach(c2 => {
-                                        bool.forEach(c1 => {
+                                BOOL.forEach(c4 => {
+                                    BOOL.forEach(c2 => {
+                                        BOOL.forEach(c1 => {
                                             if (!header) {
                                                 hdr_images.push(mk_div([
                                                     mk_overlay(true, false, false, false, false, c4, c2, c1),
@@ -570,6 +576,8 @@
                 show_count_small(counter);
             }
             count_in_glyphs_row = 5;
+
+            setup_pronoun();
         });
 
         function show_count_big() {
@@ -689,6 +697,67 @@
         function ismult(row) {
             var num = getnum_txt(row);
             return num.includes('*');
+        }
+
+        function setup_pronoun() {
+            Array.from("iuoprxqnfm").forEach(c => {
+                var div_name = "pro_" + c;
+                var divo = document.getElementById(div_name);
+                if (divo) {
+                    divo.appendChild(mk_pronoun(c));
+                }
+            });
+        }
+
+        function pronoun_row(x) {
+            var prow = 0;
+
+            switch (what) {
+                case 'i':
+                    prow = 1;
+                    break;
+                case 'u':
+                    prow = 2;
+                    break;
+                case 'o':
+                    prow = 3;
+                    break;
+                case 'p':
+                    prow = 4;
+                    break;
+                case 'r':
+                    prow = 5;
+                    break;
+                case 'x':
+                    prow = 6;
+                    break;
+                case 'q':
+                    prow = 7;
+                    break;
+                case 'n':
+                    prow = 8;
+                    break;
+                case 'f':
+                    prow = 9;
+                    break;
+                case 'm':
+                    prow = 10;
+                    break;
+            }
+
+            return prow;
+        }
+
+        function mk_pronoun(what) {
+            // 'Self' i, 'You' u, 'Other' o, 'Possessive' p, 'Reflexive' r, 'Plural' x, 'Unknown' q 'Neuter' n, 'Feminine' f, 'Masculine' m
+            var prow = pronoun_row(what);    
+            return mk_overlay(false, prow & 8, prow & 4, prow & 2, prow & 1, pronoun_col & 4, pronoun_col & 2, pronoun_col & 1, true, IMG_H / 3, IMG_W / 3, PAD_SZ / 4);
+        }
+
+        function prosound(what) {
+            var prow = pronoun_row(what);
+            var ret = row_sounds[prow][0] + col_sounds[pronoun_col][0];
+            return ret;
         }
 
         function mk_numglyph(row, cond, h, w, p) {
@@ -881,6 +950,90 @@
             btn.style.backgroundColor = '#e8e8ff';
         }
 
+        function rbvalue(name) {
+            var selector = 'input[name="' + name + '"]:checked';
+            var qs = document.querySelector(selector);
+            if (qs) return qs.value;
+            return null;
+        }
+
+        function cbchecked(name) {
+            var cb = document.getElementById(name);
+            if (cb & cb.checked) return 1;
+            return 0;
+        }
+
+        function do_pronoun(glist, ltext, etext, what, gender, plural, what_txt, gen_text, esep) {
+            glist.push(what);
+            ltext[0] += prosound(what);
+            etext[0] += esep + what_txt;
+
+            if (plural) {
+                glist.push(gender);
+                ltext[0] += prosound(gender);
+            }
+
+            glist.push(gender);
+            ltext[0] += prosound(gender);
+            etext[0] += gen_txt;
+        }
+
+        function handle_pronoun(glist, ltext, etext, txt, pre, eng, esep) {
+            switch (txt) {
+                case pre+'0':
+                    return esep;
+                case pre+'f':
+                    do_pronoun(glist, ltext, etext, pre, 'f', eng, '(f)', esep);
+                    esep = ' ';
+                    break;
+                case pre +'m':
+                    do_pronoun(glist, ltext, etext, pre, 'm', eng, '(m)', esep);
+                    esep = ' ';
+                    break;
+                case pre +'n':
+                    do_pronoun(glist, ltext, etext, pre, 'n', eng, '(n)', esep);
+                    esep = ' ';
+                    break;
+                case pre +'q':
+                    do_pronoun(glist, ltext, etext, pre, 'q', eng, '(?)', esep);
+                    esep = ' ';
+                    break;
+            }
+            return ' ';
+        }
+
+        function procalc() {
+            var text = document.getElementById("pro-eng");
+            var lit = document.getElementById("pro-lit");
+            var pglyth = document.getElementById("pro-glyph");
+            var self = rbvalue("icb");
+            var you = rbvalue("ucb");
+            var of = cbchecked("f") + cbchecked("f2");
+            var om = cbchecked("m") + cbchecked("m2");
+            var on = cbchecked("n") + cbchecked("n2");
+            var oq = cbchecked("q") + cbchecked("q2");
+
+            glist = [];
+            ltext = [''];
+            etext = [''];
+            esep = '';
+
+
+            esep=handle_pronoun(glist, ltext, etext, self, 'i', 'I', esep);
+
+
+            if (of + om + on + oq == 0) {
+                if (you == 'u0') {
+                    if (self == 'i0') {
+                        etext[0] = "You must select something...";
+                    }
+                }
+            } else {
+            }
+
+
+        }
+
     </script>
     <div>
         <div id="buttons">
@@ -923,55 +1076,55 @@
                             <tr>
                                 <th></th>
                                 <th>None</th>
-                                <th>Female</th>
-                                <th>Male</th>
-                                <th>Neuter</th>
-                                <th>Unknown</th>
+                                <th>Female <div id="pro_f"></div> </th>
+                                <th>Male <div id="pro_m"></div> </th>
+                                <th>Neuter <div id="pro_u"></div> </th>
+                                <th>Unknown <div id="pro_q"></div></th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td><span>1st Person - Self: </span></td>
-                                <td><input type="radio" id="i0" name="icb" value="i0" /></td>
+                                <td><span>1st Person - Self: </span> <div id="pro_i"> </div> </td>
+                                <td><input type="radio" id="i0" name="icb" value="i0" checked/></td>
                                 <td>
-                                    <input type="radio" id="if" name="icb" value="if" checked>
+                                    <input type="radio" id="if" name="icb" value="if">
                                 </td>
                                 <td>
-                                    <input type="radio" id="im" name="icb" value="im" checked>
+                                    <input type="radio" id="im" name="icb" value="im">
                                 </td>
                                 <td>
-                                    <input type="radio" id="in" name="icb" value="in" checked>
+                                    <input type="radio" id="in" name="icb" value="in">
                                 </td>
                                 <td>
-                                    <input type="radio" id="iq" name="icb" value="iq" checked>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><span>2nd Person - You: </span></td>
-                                <td>
-                                    <input type="radio" id="u0" name="ucb" value="u0" />
-                                </td>
-                                <td><input type="radio" id="uf" name="ucb" value="uf" checked>
-                                <td>
-                                    <input type="radio" id="um" name="ucb" value="um" checked>
-                                </td>
-                                <td>
-                                    <input type="radio" id="un" name="ucb" value="un" checked>
-                                </td>
-                                <td>
-                                    <input type="radio" id="uq" name="ucb" value="uq" checked>
+                                    <input type="radio" id="iq" name="icb" value="iq">
                                 </td>
                             </tr>
                             <tr>
-                                <td><span>3rd Person - Other</span></td>
+                                <td><span>2nd Person - You: </span> <div id="pro_u"></div> </td>
+                                <td>
+                                    <input type="radio" id="u0" name="ucb" value="u0" checked/>
+                                </td>
+                                <td><input type="radio" id="uf" name="ucb" value="uf">
+                                <td>
+                                    <input type="radio" id="um" name="ucb" value="um">
+                                </td>
+                                <td>
+                                    <input type="radio" id="un" name="ucb" value="un">
+                                </td>
+                                <td>
+                                    <input type="radio" id="uq" name="ucb" value="uq">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span>3rd Person - Other</span> <div id="pro_o"></div> </td>
                                 <td></td>
-                                <td>
-                                    <input type="checkbox" id="m" name="pronoun-cb" value="m" />
-                                    <input type="checkbox" id="m2" name="pronoun-cb" value="m2" />
-                                </td>
                                 <td>
                                     <input type="checkbox" id="f" name="pronoun-cb" value="f" />
                                     <input type="checkbox" id="f2" name="pronoun-cb" value="f2" />
+                                </td>
+                                <td>
+                                    <input type="checkbox" id="m" name="pronoun-cb" value="m" />
+                                    <input type="checkbox" id="m2" name="pronoun-cb" value="m2" />
                                 </td>
                                 <td>
                                     <input type="checkbox" id="n" name="pronoun-cb" value="n" />
@@ -984,6 +1137,8 @@
                             </tr>
                         </tbody>
                     </table>
+                    <br />
+                    <button id="pro_button" type="button" onclick="procalc();">Calculate</button>
                     <div id="pro-eng"></div>
                     <div id="pro-glyph" class="glyph"></div>
                     <div id="pro-lit"></div>
