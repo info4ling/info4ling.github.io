@@ -211,28 +211,31 @@
         const punct = ['Punctuation', "STOP '.'", "Start Paren '('", "Start Quote '\"'", "Question '?'", "Excitement '!'", "End Paren ')'", "Quote '\"'", "Elipses '...'", 'Sarcasm', 'Rhetoric'];
         const punct_txt = 'Question/Excitement/Sarcasm/Rhetorical goes at the front';
 
-        const strct = ['Structure', 'Verb', 'Subject', 'Object', 'Adjective', 'Adverb', 'Interjection', 'Conjunction', 'Question'];
+        const strct = ['Structure', 'Verb (verblist)', 'Powerword (verblist)', 'Gerund (verblist)', 'Subject (noun)', 'Object (noun)', 'Adjective', 'Adverb', 'Interjection', 'Conjunction', 'Preposition'
+            , 'Who [q]', 'What [q]', 'Where [q]', 'When [q]', 'How [q]', 'Is [q]' ];
         const strct_txt = '[Punctuation: Question/Excitement/Sarcastic/Rhetorical] <BR><BR>'
             + 'Interjection <BR><BR>'
+            + 'Question word ([q] - Adjective/Prep Phrase)<BR><BR>'
             + 'Verb(Adverb) <BR><BR>'
-            + 'Subject(Subject - Adjective)...<BR><BR>'
-            + '(Conjunction Subject Subject - Adjective)... <BR><BR>'
-            + 'Object(Object - Adjective)...<BR><BR>'
-            + '(Conjunction Object Object - Adjective)...<BR><BR>'
-            + '[Punctuation: STOP/Elipses/Repeat of punctuation at start for emphasis]';
+            + 'Subject(Subject - Adjective/Prep Phrase)...<BR><BR>'
+            + '(Conjunction Subject Subject - Adjective/Prep Phrase)... <BR><BR>'
+            + 'Object(Object - Adjective/Prep Phrase)...<BR><BR>'
+            + '(Conjunction Object Object - Adjective/Prep Phrase)...<BR><BR>'
+            + '[Punctuation: STOP/Elipses/Repeat of punctuation at start for emphasis]'
+            + '<BR><BR><BR><BR>Note: to use a Verb as a noun (a gerund): Subject/Object Gerund (Verb)';
 
-        const cat = ['Category', 'Plant', 'Animal', 'Color', 'Environment', 'Weather', 'Body of Water', 'Elevation', 'Temerature', 'Humidity', 'Magic Element'];
+        const cat = ['Category', 'Living Creature', 'Color', 'Weather', 'Elevation', 'Spirit', 'Possession', 'Transport'];
         const cat_txt = '';
 
         const pron = ['Pronoun', 'Ordinal Tag', 'Self', 'You', 'Other', 'Possessive', 'Reflexive', 'Plural', 'Unknown', 'Neuter', 'Feminine', 'Masculine',];
         const pron_txt = 'The "Ordinal Tag" can be associated with any noun: Pronoun, Subject, or Object by prepending it, followed by a number (usually 1,2,3). '
             + 'Afterwards the Ordinal Tag and the number can replace the noun until the number is associated with another noun.<BR><BR>'
             + 'Singular is the default.<BR>Pronouns are created by combining modifiers in the order presented. '
-            + 'For "We" where it is a masculine person, with other males and one female, would be: "SelfMaleOtherPluralMaleFemale". <BR><BR>'
+            + 'For "We" where it is a masculine person, with other males and one female, would be: "SelfMaleOtherFemalePluralMale". <BR><BR>'
             + 'Note that: "Self/You/Other/Possessive/Reflexive" are only included once. Person is Self/You/Other/Self+You/Self+Other. (Cannot have You and Other together). Gender is one of: Unknown, Neuter, Feminine, Masculine. '
-            + 'Unkown is the default gender but may need to be explicitely included if it is needed to combine with other genders.<BR><BR>'
-            + 'Other is only required after Self, by itself Other is the same as OtherPluralMalePluralFemale, '
-            + 'and OtherPlural means more than one but genders are uncertain';
+            + 'Unknown is the default gender but may need to be explicitely included if it is needed to combine with other genders.<BR><BR>'
+            + 'Other is only required after Self, by itself Other is the same as OtherPluralFemalePluralMale, '
+            + 'and OtherPlural means more than one but genders are uncertain. You cannot have a single unknown and any other single';
 
         const number_col = 2;
         const number = ['Number', '0',
@@ -258,6 +261,79 @@
 
         const spaces = ' &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp';
 
+        const creature_types = [
+            ['Tree', 'Bush', 'Herb', 'Hair', 'Feather', 'Scale', 'Shell', 'Smooth',],
+            ['High Spirit', 'Med Spirit', 'Low Spririt', 'Dead Spirit'],
+        ]
+        const creatures = {
+            'Desert': [
+                ['Tree', 'Bush', 'Herb', 'Hair', 'Feather', 'Scale', 'Shell', 'Smooth',],
+                ['High Spirit', 'Med Spirit', 'Low Spririt', 'Dead Spirit'],
+            ],
+            'Tundra': [
+                ['Tree', 'Bush', 'Herb', 'Hair', 'Feather', 'Scale', 'Shell', 'Smooth',],
+                ['High Spirit', 'Med Spirit', 'Low Spririt', 'Dead Spirit'],
+            ],
+            'Mountain/ Volcano': [
+                ['Tree', 'Bush', 'Herb', 'Hair', 'Feather', 'Scale', 'Shell', 'Smooth',],
+                ['High Spirit', 'Med Spirit', 'Low Spririt', 'Dead Spirit'],
+            ],
+            'Grasslands': [
+                ['Tree', 'Bush', 'Herb', 'Hair', 'Feather', 'Scale', 'Shell', 'Smooth',],
+                ['High Spirit', 'Med Spirit', 'Low Spririt', 'Dead Spirit'],
+            ],
+            'Shrubland': [
+                ['Tree', 'Bush', 'Herb', 'Hair', 'Feather', 'Scale', 'Shell', 'Smooth',],
+                ['High Spirit', 'Med Spirit', 'Low Spririt', 'Dead Spirit'],
+            ],
+            'Woodland': [
+                ['Tree', 'Bush', 'Herb', 'Hair', 'Feather', 'Scale', 'Shell', 'Smooth',],
+                ['High Spirit', 'Med Spirit', 'Low Spririt', 'Dead Spirit'],
+            ],
+            'Forest': [
+                ['Tree', 'Bush', 'Herb', 'Hair', 'Feather', 'Scale', 'Shell', 'Smooth',],
+                ['High Spirit', 'Med Spirit', 'Low Spririt', 'Dead Spirit'],
+            ],
+            'Jungle': [
+                ['Tree', 'Bush', 'Herb', 'Hair', 'Feather', 'Scale', 'Shell', 'Smooth',],
+                ['High Spirit', 'Med Spirit', 'Low Spririt', 'Dead Spirit'],
+            ],
+            'Swamp': [
+                ['Tree', 'Bush', 'Herb', 'Hair', 'Feather', 'Scale', 'Shell', 'Smooth',],
+                ['High Spirit', 'Med Spirit', 'Low Spririt', 'Dead Spirit'],
+            ],
+            'Marsh': [
+                ['Tree', 'Bush', 'Herb', 'Hair', 'Feather', 'Scale', 'Shell', 'Smooth',],
+                ['High Spirit', 'Med Spirit', 'Low Spririt', 'Dead Spirit'],
+            ],
+            'Bogs': [
+                ['Tree', 'Bush', 'Herb', 'Hair', 'Feather', 'Scale', 'Shell', 'Smooth',],
+                ['High Spirit', 'Med Spirit', 'Low Spririt', 'Dead Spirit'],
+            ],
+            'Island': [
+                ['Tree', 'Bush', 'Herb', 'Hair', 'Feather', 'Scale', 'Shell', 'Smooth',],
+                    ['High Spirit', 'Med Spirit', 'Low Spririt', 'Dead Spirit'],
+            ],
+            'Ocean': [
+                ['Tree', 'Bush', 'Herb', 'Hair', 'Feather', 'Scale', 'Shell', 'Smooth',],
+                ['High Spirit', 'Med Spirit', 'Low Spririt', 'Dead Spirit'],
+            ],
+            'Lake': [
+                ['Tree', 'Bush', 'Herb', 'Hair', 'Feather', 'Scale', 'Shell', 'Smooth',],
+                ['High Spirit', 'Med Spirit', 'Low Spririt', 'Dead Spirit'],
+            ],
+            'River': [
+                ['Tree', 'Bush', 'Herb', 'Hair', 'Feather', 'Scale', 'Shell', 'Smooth',],
+                ['High Spirit', 'Med Spirit', 'Low Spririt', 'Dead Spirit'],
+            ],
+            'Reef': [
+                    ['Tree', 'Bush', 'Herb', 'Hair', 'Feather', 'Scale', 'Shell', 'Smooth',],
+                    ['High Spirit', 'Med Spirit', 'Low Spririt', 'Dead Spirit'],
+            ],
+        };
+        const lockeys = Object.keys(creatures);
+        const loc = ['Location', ...lockeys];
+
         const skip = [[], spaces];
 
         const ctext = [
@@ -266,7 +342,7 @@
             [number, number_txt],
             [cat, cat_txt],
             [pron, pron_txt],
-            skip,
+            [loc, spaces],
             skip,
             skip,
         ];
@@ -276,7 +352,7 @@
         // [category, 1/0 creation/destruction, description, group, word1, word2, ...]
         const mtext = [
             ['healer', 1, 'repairs the living', 'lifecycle',
-                'cure', 'heal', 'repair', 'youthen', 'clense', 'knit', 'regrow', ''],
+                'cure', 'heal', 'repair', 'youth-en', 'clense', 'knit', 'regrow', ''],
             ['necromancer', 0, 'controls the dead', 'lifecycle',
                 'speak', 'raise', 'age', 'explode', 'see', 'sense', 'hear', ''],
             ['porter', 1, 'move from place to place', 'space',
@@ -379,6 +455,36 @@
                 return ret;
             }
             return mtext[row][2];
+        }
+
+        function get_sl_text(which, row, col) {
+            if (row == 0) { // left header
+                if (col >= creature_types[which]) {
+                    return spaces;
+                }
+                return creature_types[which][row];
+            }
+            row--;
+            if (row >= lockeys.length) {
+                return spaces;
+            }
+            var key = lockeys[row];
+            if (col == 0) { // top header
+                return key;
+            }
+            col--;
+            var data = creatures[key][which];
+            if (col >= data) {
+                return spaces
+            }
+        }
+
+        function get_ltext(row, col) {
+            return get_sl_text(0, row, col);
+        }
+
+        function get_stext(row, col) {
+            return get_sl_text(1, row, col);
         }
 
         function num_sound(row) {
