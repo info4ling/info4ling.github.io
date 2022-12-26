@@ -118,6 +118,7 @@
             background-color: #D0D0D0;
         }
 
+        .glyph > div,
         .glyph {
             display: flex;
             flex-direction: row;
@@ -133,6 +134,7 @@
             margin-left: 10px;
         }
 
+        #pro-eng,
         #pro-lit,
         #math,
         #lit {
@@ -183,7 +185,7 @@
             ['H', 'Hi', false],
             ['V', 'Vat', true],
             ['Sh', 'Shop', false],
-            ['G', 'Gun', true],
+            ['Gr', 'Grin', true],
             ['Ch', 'Chat', false],
             ['Z', 'Zip', true],
             ['Kl', 'Kluge', false],
@@ -713,7 +715,7 @@
             });
         }
 
-        function pronoun_row(x) {
+        function pronoun_row(what) {
             var prow = 0;
 
             switch (what) {
@@ -961,7 +963,7 @@
 
         function cbchecked(name) {
             var cb = document.getElementById(name);
-            if (cb & cb.checked) return 1;
+            if (cb && cb.checked) return 1;
             return 0;
         }
 
@@ -971,7 +973,7 @@
             ltext[0] += prosound(what, prow);
         }
 
-        function do_pronoun(glist, ltext, etext, gender, plural, gen_text, esep) {
+        function do_pronoun(glist, ltext, etext, gender, plural, gen_txt) {
             if (plural) {
                 put_pronoun(glist, ltext, 'x');
                 // gentext set for plural
@@ -986,35 +988,35 @@
                 case pre+'0':
                     return esep;
                 case pre + 'F': // Plural 
-                    do_pronoun(glist, ltext, etext, 'f', true, 'fff', esep);
+                    do_pronoun(glist, ltext, etext, 'f', true, 'fff');
                     esep = ' ';
                     break;
                 case pre+'f':
-                    do_pronoun(glist, ltext, etext, 'f', false, 'f', esep);
+                    do_pronoun(glist, ltext, etext, 'f', false, 'f');
                     esep = ' ';
                     break;
                 case pre + 'M': // Plural 
-                    do_pronoun(glist, ltext, etext, 'm', true, 'mmm', esep);
+                    do_pronoun(glist, ltext, etext, 'm', true, 'mmm');
                     esep = ' ';
                     break;
                 case pre + 'm':
-                    do_pronoun(glist, ltext, etext, 'm', false, 'm', esep);
+                    do_pronoun(glist, ltext, etext, 'm', false, 'm');
                     esep = ' ';
                     break;
                 case pre +'N': // Plural
-                    do_pronoun(glist, ltext, etext, 'n', true, 'nnn', esep);
+                    do_pronoun(glist, ltext, etext, 'n', true, 'nnn');
                     esep = ' ';
                     break;
                 case pre + 'n':
-                    do_pronoun(glist, ltext, etext, 'n', false, 'n', esep);
+                    do_pronoun(glist, ltext, etext, 'n', false, 'n');
                     esep = ' ';
                     break;
                 case pre + 'Q':
-                    do_pronoun(glist, ltext, etext, 'q', true, '???', esep);
+                    do_pronoun(glist, ltext, etext, 'q', true, '???');
                     esep = ' ';
                     break;
                 case pre +'q':
-                    do_pronoun(glist, ltext, etext, 'q', false, '?', esep);
+                    do_pronoun(glist, ltext, etext, 'q', false, '?');
                     esep = ' ';
                     break;
             }
@@ -1024,7 +1026,7 @@
         function handle_sub_pronoun(glist, ltext, etext, val, sing, plur, esep) {
             if (val == 0) return esep;
 
-            var txt = (val == 1) ? sing, plur;
+            var txt = (val == 1) ? sing : plur;
             return handle_pronoun(glist, ltext, etext, txt, '', esep);
         }
 
@@ -1044,15 +1046,16 @@
             etext = [''];
             esep = '';
 
-            var has_self = cbchecked(me);
+            var has_self = cbchecked('me');
 
             if (has_self) {
+                put_pronoun(glist, ltext, 'i');
                 etext[0] += 'I(';
                 esep = handle_pronoun(glist, ltext, etext, self, 'i', esep);
                 etext[0] += ')';
             }
             
-            if (person == '1'){
+            if (person == '1') {
                 if (!has_self) {
                     etext[0] = "You must select something...";
                 } else {
@@ -1072,30 +1075,45 @@
                     etext[0] = "You must select something...";
                 } else {
                     // Set for 'Other'
+                    var mix_plural = (xf + xm == 4);
+                    var need_other = true;
                     var pre = 'o';
                     var txt = 'Other(';
                     if (person == '2') { // you
+                        need_other = false;
                         pre = 'u';
                         txt = 'You(';
                         put_pronoun(glist, ltext, 'u');
-                    } else if (has_self) {
+                    } else if (!has_self) {
+                        need_other = false;                       
+                    } if (mix_plural) {
+                        need_other = true;
+                    }
+
+                    if (need_other) {
                         put_pronoun(glist, ltext, 'o');
                     }
 
-                    etext[0] += txt;
-                    esep = handle_sub_pronoun(glist, ltext, etext, xf, 'f', 'F', esep);
-                    esep = handle_sub_pronoun(glist, ltext, etext, xm, 'm', 'M', esep);
-                    esep = handle_sub_pronoun(glist, ltext, etext, xn, 'n', 'N', esep);
-                    esep = handle_sub_pronoun(glist, ltext, etext, xq, 'q', 'Q', esep);
-                    etext[0] += ')';
+                    if (xq == 2) { // special case -- other implies this - but we may have to add other
+                        handle_sub_pronoun(glist, ltext, etext, xq, 'q', 'Q', esep);
+                    } else if (mix_plural) { // special case -- unkown plural overrides
+                        // already done
+                    } else {
+                        etext[0] += txt;
+                        esep = handle_sub_pronoun(glist, ltext, etext, xf, 'f', 'F', esep);
+                        esep = handle_sub_pronoun(glist, ltext, etext, xm, 'm', 'M', esep);
+                        esep = handle_sub_pronoun(glist, ltext, etext, xn, 'n', 'N', esep);
+                        esep = handle_sub_pronoun(glist, ltext, etext, xq, 'q', 'Q', esep);
+                        etext[0] += ')';
+                    }
                 }
             }
 
-            if (glist.lenght) {
+            if (glist.length > 0) {
                 pglyth.appendChild(mk_div(glist));
             }
-            lit.text = ltext[0];
-            text.text = etext[0];
+            lit.innerHTML = ltext[0];
+            text.innerHTML = etext[0];
         }
 
     </script>
