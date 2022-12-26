@@ -1099,7 +1099,7 @@
 
                     if (xq == 2) { // special case -- unkown plural overrides
                         put_pronoun(glist, ltext, 'x');
-                        etext[0] += txt + '(unkown plural)'
+                        etext[0] += txt + '(unknown plural)'
                     } else if (mix_plural) {  // special case -- other/you implies mixed plural
                         etext[0] += txt + '(plural)';
                     } else if (xq == 1) { // special case -- single unknown covers all other singles
@@ -1118,7 +1118,7 @@
                             plus = '+';
                         }
                         put_pronoun(glist, ltext, 'q');
-                        etext[0] += plus + 'unkown single)'
+                        etext[0] += plus + 'unknown single)'
                     } else {
                         etext[0] += txt + '(';
                         esep = handle_sub_pronoun(glist, ltext, etext, xf, 'f', 'F', esep);
