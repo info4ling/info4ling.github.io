@@ -163,6 +163,10 @@
         th {
             font-weight: normal;
         }
+
+        tr:has(>td>.solo:not(:checked)) > td > input[type="radio"] {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -223,7 +227,7 @@
             + 'Afterwards the Ordinal Tag and the number can replace the noun until the number is associated with another noun.<BR><BR>'
             + 'Singular is the default.<BR>Pronouns are created by combining modifiers in the order presented. '
             + 'For "We" where it is a masculine person, with other males and one female, would be: "SelfMaleOtherPluralMaleFemale". <BR><BR>'
-            + 'Note that: "Self/Other/Possessive/Reflexive" are only included once.Gender is one of: Unknown, Neuter, Feminine, Masculine. '
+            + 'Note that: "Self/You/Other/Possessive/Reflexive" are only included once. Person is Self/You/Other/Self+You/Self+Other. (Cannot have You and Other together). Gender is one of: Unknown, Neuter, Feminine, Masculine. '
             + 'Unkown is the default gender but may need to be explicitely included if it is needed to combine with other genders.<BR><BR>'
             + 'Other is only required after Self, by itself Other is the same as OtherPluralMalePluralFemale, '
             + 'and OtherPlural means more than one but genders are uncertain';
@@ -748,14 +752,12 @@
             return prow;
         }
 
-        function mk_pronoun(what) {
-            // 'Self' i, 'You' u, 'Other' o, 'Possessive' p, 'Reflexive' r, 'Plural' x, 'Unknown' q 'Neuter' n, 'Feminine' f, 'Masculine' m
-            var prow = pronoun_row(what);    
+        function mk_pronoun(what, prow = pronoun_row(what)) {
+            // 'Self' i, 'You' u, 'Other' o, 'Possessive' p, 'Reflexive' r, 'Plural' x, 'Unknown' q 'Neuter' n, 'Feminine' f, 'Masculine' m 
             return mk_overlay(false, prow & 8, prow & 4, prow & 2, prow & 1, pronoun_col & 4, pronoun_col & 2, pronoun_col & 1, true, IMG_H / 3, IMG_W / 3, PAD_SZ / 4);
         }
 
-        function prosound(what) {
-            var prow = pronoun_row(what);
+        function prosound(what, prow = pronoun_row(what)) {
             var ret = row_sounds[prow][0] + col_sounds[pronoun_col][0];
             return ret;
         }
@@ -963,18 +965,19 @@
             return 0;
         }
 
-        function do_pronoun(glist, ltext, etext, what, gender, plural, what_txt, gen_text, esep) {
-            glist.push(what);
-            ltext[0] += prosound(what);
-            etext[0] += esep + what_txt;
+        function put_pronoun(glist, ltext, what) {
+            var prow = pronoun_row(what);
+            glist.push(mk_pronoun(what, prow));
+            ltext[0] += prosound(what, prow);
+        }
 
+        function do_pronoun(glist, ltext, etext, gender, plural, gen_text, esep) {
             if (plural) {
-                glist.push(gender);
-                ltext[0] += prosound(gender);
+                put_pronoun(glist, ltext, 'x');
+                // gentext set for plural
             }
 
-            glist.push(gender);
-            ltext[0] += prosound(gender);
+            put_pronoun(glist, ltext, gender);
             etext[0] += gen_txt;
         }
 
@@ -982,20 +985,36 @@
             switch (txt) {
                 case pre+'0':
                     return esep;
+                case pre + 'F': // Plural 
+                    do_pronoun(glist, ltext, etext, 'f', true, 'fff', esep);
+                    esep = ' ';
+                    break;
                 case pre+'f':
-                    do_pronoun(glist, ltext, etext, pre, 'f', eng, '(f)', esep);
+                    do_pronoun(glist, ltext, etext, 'f', false, 'f', esep);
                     esep = ' ';
                     break;
-                case pre +'m':
-                    do_pronoun(glist, ltext, etext, pre, 'm', eng, '(m)', esep);
+                case pre + 'M': // Plural 
+                    do_pronoun(glist, ltext, etext, 'm', true, 'mmm', esep);
                     esep = ' ';
                     break;
-                case pre +'n':
-                    do_pronoun(glist, ltext, etext, pre, 'n', eng, '(n)', esep);
+                case pre + 'm':
+                    do_pronoun(glist, ltext, etext, 'm', false, 'm', esep);
+                    esep = ' ';
+                    break;
+                case pre +'N': // Plural
+                    do_pronoun(glist, ltext, etext, 'n', true, 'nnn', esep);
+                    esep = ' ';
+                    break;
+                case pre + 'n':
+                    do_pronoun(glist, ltext, etext, 'n', false, 'n', esep);
+                    esep = ' ';
+                    break;
+                case pre + 'Q':
+                    do_pronoun(glist, ltext, etext, 'q', true, '???', esep);
                     esep = ' ';
                     break;
                 case pre +'q':
-                    do_pronoun(glist, ltext, etext, pre, 'q', eng, '(?)', esep);
+                    do_pronoun(glist, ltext, etext, 'q', false, '?', esep);
                     esep = ' ';
                     break;
             }
@@ -1007,31 +1026,68 @@
             var lit = document.getElementById("pro-lit");
             var pglyth = document.getElementById("pro-glyph");
             var self = rbvalue("icb");
-            var you = rbvalue("ucb");
-            var of = cbchecked("f") + cbchecked("f2");
-            var om = cbchecked("m") + cbchecked("m2");
-            var on = cbchecked("n") + cbchecked("n2");
-            var oq = cbchecked("q") + cbchecked("q2");
+            var person = rbvalue("person");
+            var xf = cbchecked("f") + cbchecked("f2");
+            var xm = cbchecked("m") + cbchecked("m2");
+            var xn = cbchecked("n") + cbchecked("n2");
+            var xq = cbchecked("q") + cbchecked("q2");
 
             glist = [];
             ltext = [''];
             etext = [''];
             esep = '';
 
+            var has_self = cbchecked(me);
 
-            esep=handle_pronoun(glist, ltext, etext, self, 'i', 'I', esep);
-
-
-            if (of + om + on + oq == 0) {
-                if (you == 'u0') {
-                    if (self == 'i0') {
-                        etext[0] = "You must select something...";
-                    }
+            if (has_self) {
+                etext[0] += 'I(';
+                esep = handle_pronoun(glist, ltext, etext, self, 'i', esep);
+                etext[0] += ')';
+            }
+            
+            if (person == '1'){
+                if (!has_self) {
+                    etext[0] = "You must select something...";
+                } else {
+                    document.getElementById('f').checked = false;
+                    document.getElementById('f2').checked = false;
+                    document.getElementById('m').checked = false;
+                    document.getElementById('m2').checked = false;
+                    document.getElementById('n').checked = false;
+                    document.getElementById('n2').checked = false;
+                    document.getElementById('q').checked = false;
+                    document.getElementById('q2').checked = false;
                 }
-            } else {
+            } else {               
+                if (xf + xm + xn + xq == 0) {
+                    var none = document.getElementById('p1');
+                    none.checked = true;
+                    etext[0] = "You must select something...";
+                } else {
+                    // Set for 'Other'
+                    var pre = 'o';
+                    var txt = 'Other(';
+                    if (person == '2') { // you
+                        pre = 'u';
+                        txt = 'You(';
+                        put_pronoun(glist, ltext, 'u');
+                    } else if (has_self) {
+                        put_pronoun(glist, ltext, 'o');
+                    }
+
+                    etext[0] += txt;
+                    if (xf > 0) {
+                        esep = handle_pronoun(glist, ltext, etext, f, esep);
+                    }
+                    etext[0] += ')';
+                }
             }
 
-
+            if (glist.lenght) {
+                pglyth.appendChild(mk_div(glist));
+            }
+            lit.text = ltext[0];
+            text.text = etext[0];
         }
 
     </script>
@@ -1075,7 +1131,7 @@
                         <thead>
                             <tr>
                                 <th></th>
-                                <th>None</th>
+                                <th></th>
                                 <th>Female <div id="pro_f"></div> </th>
                                 <th>Male <div id="pro_m"></div> </th>
                                 <th>Neuter <div id="pro_u"></div> </th>
@@ -1085,7 +1141,7 @@
                         <tbody>
                             <tr>
                                 <td><span>1st Person - Self: </span> <div id="pro_i"> </div> </td>
-                                <td><input type="radio" id="i0" name="icb" value="i0" checked/></td>
+                                <td><input type="checkbox" id="me" name="self" value="me" class="solo" /></td>
                                 <td>
                                     <input type="radio" id="if" name="icb" value="if">
                                 </td>
@@ -1096,44 +1152,37 @@
                                     <input type="radio" id="in" name="icb" value="in">
                                 </td>
                                 <td>
-                                    <input type="radio" id="iq" name="icb" value="iq">
+                                    <input type="radio" id="iq" name="icb" value="iq" checked>
                                 </td>
                             </tr>
                             <tr>
                                 <td><span>2nd Person - You: </span> <div id="pro_u"></div> </td>
-                                <td>
-                                    <input type="radio" id="u0" name="ucb" value="u0" checked/>
+                                <td><input type="radio" id="p2" name="person" value="2"></td>
+                                <td rowspan="2">
+                                    <input type="checkbox" id="f" name="pronoun-cb" value="f" />
+                                    <input type="checkbox" id="f2" name="pronoun-cb" value="f2" />
                                 </td>
-                                <td><input type="radio" id="uf" name="ucb" value="uf">
-                                <td>
-                                    <input type="radio" id="um" name="ucb" value="um">
+                                <td rowspan="2">
+                                    <input type="checkbox" id="m" name="pronoun-cb" value="m" />
+                                    <input type="checkbox" id="m2" name="pronoun-cb" value="m2" />
                                 </td>
-                                <td>
-                                    <input type="radio" id="un" name="ucb" value="un">
+                                <td rowspan="2">
+                                    <input type="checkbox" id="n" name="pronoun-cb" value="n" />
+                                    <input type="checkbox" id="n2" name="pronoun-cb" value="n2" />
                                 </td>
-                                <td>
-                                    <input type="radio" id="uq" name="ucb" value="uq">
+                                <td rowspan="2">
+                                    <input type="checkbox" id="q" name="pronoun-cb" value="q" />
+                                    <input type="checkbox" id="q2" name="pronoun-cb" value="q2" />
                                 </td>
                             </tr>
                             <tr>
                                 <td><span>3rd Person - Other</span> <div id="pro_o"></div> </td>
-                                <td></td>
-                                <td>
-                                    <input type="checkbox" id="f" name="pronoun-cb" value="f" />
-                                    <input type="checkbox" id="f2" name="pronoun-cb" value="f2" />
-                                </td>
-                                <td>
-                                    <input type="checkbox" id="m" name="pronoun-cb" value="m" />
-                                    <input type="checkbox" id="m2" name="pronoun-cb" value="m2" />
-                                </td>
-                                <td>
-                                    <input type="checkbox" id="n" name="pronoun-cb" value="n" />
-                                    <input type="checkbox" id="n2" name="pronoun-cb" value="n2" />
-                                </td>
-                                <td>
-                                    <input type="checkbox" id="q" name="pronoun-cb" value="q" />
-                                    <input type="checkbox" id="q2" name="pronoun-cb" value="q2" />
-                                </td>
+                                <td><input type="radio" id="p3" name="person" value="3"></td>
+                            </tr>
+                            <tr>
+                                <td><span>None</span></td>
+                                <td><input type="radio" id="p1" name="person" value="1" checked></td>
+                                <td colspan=4></td>
                             </tr>
                         </tbody>
                     </table>
