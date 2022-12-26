@@ -981,7 +981,7 @@
             etext[0] += gen_txt;
         }
 
-        function handle_pronoun(glist, ltext, etext, txt, pre, eng, esep) {
+        function handle_pronoun(glist, ltext, etext, txt, pre, esep) {
             switch (txt) {
                 case pre+'0':
                     return esep;
@@ -1019,6 +1019,13 @@
                     break;
             }
             return ' ';
+        }
+
+        function handle_sub_pronoun(glist, ltext, etext, val, sing, plur, esep) {
+            if (val == 0) return esep;
+
+            var txt = (val == 1) ? sing, plur;
+            return handle_pronoun(glist, ltext, etext, txt, '', esep);
         }
 
         function procalc() {
@@ -1076,9 +1083,10 @@
                     }
 
                     etext[0] += txt;
-                    if (xf > 0) {
-                        esep = handle_pronoun(glist, ltext, etext, f, esep);
-                    }
+                    esep = handle_sub_pronoun(glist, ltext, etext, xf, 'f', 'F', esep);
+                    esep = handle_sub_pronoun(glist, ltext, etext, xm, 'm', 'M', esep);
+                    esep = handle_sub_pronoun(glist, ltext, etext, xn, 'n', 'N', esep);
+                    esep = handle_sub_pronoun(glist, ltext, etext, xq, 'q', 'Q', esep);
                     etext[0] += ')';
                 }
             }
