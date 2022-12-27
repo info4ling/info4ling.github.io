@@ -266,7 +266,7 @@
         const spaces = ' &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp';
 
         const creature_types = [
-            ['Tree', 'Bush', 'Herb', 'Hair', 'Feather', 'Scale', 'Shell', 'Smooth',],
+            ['Tree', 'Bush', 'Herb', 'Hair', 'Pelt', 'Feather', 'Shell', 'Smooth',],  // Hair vs Pelt (usable) -- Shell is anything with hard outer (insect, turtle, mollusk), Smooth is scale (snake/shark/fish) or none (newt)
             ['High Spirit', 'Med Spirit', 'Low Spririt', 'Dead Spirit', 'Legendary Creature', 'Fae'],
         ]
         const tree_types = [
@@ -280,20 +280,23 @@
 
         const hair_types = [ // Mammals
             'Anthropod', // Human, ape, monkey ...
-            'Rodent', // Beaver, Rabbit, rat
-            'Herd', //Sheep, Gazelle, cow
             'Pig', // Boars..
-            'Bats',
-            'Wolf', // Dogs, Foxes
-            'Raccoon', // Skunk, Badger
             'Selkie', // Seal, skunk, badger
-            'Whale', //Dolphin, Seacow, Siren
-            'Cats', //Tigers, Sabertooth
-            'Bears', // Polar, Grizzly, Panda
+            'Whale', // Dolphin, Seacow, Siren
             'Horse/Camel',
+            'Herd', // Sheep, Gazelle, cow
             'Elephant', // Rhino, Hippo
             'Sloth',
-            'Weasel', //+mongoose
+        ];
+
+        const pelt_types = [ // Mammals
+            'Rodent', // Beaver, Rabbit, rat
+            'Bat',
+            'Wolf', // Dogs, Foxes
+            'Raccoon', // Skunk, Badger
+            'Cat', // Tigers, Sabertooth
+            'Bear', // Polar, Grizzly, Panda
+            'Weasel', // +mongoose
             'Lemur',
         ];
 
