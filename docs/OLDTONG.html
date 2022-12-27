@@ -31,20 +31,24 @@
             #glyphmap td:not(:first-child):not(empty) > div {
                 display: grid;
                 grid-template-columns: 1fr 1fr;
-                grid-template-rows: 2fr 2fr 1fr;
+                grid-template-rows: 2fr 2fr 1fr 1fr;
                 align-items: center;
                 height: 100%;
                 vertical-align: middle;
             }
 
+            #glyphmap td:not(:first-child):not(empty) > div > div:nth-child(5) {
+                grid-column: 1 / 3;
+            }
+
             /* left (header type) cell */
             #glyphmap td:first-child > div {
-                display: grid;
-                grid-template-columns: auto;
-                grid-template-rows: 2fr 2fr 1fr;
-                align-items: center;
-                height: 100%;
-                vertical-align: middle;
+            display: grid;
+            grid-template-columns: auto;
+            grid-template-rows: 2fr 2fr 1fr 1fr;
+            align-items: center;
+            height: 100%;
+            vertical-align: middle;
             }
 
             /* comment */
@@ -227,7 +231,7 @@
         const cat = ['Category', 'Living Creature', 'Color', 'Weather', 'Elevation', 'Spirit', 'Possession', 'Transport'];
         const cat_txt = '';
 
-        const pron = ['Pronoun', 'Ordinal Tag', 'Self', 'You', 'Other', 'Possessive', 'Reflexive', 'Plural', 'Unknown', 'Neuter', 'Feminine', 'Masculine',];
+        const pron = ['Pronoun', 'Ordinal Tag', 'Self', 'You', 'Other', 'Possessive', 'Reflexive', 'Plural', 'Unknown', 'Neuter', '', '', '', 'Masculine', '', '', 'Feminine',];
         const pron_txt = 'The "Ordinal Tag" can be associated with any noun: Pronoun, Subject, or Object by prepending it, followed by a number (usually 1,2,3). '
             + 'Afterwards the Ordinal Tag and the number can replace the noun until the number is associated with another noun.<BR><BR>'
             + 'Singular is the default.<BR>Pronouns are created by combining modifiers in the order presented. '
@@ -263,72 +267,120 @@
 
         const creature_types = [
             ['Tree', 'Bush', 'Herb', 'Hair', 'Feather', 'Scale', 'Shell', 'Smooth',],
-            ['High Spirit', 'Med Spirit', 'Low Spririt', 'Dead Spirit'],
+            ['High Spirit', 'Med Spirit', 'Low Spririt', 'Dead Spirit', 'Legendary Creature', 'Fae'],
         ]
+        const tree_types = [
+        ];
+
+        const bush_types = [
+        ];
+
+        const herb_types = [
+        ];
+
+        const hair_types = [ // Mammals
+            'Anthropod', // Human, ape, monkey ...
+            'Rodent', // Beaver, Rabbit, rat
+            'Herd', //Sheep, Gazelle, cow
+            'Pig', // Boars..
+            'Bats',
+            'Wolf', // Dogs, Foxes
+            'Raccoon', // Skunk, Badger
+            'Selkie', // Seal, skunk, badger
+            'Whale', //Dolphin, Seacow, Siren
+            'Cats', //Tigers, Sabertooth
+            'Bears', // Polar, Grizzly, Panda
+            'Horse/Camel',
+            'Elephant', // Rhino, Hippo
+            'Sloth',
+            'Weasel', //+mongoose
+            'Lemur',
+        ];
+
+        const feather_types = [ // Birds
+        ];
+
+        const scale_types = [ // Snakes, Lizards, Fish, Sharks, Skates, ...
+        ];
+
+        const shell_types = [ // Insect, Mollusk, Shellfish, Turtles, Snails
+        ];
+
+        const smooth = [ // Worms, Ambibians, Slugs
+        ];
+
         const creatures = {
             'Desert': [
                 ['Tree', 'Bush', 'Herb', 'Hair', 'Feather', 'Scale', 'Shell', 'Smooth',],
-                ['High Spirit', 'Med Spirit', 'Low Spririt', 'Dead Spirit'],
+                ['Tree',],
+                ['Bush',],
+                ['Herb',],
+                ['Hair',],
+                ['Feather',],
+                ['Scale',],
+                ['Shell',],
+                ['Smooth',],
+                ['High Spirit', 'Med Spirit', 'Low Spririt', 'Dead Spirit', 'Legendary Creature', 'Fae'],
             ],
             'Tundra': [
                 ['Tree', 'Bush', 'Herb', 'Hair', 'Feather', 'Scale', 'Shell', 'Smooth',],
-                ['High Spirit', 'Med Spirit', 'Low Spririt', 'Dead Spirit'],
+                ['High Spirit', 'Med Spirit', 'Low Spririt', 'Dead Spirit', 'Legendary Creature', 'Fae'],
             ],
             'Mountain/ Volcano': [
                 ['Tree', 'Bush', 'Herb', 'Hair', 'Feather', 'Scale', 'Shell', 'Smooth',],
-                ['High Spirit', 'Med Spirit', 'Low Spririt', 'Dead Spirit'],
+                ['High Spirit', 'Med Spirit', 'Low Spririt', 'Dead Spirit', 'Legendary Creature', 'Fae'],
             ],
             'Grasslands': [
                 ['Tree', 'Bush', 'Herb', 'Hair', 'Feather', 'Scale', 'Shell', 'Smooth',],
-                ['High Spirit', 'Med Spirit', 'Low Spririt', 'Dead Spirit'],
+                ['High Spirit', 'Med Spirit', 'Low Spririt', 'Dead Spirit', 'Legendary Creature', 'Fae'],
             ],
             'Shrubland': [
                 ['Tree', 'Bush', 'Herb', 'Hair', 'Feather', 'Scale', 'Shell', 'Smooth',],
-                ['High Spirit', 'Med Spirit', 'Low Spririt', 'Dead Spirit'],
+                ['High Spirit', 'Med Spirit', 'Low Spririt', 'Dead Spirit', 'Legendary Creature', 'Fae'],
             ],
             'Woodland': [
                 ['Tree', 'Bush', 'Herb', 'Hair', 'Feather', 'Scale', 'Shell', 'Smooth',],
-                ['High Spirit', 'Med Spirit', 'Low Spririt', 'Dead Spirit'],
+                ['High Spirit', 'Med Spirit', 'Low Spririt', 'Dead Spirit', 'Legendary Creature', 'Fae'],
             ],
             'Forest': [
                 ['Tree', 'Bush', 'Herb', 'Hair', 'Feather', 'Scale', 'Shell', 'Smooth',],
-                ['High Spirit', 'Med Spirit', 'Low Spririt', 'Dead Spirit'],
+                ['High Spirit', 'Med Spirit', 'Low Spririt', 'Dead Spirit', 'Legendary Creature', 'Fae'],
             ],
             'Jungle': [
                 ['Tree', 'Bush', 'Herb', 'Hair', 'Feather', 'Scale', 'Shell', 'Smooth',],
-                ['High Spirit', 'Med Spirit', 'Low Spririt', 'Dead Spirit'],
+                ['High Spirit', 'Med Spirit', 'Low Spririt', 'Dead Spirit', 'Legendary Creature', 'Fae'],
             ],
             'Swamp': [
                 ['Tree', 'Bush', 'Herb', 'Hair', 'Feather', 'Scale', 'Shell', 'Smooth',],
-                ['High Spirit', 'Med Spirit', 'Low Spririt', 'Dead Spirit'],
+                ['High Spirit', 'Med Spirit', 'Low Spririt', 'Dead Spirit', 'Legendary Creature', 'Fae'],
             ],
             'Marsh': [
                 ['Tree', 'Bush', 'Herb', 'Hair', 'Feather', 'Scale', 'Shell', 'Smooth',],
-                ['High Spirit', 'Med Spirit', 'Low Spririt', 'Dead Spirit'],
+                ['High Spirit', 'Med Spirit', 'Low Spririt', 'Dead Spirit', 'Legendary Creature', 'Fae'],
             ],
             'Bogs': [
                 ['Tree', 'Bush', 'Herb', 'Hair', 'Feather', 'Scale', 'Shell', 'Smooth',],
-                ['High Spirit', 'Med Spirit', 'Low Spririt', 'Dead Spirit'],
+                ['High Spirit', 'Med Spirit', 'Low Spririt', 'Dead Spirit', 'Legendary Creature', 'Fae'],
             ],
             'Island': [
                 ['Tree', 'Bush', 'Herb', 'Hair', 'Feather', 'Scale', 'Shell', 'Smooth',],
-                    ['High Spirit', 'Med Spirit', 'Low Spririt', 'Dead Spirit'],
+                ['High Spirit', 'Med Spirit', 'Low Spririt', 'Dead Spirit', 'Legendary Creature', 'Fae'],
             ],
             'Ocean': [
                 ['Tree', 'Bush', 'Herb', 'Hair', 'Feather', 'Scale', 'Shell', 'Smooth',],
-                ['High Spirit', 'Med Spirit', 'Low Spririt', 'Dead Spirit'],
+                ['High Spirit', 'Med Spirit', 'Low Spririt', 'Dead Spirit', 'Legendary Creature', 'Fae'],
             ],
             'Lake': [
                 ['Tree', 'Bush', 'Herb', 'Hair', 'Feather', 'Scale', 'Shell', 'Smooth',],
-                ['High Spirit', 'Med Spirit', 'Low Spririt', 'Dead Spirit'],
+                ['High Spirit', 'Med Spirit', 'Low Spririt', 'Dead Spirit', 'Legendary Creature', 'Fae'],
             ],
             'River': [
                 ['Tree', 'Bush', 'Herb', 'Hair', 'Feather', 'Scale', 'Shell', 'Smooth',],
-                ['High Spirit', 'Med Spirit', 'Low Spririt', 'Dead Spirit'],
+                ['High Spirit', 'Med Spirit', 'Low Spririt', 'Dead Spirit', 'Legendary Creature', 'Fae'],
             ],
             'Reef': [
                     ['Tree', 'Bush', 'Herb', 'Hair', 'Feather', 'Scale', 'Shell', 'Smooth',],
-                    ['High Spirit', 'Med Spirit', 'Low Spririt', 'Dead Spirit'],
+                ['High Spirit', 'Med Spirit', 'Low Spririt', 'Dead Spirit', 'Legendary Creature', 'Fae'],
             ],
         };
         const lockeys = Object.keys(creatures);
@@ -458,33 +510,34 @@
         }
 
         function get_sl_text(which, row, col) {
-            if (row == 0) { // left header
+            if (row == 0) { // top header
                 if (col >= creature_types[which]) {
                     return spaces;
                 }
-                return creature_types[which][row];
+                return creature_types[which][col-1];
             }
             row--;
             if (row >= lockeys.length) {
                 return spaces;
             }
             var key = lockeys[row];
-            if (col == 0) { // top header
+            if (col == 0) { // left header
                 return key;
             }
             col--;
             var data = creatures[key][which];
-            if (col >= data) {
-                return spaces
+            if (col >= data.length) {
+                return spaces;
             }
+            return data[col];
         }
 
-        function get_ltext(row, col) {
-            return get_sl_text(0, row, col);
+        function get_live_text(row, col) {
+            return wrap(get_sl_text(0, row, col));
         }
 
-        function get_stext(row, col) {
-            return get_sl_text(1, row, col);
+        function get_spirit_text(row, col) {
+            return wrap(get_sl_text(1, row, col));
         }
 
         function num_sound(row) {
@@ -631,7 +684,7 @@
                         BOOL.forEach(r2 => {
                             BOOL.forEach(r1 => {
                                 var col = 0;
-                                var images = [
+                                var images = [ // left header
                                     mk_div([
                                         mk_overlay(true, r8, r4, r2, r1, false, false, false),
                                         mk_div([
@@ -640,17 +693,20 @@
                                             italic(row_sounds[row][1]),
                                         ]),
                                         mk_div([bold(get_mtext(row, 0))]),
+                                        get_live_text(row + 1, 0), // get_spirit_text(row + 1, 0), SKIP (live and spirit have the same text)
                                     ])
                                 ];
                                 BOOL.forEach(c4 => {
                                     BOOL.forEach(c2 => {
                                         BOOL.forEach(c1 => {
                                             if (!header) {
-                                                hdr_images.push(mk_div([
+                                                hdr_images.push(mk_div([ // top header
                                                     mk_overlay(true, false, false, false, false, c4, c2, c1),
                                                     bold(get_ctext(0, col)),
                                                     bold(col_sounds[col][0]),
                                                     italic(col_sounds[col][1]),
+                                                    get_live_text(0, col + 1),
+                                                    get_spirit_text(0, col + 1),
                                                 ]));
                                                 ftr_images.push(mk_div([ // double div to control overflow
                                                     mk_div([
@@ -658,12 +714,13 @@
                                                     ]),
                                                 ]));
                                             }
-                                            images.push(mk_div([
+                                            images.push(mk_div([ // each cell
                                                 mk_overlay(false, r8, r4, r2, r1, c4, c2, c1),
                                                 color_circle(row, col),
                                                 italic(row_sounds[row][0] + col_sounds[col][0]),
                                                 bold(get_ctext(row + 1, col) + spaces),
-                                                mk_div([bold(get_mtext(row, col + 1))]),
+                                                mk_div([bold(get_mtext(row, col + 1))]), // css sets colspan=2 -- wrap(spaces),
+                                                get_live_text(row + 1, col + 1), get_spirit_text(row + 1, col + 1),
                                             ]));
                                             col++;
                                         }); // c1
