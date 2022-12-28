@@ -19,8 +19,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />
-    <None Include="Animal.csv">
-      <Filter>Resource Files</Filter>
+    <None Include="Creature.csv">
+      <Filter>docs</Filter>
     </None>
   </ItemGroup>
 </Project>
