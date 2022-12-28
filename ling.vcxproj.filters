@@ -19,7 +19,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />
-    <None Include="D:\DOWNLOADS\GT\Animals - Sheet1.csv">
+    <None Include="Animal.csv">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>
