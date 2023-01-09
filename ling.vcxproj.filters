@@ -19,7 +19,25 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />
-    <None Include="Creature.csv">
+    <None Include="docs\grid.csv">
+      <Filter>docs</Filter>
+    </None>
+    <None Include="docs\byrow.csv">
+      <Filter>docs</Filter>
+    </None>
+    <None Include="docs\OLDTONG.css">
+      <Filter>docs</Filter>
+    </None>
+    <None Include="docs\OLDTONG.js">
+      <Filter>docs</Filter>
+    </None>
+    <None Include="docs\rowglyph.csv">
+      <Filter>docs</Filter>
+    </None>
+    <None Include="docs\colglyph.csv">
+      <Filter>docs</Filter>
+    </None>
+    <None Include="docs\glyph_data.csv">
       <Filter>docs</Filter>
     </None>
   </ItemGroup>
