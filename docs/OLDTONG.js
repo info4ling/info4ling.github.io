@@ -1,9 +1,46 @@
 
 //////////////////////// Globals
 
-var glyph_data = null;
+function csv_to_arr_of_arr(filename) {
+    var status=null;
+
+    var rawFile = new XMLHttpRequest();
+    rawFile.open("GET", file, false);
+    rawFile.onreadystatechange = function () {
+        if (rawFile.readyState === 4) {
+            if (rawFile.status === 200 || rawFile.status == 0) {
+                status = rawFile.responseText;
+            }
+        }
+    }
+    rawFile.send(null); // Wait synchronously
+    var ret=[];
+    if (status == null) {
+        return ret;
+    }
+
+    let splitStatus = status.split('\n');
+    for (let i = 0; i < splitStatus.length; i++) {
+        let line = splitStatus[i];
+        ret.push(line.split(',');
+    }
+
+    return ret;
+}
+
+var glyph_data = {};
 
 function load_glyph_data() {
+    var arr = csv_to_arr_of_arr("glyph_data.csv");
+    for (let i = 0; i < arr.length; i++) {
+        var data = arr[i];
+        var key1 = arr.shift();
+        var key2 = arr.shift();
+        if (glyph_data[key1] == null) {
+            glyph_data[key1] = {};
+        }
+        glyph_data[key1][key2] = data;
+    }
 }
 
 function draw_glyph_line(context, shift, point1, point2) {
@@ -66,7 +103,7 @@ function mk_glyph(name, r1, r2, r4, r8, c1, c2, c4) {
 
     draw_glyph_row(context, r1, r2, r4, r8);
     draw_glyph_center(context);
-    draw_glyph_col(context, shift, c1, c2, r4);
+    draw_glyph_col(context, false, c1, c2, r4);
 
     saveImage(canvas, name);
 
@@ -852,6 +889,7 @@ function procalc() {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
+    load_glyph_data();
     input = document.getElementById('number');
     calc_glyph = document.getElementById('glyph');
     calc_math = document.getElementById('math');
