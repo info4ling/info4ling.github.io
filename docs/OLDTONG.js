@@ -1,36 +1,85 @@
 
 //////////////////////// Globals
 
-function csv_to_arr_of_arr(filename) {
-    var status=null;
 
-    var rawFile = new XMLHttpRequest();
-    rawFile.open("GET", file, false);
-    rawFile.onreadystatechange = function () {
-        if (rawFile.readyState === 4) {
-            if (rawFile.status === 200 || rawFile.status == 0) {
-                status = rawFile.responseText;
+const BOOL = [false, true];
+
+const spaces = ' &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp';
+
+const skip = [[], spaces];
+
+const IMG_W = 40;
+const IMG_H = 40;
+
+const PAD_SZ = (IMG_W + IMG_H) / 10;
+
+const SB = [[100, 60], [100, 90], [100, 80], [60, 70], [40, 50], [100, 30], [60, 20], [80, 8]];
+
+const stored_images = {};
+
+// Globals that change
+
+var valc = 0;
+var count_in_glyphs_row = 0;
+
+// Globals set after document.ready()
+
+var input = null;
+var calc_glyph = null;
+var calc_math = null;
+var calc_lit = null;
+var Xcore = null;
+var Xr8 = null;
+var Xr4 = null;
+var Xr2 = null;
+var Xr1 = null;
+var Xc4 = null;
+var Xc2 = null;
+var Xc1 = null;
+
+//////////////////////////////// Functions
+
+const FILE_DATA = {}
+
+function file_promise(filename) {
+        return new Promise((resolve, reject) => {
+            let xhr = new XMLHttpRequest();
+            xhr.open(obj.method || "GET", filename);
+            if (obj.headers) {
+                Object.keys(obj.headers).forEach(key => {
+                    xhr.setRequestHeader(key, obj.headers[key]);
+                });
             }
-        }
-    }
-    rawFile.send(null); // Wait synchronously
-    var ret=[];
-    if (status == null) {
-        return ret;
-    }
-
-    let splitStatus = status.split('\n');
-    for (let i = 0; i < splitStatus.length; i++) {
-        let line = splitStatus[i];
-        ret.push(line.split(',');
+            xhr.onload = () => {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    resolve(xhr.response);
+                } else {
+                    reject(xhr.statusText);
+                }
+            };
+            xhr.onerror = () => reject(xhr.statusText);
+            xhr.send(obj.body);
+        });
     }
 
-    return ret;
+function blob_to_arr_of_arr(blob) {
+    request({ url: filename })
+        .then(data => {
+            var lines = data.split(/\n/);
+            var arr = [];
+            for (let i = 0; i < lines.length; ++i) {
+                arr.push(lines[i].split(/,/));
+            }
+            func(arr);
+        })
+        .catch(error => {
+            console.log(error);
+        });
 }
 
 var glyph_data = {};
 
-function load_glyph_data() {
+function load_glyph_data(arr) {
     var arr = csv_to_arr_of_arr("glyph_data.csv");
     for (let i = 0; i < arr.length; i++) {
         var data = arr[i];
@@ -53,7 +102,7 @@ function draw_glyph_line(context, shift, point1, point2) {
     context.fillStyle = '#000000';
     context.lineWidth = 4;
     context.beginPath();
-    context.moveTo(adj + (rpos1[X] * IMG_W/2), rpos1[Y]*IMG_H/2);
+    context.moveTo(adj + (rpos1[X] * IMG_W / 2), rpos1[Y] * IMG_H / 2);
     context.lineTo(adj + (rpos2[X] * IMG_W / 2), rpos1[Y] * IMG_H / 2);
     context.stroke();
     context.closePath();
@@ -95,8 +144,6 @@ function draw_glyph_center(context) {
     draw_glyph_stroke(context, 'X', '0', shift);
 }
 
-var images = {};
-
 function mk_glyph(name, r1, r2, r4, r8, c1, c2, c4) {
     var canvas = makeCanvas(IMG_W, IMG_H);
     var context = canvas.getContext('2d');
@@ -112,7 +159,7 @@ function mk_glyph(name, r1, r2, r4, r8, c1, c2, c4) {
 
 function makeCanvas(wsz, hsz) {
     var canvas = document.createElement('canvas');
-    
+
     canvas.width = wsz;
     canvas.height = hsz;
 
@@ -121,51 +168,17 @@ function makeCanvas(wsz, hsz) {
 
 function saveImage(original, name) {
     var URI = original.toDataURL('image/png');
-    images[name] = URI;
+    stored_images[name] = URI;
 }
 
 function getImage(name, rsz) {
-    var dataURI = images[name];
+    var dataURI = stored_images[name];
     var image = document.createElement('img');
     image.src = dataURI;
     image.width = rsz;
     image.height = rsz;
     return image;
 }
-const BOOL = [false, true];
-
-const spaces = ' &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp';
-
-const skip = [[], spaces];
-
-const IMG_W = 40;
-const IMG_H = 40;
-
-const PAD_SZ = (IMG_W + IMG_H) / 10;
-
-const SB = [[100, 60], [100, 90], [100, 80], [60, 70], [40, 50], [100, 30], [60, 20], [80, 8]];
-
-// Globals that change
-
-var valc = 0;
-var count_in_glyphs_row = 0;
-
-// Globals set after document.ready()
-
-var input = null;
-var calc_glyph = null;
-var calc_math = null;
-var calc_lit = null;
-var Xcore = null;
-var Xr8 = null;
-var Xr4 = null;
-var Xr2 = null;
-var Xr1 = null;
-var Xc4 = null;
-var Xc2 = null;
-var Xc1 = null;
-
-//////////////////////////////// Functions
 
 function get_ctext(row, col, is_data = true) {
     if (col >= ctext.length) {
@@ -889,19 +902,10 @@ function procalc() {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-    load_glyph_data();
     input = document.getElementById('number');
     calc_glyph = document.getElementById('glyph');
     calc_math = document.getElementById('math');
     calc_lit = document.getElementById('lit');
-    Xcore = mk_layer('ZBase.png');
-    Xr8 = mk_layer('ZC8.png');
-    Xr4 = mk_layer('ZC4.png');
-    Xr2 = mk_layer('ZC2.png');
-    Xr1 = mk_layer('ZC1.png');
-    Xc4 = mk_layer('ZV4.png');
-    Xc2 = mk_layer('ZV2.png');
-    Xc1 = mk_layer('ZV1.png');
 
     numtxt = document.getElementById('number_txt');
     numtxt.innerHTML = number_txt;
@@ -912,9 +916,9 @@ document.addEventListener('DOMContentLoaded', function () {
     protxt.innerHTML = pron_txt;
     protxt.style.border = '2px solid black';
     protxt.style.marginBottom = '25px';
-
-    var prepositions = ['Preposition', 'over (under)', 'in (out)', 'inside (outside)', 'front (back)', 'left (right)', 'up (down)'];
-    {
+    var arr = csv_to_arr_of_arr("glyph_data.csv", function () {
+        load_glyph_data(arr);
+   
         var cbody = document.getElementById("cbody");
         var chead = document.getElementById("chead");
         var blank = wrap('');
