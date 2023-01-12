@@ -31,23 +31,36 @@ var calc_lit = null;
 
 //////////////////////////////// Functions
 
-function blob_to_arr_of_arr(blob) {
-    var lines = blob.split(/\n/);
-    var arr = [];
-    for (let i = 0; i < lines.length; ++i) {
-        arr.push(lines[i].split(/,/));
-    }
-    return blob;
-}
+// todo is array of tuples [ file , line_process_func ]
+function on_ready_blobs(todo, after) {
+    var proms = [ready_promise()];
+    todo.forEach(bfile_rec => {
+        proms.push(blob_promise(bfile_rec[0], bfile_rec[1]));
+    });
+    Promise.all(proms).then((values) => {
+        console.log(values);
+        after(values);
+    });
 
-function blob_promise(filename, func) {
-    return new Promise((resolve, reject) => {
-        let xhr = new XMLHttpRequest();
-        xhr.open("GET", filename);
-        xhr.responseType = 'text';
-        xhr.onload = () => {
+    function ready_promise() {
+        return new Promise((resolve) => {
+            if (document.readyState != "loading")
+                return resolve();
+            else
+                document.addEventListener("DOMContentLoaded", function () {
+                    return resolve();
+                });
+        });
+    }
+
+    function blob_promise(filename, line_func) {
+        return new Promise((resolve, reject) => {
+            let xhr = new XMLHttpRequest();
+            xhr.open("GET", filename);
+            xhr.responseType = 'text';
+            xhr.onload = () => {
                 if (xhr.status >= 200 && xhr.status < 300) {
-                    resolve(func(xhr.responseText));
+                    resolve(blob_to_obj(xhr.responseText, line_func));
                 } else {
                     reject(xhr.statusText);
                 }
@@ -55,47 +68,58 @@ function blob_promise(filename, func) {
             xhr.onerror = () => reject(xhr.statusText);
             xhr.send();
         });
-}
 
-function ready_promise() {
-    return new Promise((resolve) => {
-        if (document.readyState != "loading")
-            return resolve();
-        else
-            document.addEventListener("DOMContentLoaded", function () {
-                return resolve();
-            });
-    });
-}
-
-function on_ready_blobs(files, before, after) {
-    var proms = [ready_promise()];
-    files.forEach(bfile => {
-        proms.push(blob_promise(bfile, before));
-    });
-    Promise.all(proms).then((values) => {
-        console.log(values);
-        after(values);
-    });
-}
-
-function on_ready_csv_blobs(files, func) {
-    on_ready_blobs(files, blob_to_arr_of_arr, func);
-}
-
-var glyph_data = {};
-
-function load_glyph_data(arr) {
-    var arr = csv_to_arr_of_arr("glyph_data.csv");
-    for (let i = 0; i < arr.length; i++) {
-        var data = arr[i];
-        var key1 = arr.shift();
-        var key2 = arr.shift();
-        if (glyph_data[key1] == null) {
-            glyph_data[key1] = {};
+        function blob_to_obj(blob, func) {
+            var lines = blob.split(/\n/);
+            var arr = null;
+            for (let i = 0; i < lines.length; ++i) {
+                func(lines[i]);
+            }
+            return blob;
         }
-        glyph_data[key1][key2] = data;
     }
+}
+
+function comma_split(line) {
+    return line.split(/,/);
+}
+
+function simple_csv_to_arr_of_arr(current, line) {
+    if (current == null) {
+        current = [];
+    }
+    current.push(comma_split(line));
+    return current;
+}
+
+function simple_csv_to_dict(current, line) {
+    if (current == null) {
+        current = {};
+    }
+
+    var data = comma_split(line);
+    var key = data.shift();
+
+    current[key] = data;
+
+    return current;
+}
+
+// for "glyph_data.csv"
+function simple_csv_to_dict_of_dict(current, line) {
+    if (current == null) {
+        current = {};
+    }
+
+    var data = comma_split(line);
+    var key1 = data.shift();
+    var key2 = data.shift();
+    if (current[key1] == null) {
+        current[key1] = {};
+    }
+    current[key1][key2] = data;
+    
+    return current;
 }
 
 function draw_glyph_line(context, shift, point1, point2) {
@@ -924,7 +948,7 @@ document.addEventListener('DOMContentLoaded', function () {
     protxt.style.marginBottom = '25px';
     var arr = csv_to_arr_of_arr("glyph_data.csv", function () {
         load_glyph_data(arr);
-   
+
         var cbody = document.getElementById("cbody");
         var chead = document.getElementById("chead");
         var blank = wrap('');

@@ -31,10 +31,7 @@
     <None Include="docs\OLDTONG.js">
       <Filter>docs</Filter>
     </None>
-    <None Include="docs\rowglyph.csv">
-      <Filter>docs</Filter>
-    </None>
-    <None Include="docs\colglyph.csv">
+    <None Include="docs\glyph_sound.csv">
       <Filter>docs</Filter>
     </None>
     <None Include="docs\glyph_data.csv">

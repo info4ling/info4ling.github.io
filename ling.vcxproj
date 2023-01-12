@@ -140,12 +140,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="docs\byrow.csv" />
-    <None Include="docs\colglyph.csv" />
     <None Include="docs\glyph_data.csv" />
     <None Include="docs\grid.csv" />
     <None Include="docs\OLDTONG.css" />
     <None Include="docs\OLDTONG.js" />
-    <None Include="docs\rowglyph.csv" />
+    <None Include="docs\glyph_sound.csv" />
     <None Include="README.md" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
