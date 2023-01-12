@@ -99,7 +99,6 @@ function simple_csv_to_dict(current, line) {
 
     var data = comma_split(line);
     var key = data.shift();
-
     current[key] = data;
 
     return current;
