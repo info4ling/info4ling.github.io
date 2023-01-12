@@ -19,7 +19,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />
-    <None Include="docs\grid.csv">
+    <None Include="docs\bycol.csv">
       <Filter>docs</Filter>
     </None>
     <None Include="docs\byrow.csv">
