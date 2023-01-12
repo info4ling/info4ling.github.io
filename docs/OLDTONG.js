@@ -28,14 +28,6 @@ var input = null;
 var calc_glyph = null;
 var calc_math = null;
 var calc_lit = null;
-var Xcore = null;
-var Xr8 = null;
-var Xr4 = null;
-var Xr2 = null;
-var Xr1 = null;
-var Xc4 = null;
-var Xc2 = null;
-var Xc1 = null;
 
 //////////////////////////////// Functions
 
@@ -48,14 +40,14 @@ function blob_to_arr_of_arr(blob) {
     return blob;
 }
 
-function blob_promise(filename) {
+function blob_promise(filename, func) {
     return new Promise((resolve, reject) => {
         let xhr = new XMLHttpRequest();
         xhr.open("GET", filename);
         xhr.responseType = 'text';
         xhr.onload = () => {
                 if (xhr.status >= 200 && xhr.status < 300) {
-                    resolve(blob_to_arr_of_arr(xhr.responseText));
+                    resolve(func(xhr.responseText));
                 } else {
                     reject(xhr.statusText);
                 }
@@ -66,12 +58,30 @@ function blob_promise(filename) {
 }
 
 function ready_promise() {
+    return new Promise((resolve) => {
+        if (document.readyState != "loading")
+            return resolve();
+        else
+            document.addEventListener("DOMContentLoaded", function () {
+                return resolve();
+            });
+    });
 }
 
-function on_ready_blobs(files) {
-
+function on_ready_blobs(files, before, after) {
+    var proms = [ready_promise()];
+    files.forEach(bfile => {
+        proms.push(blob_promise(bfile, before));
+    });
+    Promise.all(proms).then((values) => {
+        console.log(values);
+        after(values);
+    });
 }
 
+function on_ready_csv_blobs(files, func) {
+    on_ready_blobs(files, blob_to_arr_of_arr, func);
+}
 
 var glyph_data = {};
 
