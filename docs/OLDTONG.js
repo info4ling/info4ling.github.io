@@ -92,6 +92,7 @@ function simple_csv_to_arr_of_arr(current, line) {
     return current;
 }
 
+// for "bycol.csv"
 function simple_csv_to_dict(current, line) {
     if (current == null) {
         current = {};
