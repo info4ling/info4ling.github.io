@@ -139,9 +139,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <None Include="docs\byrow.csv" />
+    <None Include="docs\datacols.csv" />
     <None Include="docs\glyph_data.csv" />
-    <None Include="docs\bycol.csv" />
+    <None Include="docs\datarows.csv" />
     <None Include="docs\OLDTONG.css" />
     <None Include="docs\OLDTONG.js" />
     <None Include="docs\glyph_sound.csv" />
