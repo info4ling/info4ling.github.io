@@ -39,43 +39,39 @@ var Xc1 = null;
 
 //////////////////////////////// Functions
 
-const FILE_DATA = {}
+function blob_to_arr_of_arr(blob) {
+    var lines = blob.split(/\n/);
+    var arr = [];
+    for (let i = 0; i < lines.length; ++i) {
+        arr.push(lines[i].split(/,/));
+    }
+    return blob;
+}
 
-function file_promise(filename) {
-        return new Promise((resolve, reject) => {
-            let xhr = new XMLHttpRequest();
-            xhr.open(obj.method || "GET", filename);
-            if (obj.headers) {
-                Object.keys(obj.headers).forEach(key => {
-                    xhr.setRequestHeader(key, obj.headers[key]);
-                });
-            }
-            xhr.onload = () => {
+function blob_promise(filename) {
+    return new Promise((resolve, reject) => {
+        let xhr = new XMLHttpRequest();
+        xhr.open("GET", filename);
+        xhr.responseType = 'text';
+        xhr.onload = () => {
                 if (xhr.status >= 200 && xhr.status < 300) {
-                    resolve(xhr.response);
+                    resolve(blob_to_arr_of_arr(xhr.responseText));
                 } else {
                     reject(xhr.statusText);
                 }
             };
             xhr.onerror = () => reject(xhr.statusText);
-            xhr.send(obj.body);
-        });
-    }
-
-function blob_to_arr_of_arr(blob) {
-    request({ url: filename })
-        .then(data => {
-            var lines = data.split(/\n/);
-            var arr = [];
-            for (let i = 0; i < lines.length; ++i) {
-                arr.push(lines[i].split(/,/));
-            }
-            func(arr);
-        })
-        .catch(error => {
-            console.log(error);
+            xhr.send();
         });
 }
+
+function ready_promise() {
+}
+
+function on_ready_blobs(files) {
+
+}
+
 
 var glyph_data = {};
 
