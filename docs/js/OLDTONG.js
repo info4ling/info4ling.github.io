@@ -31,6 +31,33 @@ var calc_lit = null;
 
 //////////////////////////////// Functions
 
+/*
+           / VOWEL \      | [c1.sub]
+           \  ''   /      | [c2.sub]
+        [  lit  ]|[ as in]| [c3.sub]
+        /                \| [c4.sub]
+        \                /| [c5.sub]
+        [meaning]|[verb]  | [c6.sub]
+        [legend ]|[ prep] | [c7.sub]
+        [number ]|[     ] | [c8.sub]
+        
+        /GLYPH          \ | [   c1  ]
+        \      ''       / | [   c2  ]
+             [ lit ]      | [   c3  ]
+        /COLOR          \ | [   c4  ]
+        \       ''      / | [   c5  ]
+        [meaning]|[verb]  | [   c6  ]
+        [legend ]|[ prep] | [   c7  ]
+        [number ]|[     ] | [   c8  ]
+
+
+*/
+
+var locations = [];
+var prof = [];
+var prof_opp = [];
+var legend=[]
+
 on_ready_blobs([
     ['data/datacols.csv', 'cols', simple_csv_to_arr_of_arr],
     ['data/datarows.csv', 'rows', simple_csv_to_arr_of_arr],
@@ -38,7 +65,34 @@ on_ready_blobs([
     ['data/glyph_sound.csv', 'gsound', simple_csv_to_arr_of_arr],
     ['badfile.csv', 'bf', simple_csv_to_arr_of_arr],
 ], function (values) {
-    console.log(values);
+    console.log('GOT:', values);
+    var dc = values['cols'];
+    var c;
+    dc.forEach(row => {
+        switch (row[0]) {
+            case 'H':
+                for (c = 5; c < row.length; c++) {
+                    locations.push(row[c]);
+                }
+                break;
+            case 'C':
+
+            case 'M':
+                if (row[4] == 'Profession') {
+                    for (c = 5; c < row.length; c++) {
+                        prof.push(row[c]);
+                    }
+                } else {
+                    for (c = 5; c < row.length; c++) {
+                        prof_opp.push(row[c]);
+                    }
+                }
+                break;
+            case 'D':
+
+
+        }
+    });
 });
 
 /*

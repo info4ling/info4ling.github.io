@@ -64,9 +64,9 @@ function on_ready_blobs(todo, after) {
             var lines = blob.split(/\n/);
             var arr = null;
             for (let i = 0; i < lines.length; ++i) {
-                func(arr, lines[i]);
+                arr=func(arr, lines[i]);
             }
-            return [name, blob];
+            return [name, arr];
         }
     }
 }
@@ -79,7 +79,8 @@ function simple_csv_to_arr_of_arr(current, line) {
     if (current == null) {
         current = [];
     }
-    current.push(comma_split(line));
+    var entry = comma_split(line);
+    current.push(entry);
     return current;
 }
 
