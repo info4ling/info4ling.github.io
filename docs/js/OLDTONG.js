@@ -31,9 +31,15 @@ var calc_lit = null;
 
 //////////////////////////////// Functions
 
-
-
-
+on_ready_blobs([
+    ['data/datacols.csv', 'cols', simple_csv_to_arr_of_arr],
+    ['data/datarows.csv', 'rows', simple_csv_to_arr_of_arr],
+    ['data/glyph_data.csv', 'gdata', simple_csv_to_arr_of_arr],
+    ['data/glyph_sound.csv', 'gsound', simple_csv_to_arr_of_arr],
+    ['badfile.csv', 'bf', simple_csv_to_arr_of_arr],
+], function (values) {
+    console.log(values);
+});
 
 /*
 function get_ctext(row, col, is_data = true) {
