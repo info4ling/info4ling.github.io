@@ -139,14 +139,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <None Include="docs\datacols.csv" />
-    <None Include="docs\glyph_data.csv" />
-    <None Include="docs\datarows.csv" />
-    <None Include="docs\GTR.js" />
+    <None Include="docs\data\datacols.csv" />
+    <None Include="docs\js\GTRtabs.js" />
+    <None Include="docs\data\glyph_data.csv" />
+    <None Include="docs\data\datarows.csv" />
+    <None Include="docs\js\glyph_data.js" />
+    <None Include="docs\js\GTR.js" />
     <None Include="docs\OLDTONG.css" />
     <None Include="docs\OLDTONG.html" />
-    <None Include="docs\OLDTONG.js" />
-    <None Include="docs\glyph_sound.csv" />
+    <None Include="docs\js\OLDTONG.js" />
+    <None Include="docs\data\glyph_sound.csv" />
     <None Include="README.md" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
