@@ -31,7 +31,7 @@ var calc_lit = null;
 
 //////////////////////////////// Functions
 
-// todo is array of tuples [ file , line_process_func ]
+// `todo` is array of tuples [ file , line_process_func ]
 function on_ready_blobs(todo, after) {
     var proms = [ready_promise()];
     todo.forEach(bfile_rec => {
