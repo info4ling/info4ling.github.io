@@ -142,7 +142,9 @@
     <None Include="docs\datacols.csv" />
     <None Include="docs\glyph_data.csv" />
     <None Include="docs\datarows.csv" />
+    <None Include="docs\GTR.js" />
     <None Include="docs\OLDTONG.css" />
+    <None Include="docs\OLDTONG.html" />
     <None Include="docs\OLDTONG.js" />
     <None Include="docs\glyph_sound.csv" />
     <None Include="README.md" />

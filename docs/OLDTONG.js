@@ -31,97 +31,6 @@ var calc_lit = null;
 
 //////////////////////////////// Functions
 
-// `todo` is array of tuples [ file , line_process_func ]
-function on_ready_blobs(todo, after) {
-    var proms = [ready_promise()];
-    todo.forEach(bfile_rec => {
-        proms.push(blob_promise(bfile_rec[0], bfile_rec[1]));
-    });
-    Promise.all(proms).then((values) => {
-        console.log(values);
-        after(values);
-    });
-
-    function ready_promise() {
-        return new Promise((resolve) => {
-            if (document.readyState != "loading")
-                return resolve();
-            else
-                document.addEventListener("DOMContentLoaded", function () {
-                    return resolve();
-                });
-        });
-    }
-
-    function blob_promise(filename, line_func) {
-        return new Promise((resolve, reject) => {
-            let xhr = new XMLHttpRequest();
-            xhr.open("GET", filename);
-            xhr.responseType = 'text';
-            xhr.onload = () => {
-                if (xhr.status >= 200 && xhr.status < 300) {
-                    resolve(blob_to_obj(xhr.responseText, line_func));
-                } else {
-                    reject(xhr.statusText);
-                }
-            };
-            xhr.onerror = () => reject(xhr.statusText);
-            xhr.send();
-        });
-
-        function blob_to_obj(blob, func) {
-            var lines = blob.split(/\n/);
-            var arr = null;
-            for (let i = 0; i < lines.length; ++i) {
-                func(lines[i]);
-            }
-            return blob;
-        }
-    }
-}
-
-function comma_split(line) {
-    return line.split(/,/);
-}
-
-function simple_csv_to_arr_of_arr(current, line) {
-    if (current == null) {
-        current = [];
-    }
-    current.push(comma_split(line));
-    return current;
-}
-
-// for "bycol.csv"
-function simple_csv_to_dict(current, line) {
-    if (current == null) {
-        current = {};
-    }
-
-    var data = comma_split(line);
-    var key = data.shift();
-    current[key] = data;
-
-    return current;
-}
-
-// for "glyph_data.csv"
-function simple_csv_to_dict_of_dict(current, line) {
-    if (current == null) {
-        current = {};
-    }
-
-    var data = comma_split(line);
-    var key1 = data.shift();
-    var key2 = data.shift();
-    if (current[key1] == null) {
-        current[key1] = {};
-    }
-    current[key1][key2] = data;
-    
-    return current;
-}
-
 function draw_glyph_line(context, shift, point1, point2) {
     var rpos1 = glyph_data['P'][point1];
     var rpos2 = glyph_data['P'][point2];
@@ -210,6 +119,29 @@ function getImage(name, rsz) {
     return image;
 }
 
+
+function fake_tabs(tab_name, tab_class, tab_button) {
+    tabcontent = document.getElementsByClassName(tab_class);
+    for (var i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+    }
+    tabbuttons = document.getElementsByClassName(tab_button);
+
+    for (var j = 0; j < tabcontent.length; j++) {
+        tabbuttons[j].style.backgroundColor = "buttonface";
+    }
+    tab = document.getElementById(tab_name);
+    tab.style.display = "block";
+}
+
+function show_tab(btn, name) {
+    fake_tabs(name, "display_tab", "tab_button");
+    btn.style.backgroundColor = '#e8e8ff';
+}
+
+
+
+/*
 function get_ctext(row, col, is_data = true) {
     if (col >= ctext.length) {
         return spaces;
@@ -730,24 +662,6 @@ function do_calc(val, glyph = null, math = null, lit = null, h = IMG_H, w = IMG_
 
     return ltext;
 }
-function fake_tabs(tab_name, tab_class, tab_button) {
-    tabcontent = document.getElementsByClassName(tab_class);
-    for (var i = 0; i < tabcontent.length; i++) {
-        tabcontent[i].style.display = "none";
-    }
-    tabbuttons = document.getElementsByClassName(tab_button);
-
-    for (var j = 0; j < tabcontent.length; j++) {
-        tabbuttons[j].style.backgroundColor = "buttonface";
-    }
-    tab = document.getElementById(tab_name);
-    tab.style.display = "block";
-}
-
-function show_tab(btn, name) {
-    fake_tabs(name, "display_tab", "tab_button");
-    btn.style.backgroundColor = '#e8e8ff';
-}
 
 function rbvalue(name) {
     var selector = 'input[name="' + name + '"]:checked';
@@ -1026,3 +940,5 @@ document.addEventListener('DOMContentLoaded', function () {
 
     setup_pronoun();
 });
+
+*/
