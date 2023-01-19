@@ -32,23 +32,23 @@ var calc_lit = null;
 //////////////////////////////// Functions
 
 /*
-           / VOWEL \      | [c1.sub]
-           \  ''   /      | [c2.sub]
-        [  lit  ]|[ as in]| [c3.sub]
-        /                \| [c4.sub]
-        \                /| [c5.sub]
-        [meaning]|[verb]  | [c6.sub]
-        [legend ]|[ prep] | [c7.sub]
-        [number ]|[     ] | [c8.sub]
+                       / VOWEL \      | [c1.sub]
+                       \  ''   /      | [c2.sub]
+                    [lit]<say>|[as in]| [c3.sub]
+                    /                \| [c4.sub]
+                    \                /| [c5.sub]
+                    [meaning]|[ num ] | [c6.sub]
+                    [legend ]|[ prep] | [c7.sub]
+                         [verb ]      | [c8.sub]
         
-        /GLYPH          \ | [   c1  ]
-        \      ''       / | [   c2  ]
-             [ lit ]      | [   c3  ]
-        /COLOR          \ | [   c4  ]
-        \       ''      / | [   c5  ]
-        [meaning]|[verb]  | [   c6  ]
-        [legend ]|[ prep] | [   c7  ]
-        [number ]|[     ] | [   c8  ]
+ / CONS \           /     GLYPH     \ | [   c1  ]
+ \  ''  /           \      ''       / | [   c2  ]
+ [lit]<say>           [ lit ] <say>   | [   c3  ]
+ [as in]            /COLOR          \ | [   c4  ]
+                    \       ''      / | [   c5  ]
+ [loc]              [meaning]|[ num ] | [   c6  ]
+                    [legend ]|[ prep] | [   c7  ]
+ [job]                   [verb ]      | [   c8  ]
 
 
 */
