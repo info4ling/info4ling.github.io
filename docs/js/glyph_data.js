@@ -1,5 +1,6 @@
 
 var glyph_data = null;
+const stored_images = {};
 
 function set_glyph_data(orig) {
     // shallow copy
@@ -42,7 +43,7 @@ function draw_glyph_row(context, r1, r2, r4, r8) {
     }
 }
 
-function draw_glyph_col(context, shift, c1, c2, r4) {
+function draw_glyph_col(context, shift, c1, c2, c4) {
     if (c1) {
         draw_glyph_stroke(context, 'C', '1', shift);
     }
@@ -64,7 +65,7 @@ function mk_glyph(name, r1, r2, r4, r8, c1, c2, c4) {
 
     draw_glyph_row(context, r1, r2, r4, r8);
     draw_glyph_center(context);
-    draw_glyph_col(context, false, c1, c2, r4);
+    draw_glyph_col(context, false, c1, c2, c4);
 
     saveImage(canvas, name);
 
@@ -94,3 +95,37 @@ function getImage(name, rsz) {
     return image;
 }
 
+function col_hdr_glyph(col, size) {
+    var name = 'C' + col;
+    if (!(name in stored_images)) {
+        var canvas = makeCanvas(IMG_W, IMG_H);
+        var context = canvas.getContext('2d');
+
+        draw_glyph_col(context, true, col & 1, col & 2, col & 4);
+        saveImage(canvas, name);
+    }
+
+    return getImage(name, size);
+}
+
+function row_hdr_glyph(row, size) {
+    var name = 'R' + row;
+    if (!(name in stored_images)) {
+        var canvas = makeCanvas(IMG_W, IMG_H);
+        var context = canvas.getContext('2d');
+
+        draw_glyph_row(context, row & 1, row & 2, row & 4, row & 8)
+        saveImage(canvas, name);
+    }
+
+    return getImage(name, size);
+}
+
+function cell_glyph(row, col, size) {
+    var name = 'R' + row + 'C' + col;
+    if (!(name in stored_images)) {
+        mk_glyph(name, row & 1, row & 2, row & 4, row & 8, col & 1, col & 2, col & 4)
+    }
+
+    return getImage(name, size);
+}

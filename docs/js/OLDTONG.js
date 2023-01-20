@@ -15,8 +15,6 @@ const PAD_SZ = (IMG_W + IMG_H) / 10;
 
 const SB = [[100, 60], [100, 90], [100, 80], [60, 70], [40, 50], [100, 30], [60, 20], [80, 8]];
 
-const stored_images = {};
-
 // Globals that change
 
 var valc = 0;
@@ -31,21 +29,6 @@ var calc_lit = null;
 
 //////////////////////////////// Functions
 
-/*
-                          /VOWEL\ |[lit]<say>|'Number' | [   c1  ][  c2  ]
-                          \ ''  / |[as in]   |'Prep'   | [   c3  ][  c4  ]
-                          [legend]|/meaning\ |/     \  | [   c5  ][  c6  ]
-                          [verb]  |\   ''  / |\  '' /  | [   c7  ][  c8  ]
- 
-                         
- / CONS \|[lit]<say>      /GLYPH\ |/[lit]\   |[number] | [   c1  ][  c2  ]
- \  ''  /|[as in]         \ ''  / |\<say>/   |[prep]   | [   c3  ][  c4  ]
- [loc]                    [legend]|/meaning\ |/COLOR\  | [   c5  ][  c6  ]
- [job]                    [verb]  |\   ''  / |\  '' /  | [   c7  ][  c8  ]
-
-
-
-*/
 
 var locations = [];
 var prof = [];
@@ -88,6 +71,33 @@ on_ready_blobs([
         }
     });
 });
+
+/*
+                          /VOWEL\ |[lit]<say>|'Number' | [   c1  ][  c2  ]
+                          \ ''  / |[as in]   |'Prep'   | [   c3  ][  c4  ]
+                          [legend]|/meaning\ |/     \  | [   c5  ][  c6  ]
+                          [verb]  |\   ''  / |\  '' /  | [   c7  ][  c8  ]
+ 
+                         
+ / CONS \|[lit]<say>      /GLYPH\ |/[lit]\   |[number] | [   c1  ][  c2  ]
+ \  ''  /|[as in]         \ ''  / |\<say>/   |[prep]   | [   c3  ][  c4  ]
+ [loc]                    [legend]|/meaning\ |/COLOR\  | [   c5  ][  c6  ]
+ [job]                    [verb]  |\   ''  / |\  '' /  | [   c7  ][  c8  ]
+
+
+
+*/
+
+function mk_col_hdr(col) {
+    var vowel=
+}
+
+function mk_row_hdr(row) {
+}
+
+function mk_cell(row, col) {
+}
+
 
 /*
 function get_ctext(row, col, is_data = true) {
