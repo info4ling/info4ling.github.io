@@ -10,6 +10,7 @@ const skip = [[], spaces];
 
 const IMG_W = 40;
 const IMG_H = 40;
+const IMG_SZ = (IMG_W + IMG_H) / 2;
 
 const PAD_SZ = (IMG_W + IMG_H) / 10;
 
@@ -72,6 +73,45 @@ on_ready_blobs([
     });
 });
 
+function create_color(row, col) {
+    var H = 0;
+    var S = 0;
+    var B = 0;
+    var adj = 0;
+    if (row == 0) { // Greyscale
+        B = (7 - col) * 100 / 7;
+    } else {
+        if (row > 6) {
+            adj = 15;
+        }
+        H = adj + ((row - 1) * 360 / 18);
+        S = SB[col][0];
+        B = SB[col][1];
+    }
+    return `hsl(${H} ${S}% ${B}%)`;
+}
+
+function force_size(node, img_h, img_w) {
+    node.style.minHeight = img_h + 'px';
+    node.style.minWidth = img_w + 'px';
+    node.style.maxHeight = img_h + 'px';
+    node.style.maxWidth = img_w + 'px';
+}
+
+function color_circle(row, col) {
+    var circle = document.createElement('div');
+    circle.style.borderRadius = '50% 5% 50%'; // elliptical
+    circle.style.backgroundColor = create_color(row, col);
+    circle.style.border = '5px ridge grey';
+    force_size(circle, IMG_H, IMG_W);
+    circle.style.minHeight = IMG_H + 'px';
+    circle.style.minWidth = IMG_W + 'px';
+    circle.style.maxHeight = IMG_H + 'px';
+    circle.style.maxWidth = IMG_W + 'px';
+    circle.margin = 'auto';
+    return circle;
+}
+
 /*
                           /VOWEL\ |[lit]<say>|'Number' | [   c1  ][  c2  ]
                           \ ''  / |[as in]   |'Prep'   | [   c3  ][  c4  ]
@@ -89,15 +129,25 @@ on_ready_blobs([
 */
 
 function mk_col_hdr(col) {
-    var vowel=
+    var vowel = col_hdr_glyph(col, IMG_SZ);
 }
 
 function mk_row_hdr(row) {
+    var vowel = row_hdr_glyph(row, IMG_SZ);
 }
 
 function mk_cell(row, col) {
+    var vowel = cell_glyph(row, IMG_SZ);
+    var color = color_circle(row, col);
 }
 
+function mk_main_table() {
+    for (row = 0; row < 16; ++row) {
+        for (col = 0; col < 8; col++) {
+
+        }
+    }
+}
 
 /*
 function get_ctext(row, col, is_data = true) {
@@ -172,39 +222,6 @@ function num_sound(row) {
     return ret;
 }
 
-function create_color(row, col) {
-    var H = 0;
-    var S = 0;
-    var B = 0;
-    var adj = 0;
-    if (row == 0) { // Greyscale
-        B = (7 - col) * 100 / 7;
-    } else {
-        if (row > 6) {
-            adj = 15;
-        }
-        H = adj + ((row - 1) * 360 / 18);
-        S = SB[col][0];
-        B = SB[col][1];
-    }
-    return `hsl(${H} ${S}% ${B}%)`;
-}
-
-function color_circle(row, col) {
-    var circle = document.createElement('div');
-    circle.style.borderRadius = '50% 5% 50%'; // elliptical
-    circle.style.backgroundColor = create_color(row, col);
-    circle.style.border = '5px ridge grey';
-    force_size(circle, IMG_H, IMG_W);
-    circle.style.minHeight = IMG_H + 'px';
-    circle.style.minWidth = IMG_W + 'px';
-    circle.style.maxHeight = IMG_H + 'px';
-    circle.style.maxWidth = IMG_W + 'px';
-    circle.margin = 'auto';
-    return circle;
-}
-
-
 function mk_layer(nm) {
     var img = mk_img(nm);
     img.style.position = 'absolute';
@@ -216,13 +233,6 @@ function mk_layer(nm) {
     //   img.style.width = IMG_W + 'px';
     //   img.style.height = IMG_H + 'px';
     return img;
-}
-
-function force_size(node, img_h, img_w) {
-    node.style.minHeight = img_h + 'px';
-    node.style.minWidth = img_w + 'px';
-    node.style.maxHeight = img_h + 'px';
-    node.style.maxWidth = img_w + 'px';
 }
 
 function mk_overlay(hdr, r8, r4, r2, r1, c4, c2, c1, padding = true, img_h = IMG_H, img_w = IMG_W, pad_sz = PAD_SZ) {

@@ -114,7 +114,7 @@ function row_hdr_glyph(row, size) {
         var canvas = makeCanvas(IMG_W, IMG_H);
         var context = canvas.getContext('2d');
 
-        draw_glyph_row(context, row & 1, row & 2, row & 4, row & 8)
+        draw_glyph_row(context, row & 1, row & 2, row & 4, row & 8);
         saveImage(canvas, name);
     }
 
@@ -124,7 +124,7 @@ function row_hdr_glyph(row, size) {
 function cell_glyph(row, col, size) {
     var name = 'R' + row + 'C' + col;
     if (!(name in stored_images)) {
-        mk_glyph(name, row & 1, row & 2, row & 4, row & 8, col & 1, col & 2, col & 4)
+        mk_glyph(name, row & 1, row & 2, row & 4, row & 8, col & 1, col & 2, col & 4);
     }
 
     return getImage(name, size);
