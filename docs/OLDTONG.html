@@ -11,7 +11,6 @@
         <div id="buttons">
             <button class="tab_button" onclick="show_tab(this, 'glyphmap');" style="background-color: #e8e8ff">Glyph Map</button>
             <button class="tab_button" onclick="show_tab(this, 'num');">Numbers</button>
-            <button class="tab_button" onclick="show_tab(this, 'pronoun');">Pronouns</button>
         </div>
         <div id="container" style="background-color: #e0e0ff">
             <div id='glyphmap' class="display_tab">
@@ -39,76 +38,6 @@
                     <table id="count2"><tbody id="count_body2"></tbody></table>
                     <button id="count_more" type="button" onclick="count_more();">More...</button>
                 </div>
-            </div>
-            <div id="pronoun" style="display:none" class="display_tab">
-                <div>
-                    <div id="pron_txt"></div>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th></th>
-                                <th></th>
-                                <th>Female <div id="pro_f"></div> </th>
-                                <th>Male <div id="pro_m"></div> </th>
-                                <th>Neuter <div id="pro_u"></div> </th>
-                                <th>Unknown <div id="pro_q"></div></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><span>1st Person - Self: </span> <div id="pro_i"> </div> </td>
-                                <td><input type="checkbox" id="me" name="self" value="me" class="solo" /></td>
-                                <td>
-                                    <input type="radio" id="if" name="icb" value="if">
-                                </td>
-                                <td>
-                                    <input type="radio" id="im" name="icb" value="im">
-                                </td>
-                                <td>
-                                    <input type="radio" id="in" name="icb" value="in">
-                                </td>
-                                <td>
-                                    <input type="radio" id="iq" name="icb" value="iq" checked>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><span>2nd Person - You: </span> <div id="pro_u"></div> </td>
-                                <td><input type="radio" id="p2" name="person" value="2"></td>
-                                <td rowspan="2">
-                                    <input type="checkbox" id="f" name="pronoun-cb" value="f" />
-                                    <input type="checkbox" id="f2" name="pronoun-cb" value="f2" />
-                                </td>
-                                <td rowspan="2">
-                                    <input type="checkbox" id="m" name="pronoun-cb" value="m" />
-                                    <input type="checkbox" id="m2" name="pronoun-cb" value="m2" />
-                                </td>
-                                <td rowspan="2">
-                                    <input type="checkbox" id="n" name="pronoun-cb" value="n" />
-                                    <input type="checkbox" id="n2" name="pronoun-cb" value="n2" />
-                                </td>
-                                <td rowspan="2">
-                                    <input type="checkbox" id="q" name="pronoun-cb" value="q" />
-                                    <input type="checkbox" id="q2" name="pronoun-cb" value="q2" />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><span>3rd Person - Other</span> <div id="pro_o"></div> </td>
-                                <td><input type="radio" id="p3" name="person" value="3"></td>
-                            </tr>
-                            <tr>
-                                <td><span>None</span></td>
-                                <td><input type="radio" id="p1" name="person" value="1" checked></td>
-                                <td colspan=4></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <br />
-                    <button id="pro_button" type="button" onclick="procalc();">Calculate</button>
-                    <div id="pro-eng"></div>
-                    <div id="pro-glyph" class="glyph"></div>
-                    <div id="pro-lit"></div>
-                </div>
-                <div id="list_all"></div>
             </div>
         </div>
     </div>

@@ -30,18 +30,9 @@ var calc_lit = null;
 
 //////////////////////////////// Functions
 
-
-
-
-on_ready_blobs([
-    ['data/datacols.csv', 'cols', load_cols],
-    ['data/datarows.csv', 'rows', simple_csv_to_arr_of_arr],
-    ['data/glyph_data.csv', 'gdata', simple_csv_to_arr_of_arr],
-    ['data/glyph_sound.csv', 'gsound', simple_csv_to_arr_of_arr],
-    ['badfile.csv', 'bf', simple_csv_to_arr_of_arr],
-], function (values) {
+function handle_blobs(values) {
     console.log('GOT:', values);
-});
+}
 
 var locations = []; // H
 var meaning = [];
@@ -55,21 +46,21 @@ function load_cols(skip, line) {
     var row = comma_split(line);
 
     var dest;
-    var header;
-    var comment;
+    var is_header;
+    var is_comment;
     var multirow;
 
     switch (row[0]) {
         case 'H':
             dest = locations;
-            header = false;
-            comment = false;
+            is_header = false;
+            is_comment = false;
             multirow = false;
             break;
         case 'C':
             dest = meaning;
-            header = true;
-            comment = true;
+            is_header = true;
+            is_comment = true;
             multirow = true;
             break;
         case 'M':
@@ -78,20 +69,20 @@ function load_cols(skip, line) {
             } else {
                 dest = prof_opp;
             }
-            header = false;
-            comment = false;
+            is_header = false;
+            is_comment = false;
             multirow = false;
             break;
         case 'L':
             dest = legend;
-            header = true;
-            comment = false;
+            is_header = true;
+            is_comment = false;
             multirow = true;
             break;
         case 'D':
             var type = row[3];
-            header = true;
-            comment = false;
+            is_header = true;
+            is_comment = false;
             multirow = true;
             if (!(type in creature)) {
                 creature[type] = [];
@@ -102,12 +93,54 @@ function load_cols(skip, line) {
         default:
             return;
     }
-    add_value(dest, row, 5, 16, header, comment, multirow);
-}
-
-function add_value(dest, row, base, max_row, is_header, is_comment, is_multirow) {
+   
+    var base = 5;
+    var max_row = 16;
     var header = is_header ? 1 : 0;
     var comment = is_comment ? 1 : 0;
+
+    var start = base - header;
+    var last = start + max_row + header + comment;
+    do_add(dest, row, start, last, multirow);
+}
+
+var numbers = [];
+var preps = [];
+var jobs = [];
+
+function load_rows(skip, line) {
+    var row = comma_split(line);
+
+    var start;
+    var dest;
+    var extra;
+    switch (row[0]) {
+        case 'NUMBER':
+            start = 3;
+            extra = 1; // Comment
+            dest = numbers;
+            break;
+        case 'PREPOSITION':
+            start = 4;
+            extra = 0;
+            dest = preps;
+            break;
+        case 'JOB':
+            start = 1;
+            extra = 3; // Name, Create/Destroy, Comment
+            dest = jobs;
+            break;
+        default:
+            return;
+    }
+    var max_row = 8;
+    var last = start + extra + max_row;
+    do_add(dest, row, start, last, true);
+}
+
+const empty = '';
+
+function do_add(dest, row, start, last, is_multirow) {
     var add;
     if (is_multirow) {
         add = [];
@@ -115,9 +148,6 @@ function add_value(dest, row, base, max_row, is_header, is_comment, is_multirow)
     } else {
         add = dest;
     }
-    var start = base - header;
-    var last = start + max_row + header + comment;
-    var empty = '';
     for (var c = start; c < last; c++) {
         if (c < row.length) {
             add.push(row[c]);
@@ -172,14 +202,11 @@ function color_circle(row, col) {
                           [legend]|/meaning\ |/     \  | [   c5  ][  c6  ]
                           [verb]  |\   ''  / |\  '' /  | [   c7  ][  c8  ]
  
-                         
+
  / CONS \|[lit]<say>      /GLYPH\ |/[lit]\   |[number] | [   c1  ][  c2  ]
  \  ''  /|[as in]         \ ''  / |\<say>/   |[prep]   | [   c3  ][  c4  ]
  [loc]                    [legend]|/meaning\ |/COLOR\  | [   c5  ][  c6  ]
  [job]                    [verb]  |\   ''  / |\  '' /  | [   c7  ][  c8  ]
-
-
-
 */
 
 function mk_col_hdr(col) {
@@ -207,12 +234,63 @@ function mk_cell(row, col) {
 }
 
 function mk_main_table() {
-    for (row = 0; row < 16; ++row) {
-        for (col = 0; col < 8; col++) {
-
+    var row_hdr = 'R';
+    for (row = 0; row <= 17; ++row) {
+        var col_hdr = 'C';
+        for (col = 0; col <= 8; col++) {          
+            for (subrow = 0; subrow < 4; subrow++) {
+                var code = row_hdr + col_hdr + subrow;
+                switch (code) {
+                    case 'RC0': // Upper Left - 0
+                        break;
+                    case 'RC1': // Upper Left - 1
+                        break;
+                    case 'RC2': // Upper Left - 2
+                        break;
+                    case 'RC3': // Upper Left - 3
+                        break;
+                    case 'Rc0': // TOP ROW HEADER - 0
+                        break;
+                    case 'Rc1': // TOP ROW HEADER - 1
+                        break;
+                    case 'Rc2': // TOP ROW HEADER - 2
+                        break;
+                    case 'Rc3': // TOP ROW HEADER - 3
+                        break;
+                    case 'rC0': // FIRST COL HEADER - 0
+                        break;
+                    case 'rC1': // FIRST COL HEADER - 1
+                        break;
+                    case 'rC2': // FIRST COL HEADER - 2
+                        break;
+                    case 'rC3': // FIRST COL HEADER - 3
+                        break;
+                    case 'rc0': // CELL - 0
+                        break;
+                    case 'rc1': // CELL - 0
+                        break;
+                    case 'rc2': // CELL - 0
+                        break;
+                    case 'rc3': // CELL - 0
+                        break;
+                }
+            }
+            col_hdr = 'c';
         }
+        row_hdr = 'r';
     }
 }
+
+
+
+on_ready_blobs([
+    ['data/datacols.csv', 'cols', load_cols],
+    ['data/datarows.csv', 'rows', load_rows],
+    ['data/glyph_data.csv', 'gdata', simple_csv_to_arr_of_arr],
+    ['data/glyph_sound.csv', 'gsound', simple_csv_to_arr_of_arr],
+    ['badfile.csv', 'bf', simple_csv_to_arr_of_arr],
+], handle_blobs);
+
 
 /*
 function get_ctext(row, col, is_data = true) {
