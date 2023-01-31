@@ -44,7 +44,11 @@ on_ready_blobs([
     ['badfile.csv', 'bf', simple_csv_to_arr_of_arr],
 ], function (values) {
     console.log('GOT:', values);
-    var dc = values['cols'];
+    load_cols(values['cols']);
+});
+
+
+function load_cols(dc) {
     var c;
     dc.forEach(row => {
         switch (row[0]) {
@@ -71,7 +75,7 @@ on_ready_blobs([
 
         }
     });
-});
+}
 
 function create_color(row, col) {
     var H = 0;
@@ -130,15 +134,26 @@ function color_circle(row, col) {
 
 function mk_col_hdr(col) {
     var vowel = col_hdr_glyph(col, IMG_SZ);
+    var lit = col_hdr_lit(col);
+    var say = col_hdr_say(col);
+    var asin = col_hdr_asin(col);
+    var legd = col_hdr_legd(col);
+    var verb = col_hdr_verb(col);
 }
 
 function mk_row_hdr(row) {
-    var vowel = row_hdr_glyph(row, IMG_SZ);
+    var cons = row_hdr_glyph(row, IMG_SZ);
+    var lit = row_hdr_lit(row);
+    var say = row_hdr_say(row);
+    var asin = row_hdr_asin(row);
 }
 
 function mk_cell(row, col) {
-    var vowel = cell_glyph(row, IMG_SZ);
+    var glyph = cell_glyph(row, IMG_SZ);
+    var lit = cell_lit(row);
+    var say = cell_say(row);
     var color = color_circle(row, col);
+    var num = cell_num(row, col);
 }
 
 function mk_main_table() {
