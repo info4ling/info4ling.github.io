@@ -41,7 +41,6 @@ on_ready_blobs([
     ['badfile.csv', 'bf', simple_csv_to_arr_of_arr],
 ], function (values) {
     console.log('GOT:', values);
-    load_cols(values['cols']);
 });
 
 var locations = []; // H
@@ -72,6 +71,7 @@ function load_cols(skip, line) {
             header = true;
             comment = true;
             multirow = true;
+            break;
         case 'M':
             if (row[4] == 'Profession') {
                 dest = prof;
@@ -87,23 +87,25 @@ function load_cols(skip, line) {
             header = true;
             comment = false;
             multirow = true;
+            break;
         case 'D':
             var type = row[3];
             header = true;
             comment = false;
             multirow = true;
             if (!(type in creature)) {
-                creature[type]=[];
+                creature[type] = [];
                 creature_type.push(type);
             }
             dest = creature[type];
+            break;
         default:
             return;
     }
-    add_value(dest, 16, header, comment, multirow);
+    add_value(dest, row, 5, 16, header, comment, multirow);
 }
 
-function add_value(dest, max_row, is_header, is_comment, is_mutirow) {
+function add_value(dest, row, base, max_row, is_header, is_comment, is_multirow) {
     var header = is_header ? 1 : 0;
     var comment = is_comment ? 1 : 0;
     var add;
@@ -113,8 +115,8 @@ function add_value(dest, max_row, is_header, is_comment, is_mutirow) {
     } else {
         add = dest;
     }
-    var start = 5 - header;
-    var last = max_row + comment;
+    var start = base - header;
+    var last = start + max_row + header + comment;
     var empty = '';
     for (var c = start; c < last; c++) {
         if (c < row.length) {
