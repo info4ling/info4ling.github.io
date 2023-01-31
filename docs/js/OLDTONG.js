@@ -31,13 +31,10 @@ var calc_lit = null;
 //////////////////////////////// Functions
 
 
-var locations = [];
-var prof = [];
-var prof_opp = [];
-var legend=[]
+
 
 on_ready_blobs([
-    ['data/datacols.csv', 'cols', simple_csv_to_arr_of_arr],
+    ['data/datacols.csv', 'cols', load_cols],
     ['data/datarows.csv', 'rows', simple_csv_to_arr_of_arr],
     ['data/glyph_data.csv', 'gdata', simple_csv_to_arr_of_arr],
     ['data/glyph_sound.csv', 'gsound', simple_csv_to_arr_of_arr],
@@ -47,34 +44,85 @@ on_ready_blobs([
     load_cols(values['cols']);
 });
 
+var locations = []; // H
+var meaning = [];
+var prof = []; // M
+var prof_opp = []; // M
+var legend = []; // L
+var creature = {}; // D
+var creature_type = []; // D
 
-function load_cols(dc) {
-    var c;
-    dc.forEach(row => {
-        switch (row[0]) {
-            case 'H':
-                for (c = 5; c < row.length; c++) {
-                    locations.push(row[c]);
-                }
-                break;
-            case 'C':
+function load_cols(skip, line) {
+    var row = comma_split(line);
 
-            case 'M':
-                if (row[4] == 'Profession') {
-                    for (c = 5; c < row.length; c++) {
-                        prof.push(row[c]);
-                    }
-                } else {
-                    for (c = 5; c < row.length; c++) {
-                        prof_opp.push(row[c]);
-                    }
-                }
-                break;
-            case 'D':
+    var dest;
+    var header;
+    var comment;
+    var multirow;
 
+    switch (row[0]) {
+        case 'H':
+            dest = locations;
+            header = false;
+            comment = false;
+            multirow = false;
+            break;
+        case 'C':
+            dest = meaning;
+            header = true;
+            comment = true;
+            multirow = true;
+        case 'M':
+            if (row[4] == 'Profession') {
+                dest = prof;
+            } else {
+                dest = prof_opp;
+            }
+            header = false;
+            comment = false;
+            multirow = false;
+            break;
+        case 'L':
+            dest = legend;
+            header = true;
+            comment = false;
+            multirow = true;
+        case 'D':
+            var type = row[3];
+            header = true;
+            comment = false;
+            multirow = true;
+            if (!(type in creature)) {
+                creature[type]=[];
+                creature_type.push(type);
+            }
+            dest = creature[type];
+        default:
+            return;
+    }
+    add_value(dest, 16, header, comment, multirow);
+}
 
+function add_value(dest, max_row, is_header, is_comment, is_mutirow) {
+    var header = is_header ? 1 : 0;
+    var comment = is_comment ? 1 : 0;
+    var add;
+    if (is_multirow) {
+        add = [];
+        dest.push(add);
+    } else {
+        add = dest;
+    }
+    var start = 5 - header;
+    var last = max_row + comment;
+    var empty = '';
+    for (var c = start; c < last; c++) {
+        if (c < row.length) {
+            add.push(row[c]);
+        } else {
+            add.push(empty);
         }
-    });
+    }
 }
 
 function create_color(row, col) {
