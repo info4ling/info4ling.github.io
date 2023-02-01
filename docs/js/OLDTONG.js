@@ -300,10 +300,10 @@ function creature_subtype(subtype, cnum, where) { // where is 0 for subtype labe
 }
 
 const row_max = 18; // 16 + hdr + comment
-const row_comment = row_max - 1;
+const row_for_comment = row_max - 1;
 
 const col_max = 10; // 8 + hdr + comment
-const col_comment = col_max - 1;
+const col_for_comment = col_max - 1;
 
 function mk_main_table() {
     var hdr = document.getElementById('chead');
@@ -312,7 +312,7 @@ function mk_main_table() {
     var row_comment = '';
     var row_hdr = 'R';
     for (row = 0; row < row_max; ++row) {
-        if (row == row_hdr) {
+        if (row == row_for_comment) {
             row_comment = '*';
         }
         var aa = [];
@@ -325,7 +325,7 @@ function mk_main_table() {
         for (col = 0; col < col_max; col++) { // 8 + hdr + comment
             var ctype;
             var csubtp;
-            if (col == col_hdr) {
+            if (col == col_for_comment) {
                 col_comment = '+';
             } else {
                 ctype = creature_type[col];
