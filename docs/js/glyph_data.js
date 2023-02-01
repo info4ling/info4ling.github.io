@@ -88,7 +88,7 @@ function draw_glyph_col(context, shift, c1, c2, c4) {
 }
 
 function draw_glyph_center(context) {
-    draw_glyph_stroke(context, 'X', '0', shift);
+    draw_glyph_stroke(context, 'X', '0', false);
 }
 
 function mk_glyph(name, r1, r2, r4, r8, c1, c2, c4) {

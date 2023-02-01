@@ -359,7 +359,7 @@ function mk_main_table() {
                     mk_subtxt(b, creature_subtype(csubtp, 4, 0), 1, 1, 'b');    // C4 - SUBTYPE
 
                     // line 3
-                    mk_subtxt(c, legend[col][0], 2, 1, 'b');                   // legend
+                    mk_subtxt(c, legend[col-1][0], 2, 1, 'b');                   // legend
                     mk_subtxt(c, creature_subtype(csubtp, 5, 0), 1, 1, 'b');    // C5 - SUBTYPE
                     mk_subtxt(c, creature_subtype(csubtp, 6, 0), 1, 1, 'b');    // C6 - SUBTYPE
 
