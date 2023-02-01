@@ -41,6 +41,27 @@ var prof_opp = []; // M
 var legend = []; // L
 var creature = {}; // D
 var creature_type = []; // D
+var sounds = {};
+
+function load_gsound(skip, line) {
+    row = comma_split(line);
+
+    // WHAT, lit, say, example
+    var what = row[0];
+    var lit = row[1];
+    var say = row[2];
+    if (say = '') {
+        say = lit;
+    }
+    var example = row[3];
+
+    var data = [lit, say, example];
+
+    if (!(what in sounds)) {
+        sounds[what] = [];
+    }
+    sounds[what].push(data);
+}
 
 function load_cols(skip, line) {
     var row = comma_split(line);
@@ -197,18 +218,19 @@ function color_circle(row, col) {
 }
 
 /*
-                          /VOWEL\ |[lit]<say>|'Number' | [   c1  ][  c2  ]
-                          \ ''  / |[as in]   |'Prep'   | [   c3  ][  c4  ]
-                          [legend]|/meaning\ |/     \  | [   c5  ][  c6  ]
-                          [verb]  |\   ''  / |\  '' /  | [   c7  ][  c8  ]
+                          /VOWEL\ |[lit]<say>| c:type  | [c.subtype.1][c.subtype.2]
+                          \ ''  / |[as in]   |   ''    | [c.subtype.3][c.subtype.4]
+                          [legend]|meaning   |   ''    | [c.subtype.5][c.subtype.6]
+                          [verb]  |   ''     |   ''    | [c.subtype.7][c.subtype.8]
  
 
- / CONS \|[lit]<say>      /GLYPH\ |[lit]<say>|[number] | [   c1  ][  c2  ]
- \  ''  /|[as in]         \ ''  / |/        \|[prep]   | [   c3  ][  c4  ]
- [loc]                    [legend]|(meaning )|/COLOR\  | [   c5  ][  c6  ]
- [job]                    [verb]  |\   ''  / |\  '' /  | [   c7  ][  c8  ]
+ / CONS \|[lit]<say>      /GLYPH\ |[lit]<say>|[number] | [     c1    ][    c2     ]
+ \  ''  /|[as in]         \ ''  / |meaning   |[prep]   | [     c3    ][    c4     ]
+ [loc]                    [legend]|   ''     |/COLOR\  | [     c5    ][    c6     ]
+ [job]                    [verb]  |   ''     |\  '' /  | [     c7    ][    c8     ]
 */
 
+/* WRONG
 function mk_col_hdr(col) {
     var vowel = col_hdr_glyph(col, IMG_SZ);
     var lit = col_hdr_lit(col);
@@ -232,12 +254,23 @@ function mk_cell(row, col) {
     var color = color_circle(row, col);
     var num = cell_num(row, col);
 }
-function mk_subcell(item, rows=1, cols=1) {
+
+*/
+
+function mk_subcell(arr, item, rows=1, cols=1) {
     ret = [item, rows, cols];
-    return ret;
+    arr.push(ret);
 }
 
-function mk_subtext(txt, rows=1, cols=1, font='') {
+function mk_subtext_say(arr, what, col) {
+    var row = sound[what][col];
+    var lit = row[0];
+    var say = row[1];
+    var txt = lit + '(' + say + ')'; // will be a button
+    return mk_subtext(arr, txt, 1, 1, 'b');
+}
+
+function mk_subtext(arr, txt, rows=1, cols=1, font='') {
     var item;
     switch (font) {
         case 'b':
@@ -252,10 +285,14 @@ function mk_subtext(txt, rows=1, cols=1, font='') {
     return mk_subcell(item, rows, cols);
 }
 
-function add_subcell(arr, item) {
-    if (item != null) {
-        arr.push(item);
+function add_subcell(arr, items) {
+    if (items.length) {
+        arr.push(...items);
     }
+}
+
+function creature_subtype(subtype, cnum, where) { // where is 0 for subtype label
+    return subtype[cnum-1][where];
 }
 
 function mk_main_table() {
@@ -272,20 +309,45 @@ function mk_main_table() {
         var obj = hdr;
         for (col = 0; col <= 8; col++) {
             var code = row_hdr + col_hdr;
-            var a = null;
-            var b = null;
-            var c = null;
-            var d = null;
+            var a = [];
+            var b = [];
+            var c = [];
+            var d = [];
             switch (code) {
                 case 'RC': // Upper Left
-                    a = mk_subtxt('', 4);
+                    mk_subtxt(a, '', 4, 2); // 4x2 of nothing
                     break;
                 case 'Rc': // TOP ROW HEADER
+
+                    // line 1
+                    mk_subtxt(a, col_hdr_glyph(col, IMG_SZ), 2, 1);     // RIGHT GLYPH
+                    mk_subtext_say(a, 'V', col);                        // LIT<say>
+                    var ctype = creature_type[col];
+                    mk_subtxt(a, ctype, 4, 1, 'b');                     // Creature type
+                    var csubtp = creature[ctype];
+                    mk_subtxt(a, creature_subtype(csubtp, 1, 0), 1, 1, 'b');  // C1 - SUBTYPE
+                    mk_subtxt(a, creature_subtype(csubtp, 2, 0), 1, 1, 'b');  // C2 - SUBTYPE
+
+                    // line 2
+                    mk_subtxt(b, sound['V'][col][2]);                   // as in
+                    mk_subtxt(a, creature_subtype(csubtp, 3, 0), 1, 1, 'b');  // C3 - SUBTYPE
+                    mk_subtxt(a, creature_subtype(csubtp, 4, 0), 1, 1, 'b');  // C4 - SUBTYPE
+
+                    // line 3
+                    // legend
+                    // meaning
+                    mk_subtxt(a, creature_subtype(csubtp, 5, 0), 1, 1, 'b');  // C5 - SUBTYPE
+                    mk_subtxt(a, creature_subtype(csubtp, 6, 0), 1, 1, 'b');  // C6 - SUBTYPE
+
+                    // line 4
+                    // verb
+                    mk_subtxt(a, creature_subtype(csubtp, 7, 0), 1, 1, 'b');  // C7 - SUBTYPE
+                    mk_subtxt(a, creature_subtype(csubtp, 8, 0), 1, 1, 'b');  // C8 - SUBTYPE
                     break;
                 case 'rC': // FIRST COL HEADER
                     a = [col_hdr_glyph(col, IMG_SZ), 2];
                     break;
-                case 'rc': // CELL - 0
+                case 'rc': // CELL
                     break;
 
             }
@@ -303,8 +365,8 @@ function mk_main_table() {
 on_ready_blobs([
     ['data/datacols.csv', 'cols', load_cols],
     ['data/datarows.csv', 'rows', load_rows],
-    ['data/glyph_data.csv', 'gdata', simple_csv_to_arr_of_arr],
-    ['data/glyph_sound.csv', 'gsound', simple_csv_to_arr_of_arr],
+    ['data/glyph_data.csv', 'gdata', load_gdata],
+    ['data/glyph_sound.csv', 'gsound', load_gsound],
     ['badfile.csv', 'bf', simple_csv_to_arr_of_arr],
 ], handle_blobs);
 
