@@ -328,7 +328,7 @@ function mk_main_table() {
             if (col == col_for_comment) {
                 col_comment = '+';
             } else {
-                ctype = creature_type[col];
+                ctype = creature_type[col-1];
                 csubtp = creature[ctype];
             }
 
@@ -354,7 +354,7 @@ function mk_main_table() {
                     mk_subtxt(a, creature_subtype(csubtp, 2, 0), 1, 1, 'b');    // C2 - SUBTYPE
 
                     // line 2
-                    mk_subtxt(c, meaning[col][0], 2, 1, 'b');                  // meaning
+                    mk_subtxt(c, meaning[col-1][0], 2, 1, 'b');                  // meaning
                     mk_subtxt(b, creature_subtype(csubtp, 3, 0), 1, 1, 'b');    // C3 - SUBTYPE
                     mk_subtxt(b, creature_subtype(csubtp, 4, 0), 1, 1, 'b');    // C4 - SUBTYPE
 
