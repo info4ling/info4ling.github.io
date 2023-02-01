@@ -72,7 +72,9 @@ function on_ready_blobs(todo, after) {
 }
 
 function comma_split(line) {
-    return line.split(/,/);
+    var vals = line.split(/,/);
+    var ret = vals.map(string => string.trim());
+    return ret;
 }
 
 function simple_csv_to_arr_of_arr(current, line) {
