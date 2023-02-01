@@ -307,19 +307,28 @@ function creature_subtype(subtype, cnum, where) { // where is 0 for subtype labe
     return subtype[cnum-1][where];
 }
 
+const row_max = 18; // 16 + hdr + comment
+const row_comment = row_max - 1;
+
+const col_max = 10; // 8 + hdr + comment
+const col_comment = col_max - 1;
+
 function mk_main_table() {
     var hdr = document.getElementById('chead');
     var body = document.getElementById('cbody');
 
     var row_hdr = 'R';
-    for (row = 0; row <= 17; ++row) {
+    for (row = 0; row < row_max; ++row) {
         var aa = [];
         var bb = [];
         var cc = [];
         var dd = [];
         var col_hdr = 'C';
         var obj = hdr;
-        for (col = 0; col <= 8; col++) {
+        for (col = 0; col < col_max; col++) { // 8 + hdr + comment
+            var ctype = creature_type[col];
+            var csubtp = creature[ctype];
+
             var code = row_hdr + col_hdr;
             var a = [];
             var b = [];
@@ -330,13 +339,15 @@ function mk_main_table() {
                     mk_subtxt(a, '', 4, 2); // 4x2 of nothing
                     break;
                 case 'Rc': // TOP ROW HEADER
-
+                    if (col == col_hdr) {
+                        mk_subtext(a, 'Comment', 1, 4, 'b');                    // comment column
+                        break;
+                    }
                     // line 1
                     mk_subcell(a, col_hdr_glyph(col, IMG_SZ), 2, 1);            // RIGHT HALF OF GLYPH
                     mk_subtext_say(a, 'col', col, 'b');                         // LIT<say>
-                    var ctype = creature_type[col];
+                    
                     mk_subtxt(a, ctype, 4, 1, 'b');                             // Creature type
-                    var csubtp = creature[ctype];
                     mk_subtxt(a, creature_subtype(csubtp, 1, 0), 1, 1, 'b');    // C1 - SUBTYPE
                     mk_subtxt(a, creature_subtype(csubtp, 2, 0), 1, 1, 'b');    // C2 - SUBTYPE
 
@@ -351,16 +362,36 @@ function mk_main_table() {
                     mk_subtxt(c, creature_subtype(csubtp, 5, 0), 1, 1, 'b');    // C5 - SUBTYPE
                     mk_subtxt(c, creature_subtype(csubtp, 6, 0), 1, 1, 'b');    // C6 - SUBTYPE
 
-                    // line 4
-                    
+                    // line 4                    
                     mk_subtxt(d, creature_subtype(csubtp, 7, 0), 1, 1, 'b');    // C7 - SUBTYPE
                     mk_subtxt(d, creature_subtype(csubtp, 8, 0), 1, 1, 'b');    // C8 - SUBTYPE
                     break;
                 case 'rC': // FIRST COL HEADER
+                    if (row == row_hdr) {
+                        mk_subtext(a, 'Comment', 1, 1, 'b');                    // comment column
+                        break;
+                    }
+                    // line 1
                     mk_subcell(a, row_hdr_glyph(row, IMG_SZ), 2, 1);            // LEFT HALF OF  GLYPH
                     mk_subtext_say(a, 'row', col, 'b');                         // LIT<say>
+
+                    // line 2
+                    mk_subtxt(b, sound['C'][col][2]);                           // as in
+
+                    // line 3
+                    mk_subtxt(c, location[col], 1, 2);                          // location
+
+                    // line 4
+                    mk_subtxt(d, verbs[col][0], 1, 2);                          // location
                     break;
                 case 'rc': // CELL
+                    if (col == col_hdr) {
+                        mk_subtext(a, 'Comment', 1, 4, 'b');                    // comment column
+                        break;
+                    } else if (row == row_hdr) {
+                        mk_subtext(a, 'Comment', 1, 1, 'b');                    // comment column
+                        break;
+                    }
                     break;
 
             }
