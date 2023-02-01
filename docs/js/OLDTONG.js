@@ -44,8 +44,13 @@ var creature = {}; // D
 var creature_type = []; // D
 var sounds = {};
 
+function load_gdata(skip, line) {
+    var row = comma_split(line);
+    set_glyph_data(row);
+}
+
 function load_gsound(skip, line) {
-    row = comma_split(line);
+    var row = comma_split(line);
 
     // WHAT, lit, say, example
     var what = row[0];

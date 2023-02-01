@@ -1,10 +1,39 @@
 
-var glyph_data = null;
+var glyph_data = {};
 const stored_images = {};
 
-function set_glyph_data(orig) {
-    // shallow copy
-    glyph_data = orig;
+/*
+** GLYPH DATA **
+P:
+  PT | X | Y
+
+  PT == name of point
+      X -- [0 -- 1  -- 2]
+      Y transpose of X
+
+  GLYPH DATA{'P'}{PT}=[X, Y]
+
+R: row (left)
+C: col (left)
+X: center (bit is 0)
+  BIT | PT FROM | PT TO
+
+  BIT == AND value
+     PT FROM -- name of starting point
+     PT TO -- name of ending point
+
+  GLYPH DATA{'R'}{1/2/4/8}=[FROM, TO]
+  GLYPH DATA{'C'}{1/2/4}=[FROM, TO]
+  GLYPH DATA{'X'}{0}=[FROM, TO]
+
+*/
+
+function set_glyph_data(arr) {
+    var what = arr[0];
+    var sub = arr[1];
+    var a = arr[2];
+    var b = arr[3];
+    glyph_data[what][sub] = [a, b];
 }
 
 function draw_glyph_line(context, shift, point1, point2) {
