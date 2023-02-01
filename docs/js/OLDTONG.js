@@ -253,13 +253,13 @@ function mk_subtext_say(arr, what, col, font='') {
     var lit='';
     var say='';
 
-    if (what == 'row' || what = 'cell') {
+    if (what == 'row' || what == 'cell') {
         var row = sound['C'][col];
         lit = row[0];
         say = row[1];
     }
 
-    if (what == 'col' || what = 'cell') {
+    if (what == 'col' || what == 'cell') {
         var row = sound['V'][col];
         lit += row[0];
         say += row[1];
