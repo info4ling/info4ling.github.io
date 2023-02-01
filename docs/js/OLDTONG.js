@@ -93,7 +93,7 @@ function load_cols(skip, line) {
         default:
             return;
     }
-   
+
     var base = 5;
     var max_row = 16;
     var header = is_header ? 1 : 0;
@@ -203,9 +203,9 @@ function color_circle(row, col) {
                           [verb]  |\   ''  / |\  '' /  | [   c7  ][  c8  ]
  
 
- / CONS \|[lit]<say>      /GLYPH\ |/[lit]\   |[number] | [   c1  ][  c2  ]
- \  ''  /|[as in]         \ ''  / |\<say>/   |[prep]   | [   c3  ][  c4  ]
- [loc]                    [legend]|/meaning\ |/COLOR\  | [   c5  ][  c6  ]
+ / CONS \|[lit]<say>      /GLYPH\ |[lit]<say>|[number] | [   c1  ][  c2  ]
+ \  ''  /|[as in]         \ ''  / |/        \|[prep]   | [   c3  ][  c4  ]
+ [loc]                    [legend]|(meaning )|/COLOR\  | [   c5  ][  c6  ]
  [job]                    [verb]  |\   ''  / |\  '' /  | [   c7  ][  c8  ]
 */
 
@@ -232,56 +232,73 @@ function mk_cell(row, col) {
     var color = color_circle(row, col);
     var num = cell_num(row, col);
 }
+function mk_subcell(item, rows=1, cols=1) {
+    ret = [item, rows, cols];
+    return ret;
+}
 
-function mk_main_table() {
-    var row_hdr = 'R';
-    for (row = 0; row <= 17; ++row) {
-        var col_hdr = 'C';
-        for (col = 0; col <= 8; col++) {          
-            for (subrow = 0; subrow < 4; subrow++) {
-                var code = row_hdr + col_hdr + subrow;
-                switch (code) {
-                    case 'RC0': // Upper Left - 0
-                        break;
-                    case 'RC1': // Upper Left - 1
-                        break;
-                    case 'RC2': // Upper Left - 2
-                        break;
-                    case 'RC3': // Upper Left - 3
-                        break;
-                    case 'Rc0': // TOP ROW HEADER - 0
-                        break;
-                    case 'Rc1': // TOP ROW HEADER - 1
-                        break;
-                    case 'Rc2': // TOP ROW HEADER - 2
-                        break;
-                    case 'Rc3': // TOP ROW HEADER - 3
-                        break;
-                    case 'rC0': // FIRST COL HEADER - 0
-                        break;
-                    case 'rC1': // FIRST COL HEADER - 1
-                        break;
-                    case 'rC2': // FIRST COL HEADER - 2
-                        break;
-                    case 'rC3': // FIRST COL HEADER - 3
-                        break;
-                    case 'rc0': // CELL - 0
-                        break;
-                    case 'rc1': // CELL - 0
-                        break;
-                    case 'rc2': // CELL - 0
-                        break;
-                    case 'rc3': // CELL - 0
-                        break;
-                }
-            }
-            col_hdr = 'c';
-        }
-        row_hdr = 'r';
+function mk_subtext(txt, rows=1, cols=1, font='') {
+    var item;
+    switch (font) {
+        case 'b':
+            item = bold(txt);
+            break;
+        case 'i':
+            item = italic(txt);
+            break;
+        default:
+            item = wrap(txt);
+    }
+    return mk_subcell(item, rows, cols);
+}
+
+function add_subcell(arr, item) {
+    if (item != null) {
+        arr.push(item);
     }
 }
 
+function mk_main_table() {
+    var hdr = document.getElementById('chead');
+    var body = document.getElementById('cbody');
 
+    var row_hdr = 'R';
+    for (row = 0; row <= 17; ++row) {
+        var aa = [];
+        var bb = [];
+        var cc = [];
+        var dd = [];
+        var col_hdr = 'C';
+        var obj = hdr;
+        for (col = 0; col <= 8; col++) {
+            var code = row_hdr + col_hdr;
+            var a = null;
+            var b = null;
+            var c = null;
+            var d = null;
+            switch (code) {
+                case 'RC': // Upper Left
+                    a = mk_subtxt('', 4);
+                    break;
+                case 'Rc': // TOP ROW HEADER
+                    break;
+                case 'rC': // FIRST COL HEADER
+                    a = [col_hdr_glyph(col, IMG_SZ), 2];
+                    break;
+                case 'rc': // CELL - 0
+                    break;
+
+            }
+            add_subcell(aa, a);
+            add_subcell(bb, b);
+            add_subcell(cc, c);
+            add_subcell(dd, d);
+            col_hdr = 'c';
+        }
+        row_hdr = 'r';
+        obj = body;
+    }
+}
 
 on_ready_blobs([
     ['data/datacols.csv', 'cols', load_cols],
@@ -291,6 +308,65 @@ on_ready_blobs([
     ['badfile.csv', 'bf', simple_csv_to_arr_of_arr],
 ], handle_blobs);
 
+function mk_img(img) {
+    var elem = document.createElement("img");
+    elem.src = img;
+    return elem;
+}
+
+function wrap(text) {
+    var span = document.createElement("span");
+    span.innerHTML = text;
+    return span;
+}
+
+function br() {
+    return wrap('<br>');
+}
+
+function attr(x, text) {
+    return wrap('<' + x + '>' + text + '</' + x + '>');
+}
+
+function italic(text) {
+    return attr('i', text);
+}
+
+function bold(text) {
+    return attr('b', text);
+}
+
+function mk_span(items) {
+    return mk_container("span", items);
+}
+
+function mk_div(items) {
+    return mk_container("div", items);
+}
+
+function mk_container(container, items) {
+    var box = document.createElement(container);
+    items.forEach(i => {
+        box.appendChild(i);
+    });
+    return box;
+}
+
+function mk_row(tp, item_list) {
+    var row = document.createElement('tr');
+    item_list.forEach(i => {
+        var item = i[0];
+        var rows = i[1];
+        var cols = i[2];
+        var cell = document.createElement(tp);
+        cell.append(item);
+        if (rows > 1) {
+
+        }
+        row.append(cell);
+    });
+    return row;
+}
 
 /*
 function get_ctext(row, col, is_data = true) {
@@ -422,8 +498,6 @@ function mk_overlay(hdr, r8, r4, r2, r1, c4, c2, c1, padding = true, img_h = IMG
     return outer_div;
 }
 
-
-
 function show_count_big() {
     var maxc = 36;
     var idiv = 2.5;
@@ -469,62 +543,8 @@ function count_more() {
     // butn.style.dsplay = 'none';
 }
 
-function mk_img(img) {
-    var elem = document.createElement("img");
-    elem.src = img;
-    return elem;
-}
-
-function wrap(text) {
-    var span = document.createElement("span");
-    span.innerHTML = text;
-    return span;
-}
-
-function br() {
-    return wrap('<br>');
-}
-
-function attr(x, text) {
-    return wrap('<' + x + '>' + text + '</' + x + '>');
-}
-
-function italic(text) {
-    return attr('i', text);
-}
-
-function bold(text) {
-    return attr('b', text);
-}
-
-function mk_span(items) {
-    return mk_container("span", items);
-}
-
-function mk_div(items) {
-    return mk_container("div", items);
-}
-
-function mk_container(container, items) {
-    var box = document.createElement(container);
-    items.forEach(i => {
-        box.appendChild(i);
-    });
-    return box;
-}
-
 function cp(obj) {
     return JSON.parse(JSON.stringify(obj));
-}
-
-function mk_row(tp, item) {
-    var row = document.createElement('tr');
-    item.forEach(i => {
-        var cell = document.createElement(tp);
-        cell.append(i);
-        row.append(cell);
-    });
-    return row;
 }
 
 function getnum_txt(row) {
