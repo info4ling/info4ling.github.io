@@ -33,6 +33,9 @@ function set_glyph_data(arr) {
     var sub = arr[1];
     var a = arr[2];
     var b = arr[3];
+    if (!(what in glyph_data)) {
+        glyph_data[what] = {};
+    }
     glyph_data[what][sub] = [a, b];
 }
 
