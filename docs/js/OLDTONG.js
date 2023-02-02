@@ -259,13 +259,13 @@ function mk_subtext_say(arr, what, row, col, font='') {
     var say='';
 
     if (what == 'row' || what == 'cell') {
-        var rows = sounds['C'][row];
+        var rows = sounds['C'][row-1];
         lit = rows[0];
         say = rows[1];
     }
 
     if (what == 'col' || what == 'cell') {
-        var cols = sounds['V'][col];
+        var cols = sounds['V'][col-1];
         lit += cols[0];
         say += cols[1];
     }
@@ -317,6 +317,7 @@ function mk_main_table() {
         if (row == row_for_comment) {
             row_comment = '*';
         }
+        var xx = [];
         var aa = [];
         var bb = [];
         var cc = [];
@@ -334,6 +335,7 @@ function mk_main_table() {
             }
 
             var code = row_hdr + col_hdr + row_comment + col_comment;
+            var x = [];
             var a = [];
             var b = [];
             var c = [];
@@ -343,33 +345,40 @@ function mk_main_table() {
                     mk_subtxt(a, '', 4, 2); // 4x2 of nothing
                     break;
                 case 'Rc+': // TOP ROW HEADER - Comment
-                    mk_subtxt(a, 'Comment', 1, 4, 'b');                        // row column
+                    mk_subtxt(a, 'Comment', 4, 1, 'b');                        // row column
                     break;
                 case 'Rc': // TOP ROW HEADER
+                    // line 0
+                    mksubtxt(x, '', 1, 3);                                      // blank
+                    mk_subtxt(a, ctype, 1, 2, 'b');                             // Creature type
                     // line 1
                     mk_subcell(a, col_hdr_glyph(col, IMG_SZ), 2, 1);            // RIGHT HALF OF GLYPH
                     mk_subtext_say(a, 'col', 0, col, 'b');                         // LIT<say>
                     
-                    mk_subtxt(a, ctype, 4, 1, 'b');                             // Creature type
+                    mksubtxt(a, 'Number', 1, 1, 'i');                           // Number Label
                     mk_subtxt(a, creature_subtype(csubtp, 1, 0), 1, 1, 'b');    // C1 - SUBTYPE
                     mk_subtxt(a, creature_subtype(csubtp, 2, 0), 1, 1, 'b');    // C2 - SUBTYPE
 
                     // line 2
-                    mk_subtxt(c, meaning[col-1][0], 2, 1, 'b');                  // meaning
+                    mksubtxt(a, 'Preposition', 1, 1, 'i');                           // Preposition Label
+                    mk_subtxt(b, sounds['V'][col - 1][2], 1, 1, 'b');                // as in
                     mk_subtxt(b, creature_subtype(csubtp, 3, 0), 1, 1, 'b');    // C3 - SUBTYPE
                     mk_subtxt(b, creature_subtype(csubtp, 4, 0), 1, 1, 'b');    // C4 - SUBTYPE
 
                     // line 3
-                    mk_subtxt(c, legend[col-1][0], 2, 1, 'b');                   // legend
+                    mksubtxt(a, 'Color', 2, 1, 'i');                           // Color Label
+                    mk_subtxt(c, legend[col - 1][0], 1, 1, 'b');                   // legend
+                    mk_subtxt(c, meaning[col - 1][0], 2, 1, 'b');                  // meaning
                     mk_subtxt(c, creature_subtype(csubtp, 5, 0), 1, 1, 'b');    // C5 - SUBTYPE
                     mk_subtxt(c, creature_subtype(csubtp, 6, 0), 1, 1, 'b');    // C6 - SUBTYPE
 
                     // line 4
+                    mk_subtxt(d, 'Verb', 1, 1, 'i');                            // 'verb' label
                     mk_subtxt(d, creature_subtype(csubtp, 7, 0), 1, 1, 'b');    // C7 - SUBTYPE
                     mk_subtxt(d, creature_subtype(csubtp, 8, 0), 1, 1, 'b');    // C8 - SUBTYPE
                     break;
                 case 'rC*': // FIRST COL HEADER - Comment
-                    mk_subtxt(a, 'Comment', 1, 1, 'b');                        // comment column
+                    mk_subtxt(a, 'Comment', 1, 2, 'b');                        // comment column
                     break;
                 case 'rC': // FIRST COL HEADER
                     // line 1
@@ -377,46 +386,48 @@ function mk_main_table() {
                     mk_subtext_say(a, 'row', row, 0, 'b');                         // LIT<say>
 
                     // line 2
-                    mk_subtxt(b, sounds['C'][row][2], 1, 1, 'b');                // as in
+                    mk_subtxt(b, sounds['C'][row-1][2], 1, 1, 'b');                // as in
 
                     // line 3
-                    mk_subtxt(c, location[row], 1, 2, 'b');                     // location
+                    mk_subtxt(c, locations[row-1], 1, 2, 'b');                     // location
 
                     // line 4
-                    mk_subtxt(d, verbs[row][0], 1, 2, 'b');                     // job/verb/powerword
+                    mk_subtxt(d, verbs[row-1][0], 1, 2, 'b');                     // job/verb/powerword
                     break;
                 case 'rc*': // CELL
-                    mk_subtxt(a, 'Comment', 1, 4);                             // comment column
+                    mk_subtxt(a, 'Comment');                             // comment column
                     break;
                case 'rc+': // CELL
-                    mk_subtxt(a, 'Comment');                                   // comment row
+                    mk_subtxt(a, 'Comment',4);                                   // comment row
                     break;
                 case 'rc': // CELL
                     // line 1
                     mk_subcell(a, cell_glyph(row, col, IMG_SZ), 2);             // FULL GLYPH
                     mk_subtext_say(a, 'cell', row, col);                             // LIT<say>
-                    mk_subtxt(b, numbers[row-1][col]);
-
+                    mk_subtxt(a, numbers[row-1][col]);
                     mk_subtxt(a, creature_subtype(csubtp, 1, row));             // C1 - SUBTYPE
                     mk_subtxt(a, creature_subtype(csubtp, 2, row));             // C2 - SUBTYPE
 
                     // line 2
-                    mk_subtxt(b, meaning[col-1][row], 3);                        // meaning
+                    mk_subtxt(b, meaning[col - 1][row], 3);                        // meaning
+                    mk_subtxt(b, preps[row - 1][col - 1]);                      // preposition
                     mk_subtxt(b, creature_subtype(csubtp, 3, row));             // C3 - SUBTYPE
                     mk_subtxt(b, creature_subtype(csubtp, 4, row));             // C4 - SUBTYPE
 
                     // line 3
-                    mk_subtxt(c, legend[col-1][row], 2);                         // legend
+                    mk_subtxt(c, legend[col-1][row]);                         // legend
                     mk_subcell(c, color_circle(row, col), 2);                   // color
                     mk_subtxt(c, creature_subtype(csubtp, 5, row));             // C5 - SUBTYPE
                     mk_subtxt(c, creature_subtype(csubtp, 6, row));             // C6 - SUBTYPE
 
-                    // line 4                    
+                    // line 4 
+                    mk_subtxt(d, verbs[row - 1][col+2]);                     // job/verb/powerword
                     mk_subtxt(d, creature_subtype(csubtp, 7, row));             // C7 - SUBTYPE
                     mk_subtxt(d, creature_subtype(csubtp, 8, row));             // C8 - SUBTYPE
                     break;
 
             }
+            add_subcell(xx, a);
             add_subcell(aa, a);
             add_subcell(bb, b);
             add_subcell(cc, c);
@@ -493,10 +504,13 @@ function mk_row(tp, item_list) {
         var rows = i[1];
         var cols = i[2];
         var cell = document.createElement(tp);
-        cell.append(item);
         if (rows > 1) {
-            
+            cell.rowSpan = rows;
         }
+        if (cols > 1) {
+            cell.colSpan = cols;
+        }
+        cell.append(item);
         row.append(cell);
     });
     return row;
