@@ -1,7 +1,7 @@
 // LOADS FILES AND TRIGGERS STARTUP FUNCTION AFTER THE DOM IS READY
 
 function caught(what, err) {
-    console.log('CAUGHT -- ' + what + ' ERROR:' + err);
+    console.log('CAUGHT -- ', what, ' ERROR:', err);
 }
 // `todo` is array of tuples [ file , name, line_process_func ]
 function on_ready_blobs(todo, after) {
