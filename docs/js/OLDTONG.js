@@ -247,8 +247,8 @@ function mk_cell(row, col) {
 
 */
 
-function mk_subcell(arr, cl, item, rows=1, cols=1) {
-    ret = [item, rows, cols, cl];
+function mk_subcell(arr, cl, item, is_glyph, rows=1, cols=1) {
+    let ret = [item, rows, cols, is_glyph, cl];
     arr.push(ret);
 }
 
@@ -287,7 +287,11 @@ function mk_subtxt(arr, cl, txt, rows=1, cols=1, font='') {
         default:
             item = wrap(txt);
     }
-    return mk_subcell(arr, cl, item, rows, cols);
+    return mk_subcell(arr, cl, item, false, rows, cols);
+}
+
+function mk_glyph_entry(arr, label, r=1, c=1) {
+    mk_subcell(arr, 'GLYPH', label, true, r, c);
 }
 
 function add_subcell(arr, items) {
@@ -314,7 +318,7 @@ function mk_main_table() {
     var row_hdr = 'R';
     var html_tp = 'th';
     var obj = hdr;
-    for (row = 0; row < row_max; ++row) {
+    for (let row = 0; row < row_max; ++row) {
         if (row == row_for_comment) {
             row_comment = '*';
         }
@@ -325,7 +329,7 @@ function mk_main_table() {
         var dd = [];
         var col_comment = '';
         var col_hdr = 'C';
-        for (col = 0; col < col_max; col++) { // 8 + hdr + comment
+        for (let col = 0; col < col_max; col++) { // 8 + hdr + comment
             var ctype;
             var csubtp;
             if (col == col_for_comment) {
@@ -354,7 +358,7 @@ function mk_main_table() {
                     mk_subtxt(x, 'C0', ctype, 1, 2, 'b');                             // Creature type
 
                     // line 1
-                    mk_subcell(a, 'GLYPH', col_hdr_glyph(col-1, IMG_SZ), 2, 1);            // RIGHT HALF OF GLYPH
+                    mk_glyph_entry(a, 'C'+(col-1), 2);                             // RIGHT HALF OF GLYPH
                     mk_subtext_say(a, 'LIT', 'col', 0, col, 1, 1, 'b');                         // LIT<say>                   
                     mk_subtxt(a, 'NUM', 'Number', 1, 1, 'bi');                           // Number Label
                     mk_subtxt(a, 'C1', creature_subtype(csubtp, 1, 0), 1, 1, 'b');    // C1 - SUBTYPE
@@ -383,7 +387,7 @@ function mk_main_table() {
                     break;
                 case 'rC': // FIRST COL HEADER
                     // line 1
-                    mk_subcell(a, 'GLYPH', row_hdr_glyph(row-1, IMG_SZ), 2, 1);            // LEFT HALF OF  GLYPH
+                    mk_glyph_entry(a, 'R'+(row-1), 2);                                        // LEFT HALF OF  GLYPH
                     mk_subtext_say(a, 'LIT', 'row', row, 0, 1, 1, 'b');                         // LIT<say>
 
                     // line 2
@@ -403,7 +407,7 @@ function mk_main_table() {
                     break;
                 case 'rc': // CELL
                     // line 1
-                    mk_subcell(a, 'GLYPH', cell_glyph(row-1, col-1, IMG_SZ), 2);             // FULL GLYPH
+                    mk_glyph_entry(a, 'R'+(row-1)+'C'+(col-1), 2);                  // FULL GLYPH
                     mk_subtext_say(a, 'LIT', 'cell', row, col, 2);                             // LIT<say>
                     mk_subtxt(a, 'NUM', numbers[row-1][col]);                   // Number
                     mk_subtxt(a, 'C1', creature_subtype(csubtp, 1, row));             // C1 - SUBTYPE
@@ -417,7 +421,7 @@ function mk_main_table() {
                     // line 3
                     mk_subtxt(c, 'LEGEND', legend[col - 1][row]);                         // legend
                     mk_subtxt(c, 'MEANING', meaning[col - 1][row], 2);                        // meaning
-                    mk_subcell(c, 'COLOR', color_circle(row, col), 2);                   // color
+                    mk_subcell(c, 'COLOR', color_circle(row, col), false, 2);                   // color
                     mk_subtxt(c, 'C5', creature_subtype(csubtp, 5, row));             // C5 - SUBTYPE
                     mk_subtxt(c, 'C6', creature_subtype(csubtp, 6, row));             // C6 - SUBTYPE
 
@@ -507,7 +511,8 @@ function mk_row(tp, item_list) {
         var item = i[0];
         var rows = i[1];
         var cols = i[2];
-        var cl = i[3];
+        var is_glyph = i[3];
+        var cl = i[4];
         var cell = document.createElement(tp);
         if (rows > 1) {
             cell.rowSpan = rows;
@@ -516,7 +521,12 @@ function mk_row(tp, item_list) {
             cell.colSpan = cols;
         }
         cell.classList.add(cl);
-        cell.append(item);
+        if (is_glyph) {
+            let glyph = getImage(item, IMG_SZ);
+            cell.append(glyph);
+        } else {
+            cell.append(item);
+        }
         row.append(cell);
     });
     return row;

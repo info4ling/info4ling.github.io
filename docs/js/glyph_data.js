@@ -61,8 +61,8 @@ function do_scale(v, max_v, sz, w) {
 }
 
 function do_glyph_line(context, points) {
-    const X = 0;
-    const Y = 1;
+    const X = 1;
+    const Y = 0;
     const W = 4;
     const max_v = 2;
 
@@ -75,7 +75,7 @@ function do_glyph_line(context, points) {
     context.moveTo(do_scale(spos[X], 2, IMG_W, W), do_scale(spos[Y], 2, IMG_H, W));
 
     points.forEach(pt => {
-        run = glyph_data['P'][pt][0];
+        let run = glyph_data['P'][pt][0];
         context.lineTo(do_scale(run[X], 2, IMG_W, W), do_scale(run[Y], 2, IMG_H, W));
     });
 
@@ -158,9 +158,6 @@ function getImage(name, rsz) {
     var image = document.createElement('img');
     image.width = rsz;
     image.height = rsz;
-    image.onload = function () {
-        image.src = dataURI;
-    }
     image.src = dataURI;
     return image;
 }
@@ -209,7 +206,7 @@ function cache_glyphs() {
     }
 
     for (var ch = 0; ch < 8; ++ch) {
-        var image = row_hdr_glyph(ch, IMG_W / 2);
+        var image = col_hdr_glyph(ch, IMG_W / 2);
         showdiv.appendChild(image);
     }
 
