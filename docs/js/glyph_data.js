@@ -1,7 +1,7 @@
 'use strict';
 
 var glyph_data = {};
-const stored_images = {};
+var stored_images = {};
 const IMG_W = 40;
 const IMG_H = 40;
 const IMG_SZ = (IMG_W + IMG_H) / 2;
@@ -155,10 +155,10 @@ function saveImage(original, name) {
 
 function getImage(name, rsz) {
     var dataURI = stored_images[name];
-    var image = document.createElement('img');
-    image.width = rsz;
-    image.height = rsz;
-    image.src = dataURI;
+    var image = document.createElement('div');
+    image.style.width = rsz+'px';
+    image.style.height = rsz+'px';
+    image.style.backgroundImage ="url("+dataURI+")";
     return image;
 }
 
@@ -216,4 +216,6 @@ function cache_glyphs() {
             showdiv.appendChild(image);
         }
     }
+
+    showdiv.style.display = 'none';
 }

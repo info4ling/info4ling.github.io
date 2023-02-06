@@ -23,16 +23,6 @@ var calc_glyph = null;
 var calc_math = null;
 var calc_lit = null;
 
-//////////////////////////////// Functions
-
-function handle_blobs(values) {
-    console.log('GOT:', values);
-    cache_glyphs();
-    setTimeout(() => {
-        mk_main_table();
-    }, 100);
-}
-
 var locations = []; // H
 var meaning = [];
 var prof = []; // M
@@ -40,7 +30,41 @@ var prof_opp = []; // M
 var legend = []; // L
 var creature = {}; // D
 var creature_type = []; // D
+
 var sounds = {};
+
+var numbers = [];
+var preps = [];
+var verbs = [];
+
+var data = {
+    'locations': locations,
+    'meaning': meaning,
+    'prof': prof,
+    'prof_opp': prof_opp,
+    'legend': legend,
+    'creature': creature,
+    'creature_type': creature_type,
+    'sounds': sounds,
+    'numbers': numbers,
+    'preps': preps,
+    'verbs': verbs,
+    'glyph_data': glyph_data,
+    'stored_images': stored_images,
+};
+//////////////////////////////// Functions
+
+function handle_blobs(values) {
+    console.log('GOT:', values, data);
+
+    setTimeout(() => {
+        cache_glyphs();
+    }, 0);
+    
+    setTimeout(() => {
+        mk_main_table();
+    }, 100);
+}
 
 function load_gdata(skip, line) {
     var row = comma_split(line);
@@ -129,9 +153,6 @@ function load_cols(skip, line) {
     do_add(dest, row, start, last, multirow);
 }
 
-var numbers = [];
-var preps = [];
-var verbs = [];
 
 function load_rows(skip, line) {
     var row = comma_split(line);
@@ -311,6 +332,9 @@ const col_max = 10; // 8 + hdr + comment
 const col_for_comment = col_max - 1;
 
 function mk_main_table() {
+    var tbl = document.getElementById('ctable');
+    var tbl_display = tbl.style.display;
+    tbl.style.display = 'none';
     var hdr = document.getElementById('chead');
     var body = document.getElementById('cbody');
 
@@ -450,7 +474,8 @@ function mk_main_table() {
         html_tp = 'td';
         obj = body;
     }
-    return 0;
+    tbl.style.display = tbl_display;
+    return;
 }
 
 on_ready_blobs([
@@ -460,12 +485,6 @@ on_ready_blobs([
     ['data/glyph_sound.csv', 'gsound', load_gsound],
 //    ['badfile.csv', 'bf', simple_csv_to_arr_of_arr], // TEST BAD FILE
 ], handle_blobs);
-
-function mk_img(img) {
-    var elem = document.createElement("img");
-    elem.src = img;
-    return elem;
-}
 
 function wrap(text) {
     var span = document.createElement("span");
