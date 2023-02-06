@@ -1,6 +1,10 @@
+'use strict';
 
 var glyph_data = {};
 const stored_images = {};
+const IMG_W = 40;
+const IMG_H = 40;
+const IMG_SZ = (IMG_W + IMG_H) / 2;
 
 /*
 ** GLYPH DATA **
@@ -29,75 +33,106 @@ X: center (bit is 0)
 */
 
 function set_glyph_data(arr) {
-    var what = arr[0];
-    var sub = arr[1];
-    var a = arr[2];
-    var b = arr[3];
+    var what = arr.shift();
+    var sub = arr.shift();
+
     if (!(what in glyph_data)) {
         glyph_data[what] = {};
     }
-    glyph_data[what][sub] = [a, b];
+    if (!(sub in glyph_data[what])) {
+        glyph_data[what][sub] = [];
+    }
+
+    glyph_data[what][sub].push(arr);
 }
 
-function draw_glyph_line(context, shift, point1, point2) {
-    var rpos1 = glyph_data['P'][point1];
-    var rpos2 = glyph_data['P'][point2];
+function draw_glyph_line(context, points_list) {
+    points_list.forEach(pts => {
+        do_glyph_line(context, [...pts]);
+    });
+}
+
+function do_scale(v, max_v, sz, w) {
+    var min = w;
+    var max = sz - (2*w);
+
+    var ret = w + (v / max_v) * max;
+    return Math.ceil(ret);
+}
+
+function do_glyph_line(context, points) {
     const X = 0;
     const Y = 1;
-    var adj = shift ? IMG_W / -2 : 0;
+    const W = 4;
+    const max_v = 2;
 
     context.fillStyle = '#000000';
     context.lineWidth = 4;
-    context.beginPath();
-    context.moveTo(adj + (rpos1[X] * IMG_W / 2), rpos1[Y] * IMG_H / 2);
-    context.lineTo(adj + (rpos2[X] * IMG_W / 2), rpos1[Y] * IMG_H / 2);
+    context.lineCap = 'square';
+
+    var start = points.shift();
+    var spos = glyph_data['P'][start][0];
+    context.moveTo(do_scale(spos[X], 2, IMG_W, W), do_scale(spos[Y], 2, IMG_H, W));
+
+    points.forEach(pt => {
+        run = glyph_data['P'][pt][0];
+        context.lineTo(do_scale(run[X], 2, IMG_W, W), do_scale(run[Y], 2, IMG_H, W));
+    });
+
     context.stroke();
-    context.closePath();
 }
 
-function draw_glyph_stroke(context, what, which, shift) {
-    var data = glyph_data[what][which];
-    draw_glyph_line(context, shift, ...data);
-}
+function draw_glyph_stroke(context, what, which) {
+    if (what in glyph_data) {
+        if (which in glyph_data[what]) {
+            var data = glyph_data[what][which];
 
-function draw_glyph_row(context, r1, r2, r4, r8) {
-    if (r1) {
-        draw_glyph_stroke(context, 'R', '1', false);
-    }
-    if (r2) {
-        draw_glyph_stroke(context, 'R', '2', false);
-    }
-    if (r4) {
-        draw_glyph_stroke(context, 'R', '4', false);
-    }
-    if (r8) {
-        draw_glyph_stroke(context, 'R', '8', false);
+            draw_glyph_line(context, data);
+        }
     }
 }
 
-function draw_glyph_col(context, shift, c1, c2, c4) {
-    if (c1) {
-        draw_glyph_stroke(context, 'C', '1', shift);
-    }
-    if (c2) {
-        draw_glyph_stroke(context, 'C', '2', shift);
-    }
-    if (c4) {
-        draw_glyph_stroke(context, 'C', '4', shift);
+function draw_glyph_row(context, row) {
+    if (row == 0) {
+        draw_glyph_stroke(context, 'R', '0');
+    } else {
+        if (row & 1) {
+            draw_glyph_stroke(context, 'R', '1');
+        }
+        if (row & 2) {
+            draw_glyph_stroke(context, 'R', '2');
+        }
+        if (row & 4) {
+            draw_glyph_stroke(context, 'R', '4');
+        }
+        if (row & 8) {
+            draw_glyph_stroke(context, 'R', '8');
+        }
     }
 }
 
-function draw_glyph_center(context) {
-    draw_glyph_stroke(context, 'X', '0', false);
+function draw_glyph_col(context, col) {
+    if (col == 0) {
+        draw_glyph_stroke(context, 'C', '0');
+    } else {
+        if (col & 1) {
+            draw_glyph_stroke(context, 'C', '1');
+        }
+        if (col & 2) {
+            draw_glyph_stroke(context, 'C', '2');
+        }
+        if (col & 4) {
+            draw_glyph_stroke(context, 'C', '4');
+        }
+    }
 }
 
-function mk_glyph(name, r1, r2, r4, r8, c1, c2, c4) {
+function mk_glyph(name, row, col) {
     var canvas = makeCanvas(IMG_W, IMG_H);
     var context = canvas.getContext('2d');
 
-    draw_glyph_row(context, r1, r2, r4, r8);
-    draw_glyph_center(context);
-    draw_glyph_col(context, false, c1, c2, c4);
+    draw_glyph_row(context, row);
+    draw_glyph_col(context, col);
 
     saveImage(canvas, name);
 
@@ -121,9 +156,12 @@ function saveImage(original, name) {
 function getImage(name, rsz) {
     var dataURI = stored_images[name];
     var image = document.createElement('img');
-    image.src = dataURI;
     image.width = rsz;
     image.height = rsz;
+    image.onload = function () {
+        image.src = dataURI;
+    }
+    image.src = dataURI;
     return image;
 }
 
@@ -133,7 +171,7 @@ function col_hdr_glyph(col, size) {
         var canvas = makeCanvas(IMG_W, IMG_H);
         var context = canvas.getContext('2d');
 
-        draw_glyph_col(context, true, col & 1, col & 2, col & 4);
+        draw_glyph_col(context, col);
         saveImage(canvas, name);
     }
 
@@ -146,7 +184,7 @@ function row_hdr_glyph(row, size) {
         var canvas = makeCanvas(IMG_W, IMG_H);
         var context = canvas.getContext('2d');
 
-        draw_glyph_row(context, row & 1, row & 2, row & 4, row & 8);
+        draw_glyph_row(context, row);
         saveImage(canvas, name);
     }
 
@@ -156,8 +194,29 @@ function row_hdr_glyph(row, size) {
 function cell_glyph(row, col, size) {
     var name = 'R' + row + 'C' + col;
     if (!(name in stored_images)) {
-        mk_glyph(name, row & 1, row & 2, row & 4, row & 8, col & 1, col & 2, col & 4);
+        mk_glyph(name, row, col);
     }
 
     return getImage(name, size);
+}
+
+function cache_glyphs() {
+    var showdiv = document.getElementById('allglyphs');
+
+    for (var rh = 0; rh < 16; ++rh) {
+        var image = row_hdr_glyph(rh, IMG_W / 2);
+        showdiv.appendChild(image);
+    }
+
+    for (var ch = 0; ch < 8; ++ch) {
+        var image = row_hdr_glyph(ch, IMG_W / 2);
+        showdiv.appendChild(image);
+    }
+
+    for (var r = 0; r < 16; ++r) {
+        for (var c = 0; c < 8; ++c) {
+            var image = cell_glyph(r, c, IMG_W / 2);
+            showdiv.appendChild(image);
+        }
+    }
 }

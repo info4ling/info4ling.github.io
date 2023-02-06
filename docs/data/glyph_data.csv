@@ -1,14 +1,18 @@
-P, A, 0, 0
-P, B, 1, 0
-P, C, 1, 1
-P, D, 2, 1
-P, E, 0, 2
-P, F, 1, 2
-R, 1, A, B
-R, 2, A, C
-R, 4, E, C
-R, 8, E, F
-C, 1, B, D
-C, 2, C, D
-C, 4, F, D
-X, 0, B, F
+P, UL, 0, 0
+P, UM, 1, 0
+P, UR, 2, 0
+P, CL, 0, 1
+P, CM, 1, 1
+P, CR, 2, 1
+P, BL, 0, 2
+P, BM, 1, 2
+P, BR, 2, 2
+R, 0, UM, BM
+R, 1, UL, UM, CM
+R, 2, UL, CL, CM
+R, 4, BL, CL, CM
+R, 8, BL, BM, CM 
+C, 0, UM, BM
+C, 1, CM, UM, UR, CR
+C, 2, CM, CR
+C, 4, CM, BM, BR, CR

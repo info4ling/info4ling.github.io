@@ -121,18 +121,18 @@ tbody > tr:nth-child(even) > td {
     background-color: #D0D0D0;
 }
 
-.glyph > div,
-.glyph {
+.glyphy > div,
+.glyphy {
     display: flex;
     flex-direction: row;
 }
 
-    .glyph > div {
+    .glyphy > div {
         border: none !important;
     }
 
 #pro-glyph,
-#glyph {
+#glyphy {
     min-height: 50px;
     margin-left: 10px;
 }
@@ -146,7 +146,7 @@ tbody > tr:nth-child(even) > td {
 }
 
 #pro-glyph > div,
-#glyph > div {
+#glyphy > div {
     padding: 4px !important;
 }
 

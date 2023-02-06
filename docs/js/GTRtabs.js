@@ -1,3 +1,5 @@
+'use strict';
+
 var fake_tab_background = '#e8e8ff'
 
 function set_fake_tab_background(color) {

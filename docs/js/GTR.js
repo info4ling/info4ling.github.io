@@ -1,3 +1,4 @@
+'use strict';
 // LOADS FILES AND TRIGGERS STARTUP FUNCTION AFTER THE DOM IS READY
 
 function caught(what, err) {
