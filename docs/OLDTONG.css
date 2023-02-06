@@ -1,5 +1,9 @@
 html {
-    background-color: #c0c0d0
+    background-color: #c0c0c0
+}
+
+#container {
+    background-color: #e0e0e0
 }
 
 .tab_button {
@@ -8,48 +12,116 @@ html {
     border-top-right-radius: 10px;
 }
 
-#glyphmap {
+table {
+    border-collapse: collapse;
     padding: 10px;
 }
 
-    #glyphmap div {
-        margin: auto;
-    }
+th {
+    border: solid #202020 3px;
+    padding: 0;
+}
 
 td {
     border: solid #404040 2px;
+    padding: 0;
+} m          
+
+th,
+td {
+    font-weight: normal;
     text-align: center;
+    box-sizing: border-box;
 }
 
-#glyphmap span {
+span {
     white-space: pre-wrap;
     overflow-wrap: break-word;
     width: 100%;
+    margin: auto;
 }
 
-#glyphmap td,
-#glyphmap th {
-    padding: 4px;
+.BLANK {
+    visibility: hidden;
+    border: 0;
 }
 
-.C1,.C2,.C3,.C4,.C5,.C6,.C7,.C8 {
-    background-color: blue;
+.COLOR {
+    background-color: #d0d0d0;
+}
+
+.NUM,
+table * {
+    background-color: #d0c0c0;
+}
+
+.ASIN,
+.LIT {
+    filter: hue-rotate(40deg);
+}
+
+.PREP {
+    filter: hue-rotate(80deg);
+}
+
+.LOC,
+.LEGEND {
+    filter: hue-rotate(120deg);
+}
+
+.MEANING {
+    filter: hue-rotate(160deg);
 }
 
 .VERB  {
-    background-color: red;
+    filter: hue-rotate(200deg);
 }
 
-.HDR {
-    border: solid #202020 4px;
-    filter: brightness(50%);
+.GLYPH {
+    filter: hue-rotate(240deg);
 }
 
-.ODDROW {
+.C1 {
+    filter: hue-rotate(280deg);
+}
+
+.C2 {
+    filter: hue-rotate(290deg);
+}
+
+.C3 {
+    filter: hue-rotate(300deg);
+}
+
+.C4 {
+    filter: hue-rotate(310deg);
+}
+
+.C5 {
+    filter: hue-rotate(320deg);
+}
+
+.C6 {
+    filter: hue-rotate(330deg);
+}
+
+.C7 {
+    filter: hue-rotate(340deg);
+}
+
+.C8 {
+    filter: hue-rotate(350deg);
+}
+
+.HDR  {
+    filter: brightness(70%);
+}
+
+.ODDROW:not(.COLOR):not(.HDR) {
     filter: brightness(100%);
 }
 
-.EVENROW {
+.EVENROW:not(.COLOR):not(.HDR) {
     filter: brightness(80%);
 }
 
@@ -76,14 +148,6 @@ td {
 #count2 {
     margin-top: 25px;
     margin-bottom: 25px;
-}
-
-table {
-    border-collapse: collapse;
-}
-
-th {
-    font-weight: normal;
 }
 
 tr:has(>td>.solo:not(:checked)) > td > input[type="radio"] {
