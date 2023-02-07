@@ -345,6 +345,8 @@ const row_for_comment = row_max - 1;
 const col_max = 10; // 8 + hdr + comment
 const col_for_comment = col_max - 1;
 
+var num_list = [];
+
 function mk_main_table() {
     var tbl = document.getElementById('ctable');
     var tbl_display = tbl.style.display;
@@ -454,10 +456,14 @@ function mk_main_table() {
                     mk_subtxt(a, ['COMMENT'], 'Comment', 4, 1, 'bi');                             // comment row
                     break;
                 case 'rc': // CELL
+                    var num = numbers[row - 1][col];
+                    var nvals = [num, row - 1, col - 1];
+                    num_list.push(nvals);
+
                     // line 1
                     mk_glyph_entry(a, null, 'R'+(row-1)+'C'+(col-1), 2);                  // FULL GLYPH
                     mk_subtext_say(a, ['LIT'], 'cell', row, col, 2);                             // LIT<say>
-                    mk_subtxt(a, ['NUM'], numbers[row-1][col]);                   // Number
+                    mk_subtxt(a, ['NUM'], num);                   // Number
                     mk_subtxt(a, ['C1'], creature_subtype(csubtp, 1, row));             // C1 - SUBTYPE
                     mk_subtxt(a, ['C2'], creature_subtype(csubtp, 2, row));             // C2 - SUBTYPE
 

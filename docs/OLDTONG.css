@@ -47,12 +47,11 @@ span {
 }
 
 .COLOR {
-    background-color: #d0d0d0;
+    background-color: #808080;
 }
 
 .NUM,
-th,
-tr {
+tr > :not(.COLOR) {
     background-color: #d0c0c0;
 }
 
