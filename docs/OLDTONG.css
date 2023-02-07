@@ -32,7 +32,7 @@ table {
 }
 
 .BT3 {
-    border-top: solid #202020 6px;
+    border-top: solid #202020 5px;
 }
 
 /* BOTTOM */
@@ -46,7 +46,7 @@ table {
 }
 
 .BB3 {
-    border-bottom: solid #202020 6px;
+    border-bottom: solid #202020 5px;
 }
 
 /* LEFT */
@@ -60,7 +60,7 @@ table {
 }
 
 .BL3 {
-    border-left: ridge #202020 6px;
+    border-left: ridge #202020 5px;
 }
 
 /* RIGHT */
@@ -74,7 +74,7 @@ table {
 }
 
 .BR3 {
-    border-right: ridge #202020 8px;
+    border-right: ridge #202020 5px;
 }
 
 th,
@@ -97,7 +97,7 @@ span {
 }
 
 .COLOR {
-    background-color: #808080;
+    background-color: #707070;
 }
 
 .NUM,

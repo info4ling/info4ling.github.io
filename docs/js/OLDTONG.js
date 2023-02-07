@@ -647,6 +647,10 @@ function mk_row(tp, item_list, row_class) {
     return row;
 }
 
+function toggle(btn, class_list) {
+
+}
+
 /*
 function get_ctext(row, col, is_data = true) {
     if (col >= ctext.length) {
