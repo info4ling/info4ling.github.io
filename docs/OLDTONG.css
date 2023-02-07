@@ -51,78 +51,9 @@ span {
 }
 
 .NUM,
-table * {
+th,
+tr {
     background-color: #d0c0c0;
-}
-
-.ASIN,
-.LIT {
-    filter: hue-rotate(40deg);
-}
-
-.PREP {
-    filter: hue-rotate(80deg);
-}
-
-.LOC,
-.LEGEND {
-    filter: hue-rotate(120deg);
-}
-
-.MEANING {
-    filter: hue-rotate(160deg);
-}
-
-.VERB  {
-    filter: hue-rotate(200deg);
-}
-
-.GLYPH {
-    filter: hue-rotate(240deg);
-}
-
-.C1 {
-    filter: hue-rotate(280deg);
-}
-
-.C2 {
-    filter: hue-rotate(290deg);
-}
-
-.C3 {
-    filter: hue-rotate(300deg);
-}
-
-.C4 {
-    filter: hue-rotate(310deg);
-}
-
-.C5 {
-    filter: hue-rotate(320deg);
-}
-
-.C6 {
-    filter: hue-rotate(330deg);
-}
-
-.C7 {
-    filter: hue-rotate(340deg);
-}
-
-.C8 {
-    filter: hue-rotate(350deg);
-}
-
-.HDR  {
-    filter: brightness(70%);
-}
-
-.ODDROW:not(.COLOR):not(.HDR) {
-    filter: brightness(100%);
-}
-
-.EVENROW:not(.COLOR):not(.HDR) {
-    filter: brightness(80%);
 }
 
 #pro-glyph,

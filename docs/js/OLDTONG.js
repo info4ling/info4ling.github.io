@@ -569,14 +569,12 @@ var hue_filter = {
 };
 
 var bright_filter = {
-    HDR: 70,
+    HDR: 75,
     EVENROW: 80,
 }
 
 function mk_row(tp, item_list, row_class) {
     var row = document.createElement('tr');
-
-
 
     item_list.forEach(i => {
         var item = i[0];
@@ -586,7 +584,8 @@ function mk_row(tp, item_list, row_class) {
         var cl = i[4];
         var cell = document.createElement(tp);
 
-        var attr = { row_class: 1 };
+        var attr = {};
+        attr[row_class] = 1;
         cl.forEach(cls => {
             attr[cls] = 1;
         });
@@ -597,18 +596,24 @@ function mk_row(tp, item_list, row_class) {
         }
 
         var hue_val = 0;
-        attr.forEach(att => {
-            if (bright_val == 100) {
-                if (att in bright_filter) {
-                    bright_val = bright_filter[att];
-                }
-            }
-            if (att in hue_filter) {
-                hue_val = hue_filter[att];
-            }
-        });
+        var attr_keys = Object.keys(attr);
+        cell.classList.add(...attr_keys);
 
-        cell.style.filter = 'brightness(' + bright_val + '%) hue-rotate(' + hue_val + 'deg)';
+        if (!('COLOR' in attr)) {
+            attr_keys.forEach(att => {
+                if (bright_val == 100) {
+                    if (att in bright_filter) {
+                        bright_val = bright_filter[att];
+                    }
+                }
+                if (att in hue_filter) {
+                    hue_val = hue_filter[att];
+                }
+            });
+
+            cell.style.filter = 'brightness(' + bright_val + '%) hue-rotate(' + hue_val + 'deg)';
+        }
+
         
         if (rows > 1) {
             cell.rowSpan = rows;
@@ -616,14 +621,11 @@ function mk_row(tp, item_list, row_class) {
         if (cols > 1) {
             cell.colSpan = cols;
         }
-        
         if (is_glyph) {
             item = getImage(item, IMG_SZ);
         }
     
         cell.appendChild(item);
-        }
-
         row.appendChild(cell);
     });
     return row;
