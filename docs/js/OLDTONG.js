@@ -430,32 +430,32 @@ function mk_main_table() {
                     mk_subtxt(c, ['C6', 'BB1', 'BR3'], creature_subtype(csubtp, 6, 0), 1, 1, 'b');    // C6 - SUBTYPE
 
                     // line 4
-                    mk_subtxt(d, ['VERB', 'BL3', 'BR1', 'BB3'], 'Verb', 1, 1, 'bi');                            // 'verb' label
-                    mk_subtxt(d, ['C7', 'BL2', 'BR1', 'BB3'], creature_subtype(csubtp, 7, 0), 1, 1, 'b');    // C7 - SUBTYPE
-                    mk_subtxt(d, ['C8', 'BR3', 'BB3'], creature_subtype(csubtp, 8, 0), 1, 1, 'b');    // C8 - SUBTYPE
+                    mk_subtxt(d, ['VERB', 'BB3', 'BL3', 'BR1'], 'Verb', 1, 1, 'bi');                            // 'verb' label
+                    mk_subtxt(d, ['C7', 'BB3', 'BL2', 'BR1'], creature_subtype(csubtp, 7, 0), 1, 1, 'b');    // C7 - SUBTYPE
+                    mk_subtxt(d, ['C8', 'BB3', 'BR3'], creature_subtype(csubtp, 8, 0), 1, 1, 'b');    // C8 - SUBTYPE
                     break;
                 case 'rC*': // FIRST COL HEADER - Comment
                     mk_subtxt(a, ['COMMENT', 'BT3', 'BB3', 'BL3', 'BR3'], 'Comment', 1, 2, 'bi');                        // comment column
                     break;
                 case 'rC': // FIRST COL HEADER
                     // line 1
-                    mk_glyph_entry(a, ['HDR'], 'R'+(row-1), 2);                                        // LEFT HALF OF  GLYPH
-                    mk_subtext_say(a, ['LIT', 'HDR'], 'row', row, 0, 1, 1, 'b');                         // LIT<say>
+                    mk_glyph_entry(a, ['HDR', 'BT3', 'BB2', 'BL3'], 'R'+(row-1), 2);                                        // LEFT HALF OF  GLYPH
+                    mk_subtext_say(a, ['LIT', 'HDR', 'BT3', 'BB1', 'BR3'], 'row', row, 0, 1, 1, 'b');                         // LIT<say>
 
                     // line 2
-                    mk_subtxt(b, ['ASIN', 'HDR'], sounds['C'][row-1][2], 1, 1, 'b');                // as in
+                    mk_subtxt(b, ['ASIN', 'HDR', 'BB2', 'BR3'], sounds['C'][row-1][2], 1, 1, 'b');                // as in
 
                     // line 3
-                    mk_subtxt(c, ['LOC', 'HDR'], locations[row-1], 1, 2, 'b');                     // location
+                    mk_subtxt(c, ['LOC', 'HDR', 'BB1', 'BL3', 'BR3'], locations[row-1], 1, 2, 'b');                     // location
 
                     // line 4
-                    mk_subtxt(d, ['VERB', 'HDR'], verbs[row-1][0], 1, 2, 'b');                     // job/verb/powerword
+                    mk_subtxt(d, ['VERB', 'HDR', 'BB3', 'BL3', 'BR3'], verbs[row-1][0], 1, 2, 'b');                     // job/verb/powerword
                     break;
                 case 'rc*': // CELL
-                    mk_subtxt(a, ['COMMENT'], 'Comment', 1, 5, 'bi');                             // comment column
+                    mk_subtxt(a, ['COMMENT', 'BB3', 'BL3', 'BR3'], 'Comment', 1, 5, 'bi');                             // comment column
                     break;
                case 'rc+': // CELL
-                    mk_subtxt(a, ['COMMENT'], 'Comment', 4, 1, 'bi');                             // comment row
+                    mk_subtxt(a, ['COMMENT', 'BT3', 'BB3', 'BR3'], 'Comment', 4, 1, 'bi');                             // comment row
                     break;
                 case 'rc': // CELL
                     var num = numbers[row - 1][col];
