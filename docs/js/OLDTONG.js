@@ -647,8 +647,28 @@ function mk_row(tp, item_list, row_class) {
     return row;
 }
 
-function toggle(btn, class_list) {
+var button_off = {};
+const hide_cell = 'HIDECELL';
 
+function toggle(btn, class_list) {
+    class_list.push('COMMENT');
+    var tag = btn.innerText;
+    if (tag in button_off) {
+        class_list.forEach(cls => {
+            var list = document.getElementsByClassName(cls);
+            [...list].forEach(elem => {
+                elem.classList.remove(hide_cell);
+            });
+        });
+    } else {
+        button_off[tag] = 1;
+        class_list.forEach(cls => {
+            var list = document.getElementsByClassName(cls);
+            [...list].forEach(elem => {
+                elem.classList.add(hide_cell);
+            });
+        });
+    }
 }
 
 /*

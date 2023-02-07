@@ -6,8 +6,8 @@ html {
     background-color: #e0e0e0
 }
 
-#glyphmap {
-    padding: 30px;
+#glyph_buttons {
+    padding: 20px;
 }
 
 .tab_button {
@@ -103,6 +103,10 @@ span {
 .NUM,
 tr > :not(.COLOR) {
     background-color: #d0c0c0;
+}
+
+.HIDECELL {
+    visibility: collapse;
 }
 
 #pro-glyph,
