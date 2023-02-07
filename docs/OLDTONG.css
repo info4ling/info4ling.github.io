@@ -12,6 +12,10 @@ html {
     border-top-right-radius: 10px;
 }
 
+#ctable {
+    margin-top: 40px;
+}
+
 table {
     border-collapse: collapse;
     padding: 10px;

@@ -394,22 +394,23 @@ function mk_main_table() {
             var b = [];
             var c = [];
             var d = [];
+
             switch (code) {
                 case 'RC': // Upper Left
                     mk_subtxt(x, ['BLANK'], '', 5, 2); // 4x2 of nothing
                     break;
                 case 'Rc+': // TOP ROW HEADER - Comment
-                    mk_subtxt(x, ['COMMENT'], 'Comment', 5, 1, 'b');                        // row column
+                    mk_subtxt(x, ['COMMENT', 'BT3', 'BB3', 'BL3', 'BR3'], 'Comment', 5, 1, 'b');                        // row column
                     break;
                 case 'Rc': // TOP ROW HEADER
                     row_class = 'HDR';
                     // line 0
                     mk_subtxt(x, ['BLANK'], '', 1, 3);                                      // blank
-                    mk_subtxt(x, ['C0'], ctype, 1, 2, 'b');                             // Creature type
+                    mk_subtxt(x, ['C0', 'BT3', 'BL3', 'BR3'], ctype, 1, 2, 'b');                             // Creature type
 
                     // line 1
-                    mk_glyph_entry(a, null, 'C'+(col-1), 2);                             // RIGHT HALF OF GLYPH
-                    mk_subtext_say(a, ['LIT'], 'col', 0, col, 1, 1, 'b');                         // LIT<say>                   
+                    mk_glyph_entry(a,['BT3', 'BB2', 'BL3'], 'C'+(col-1), 2);                             // RIGHT HALF OF GLYPH
+                    mk_subtext_say(a, ['LIT', 'BT3', 'BB2', 'BR2'], 'col', 0, col, 1, 1, 'b');                         // LIT<say>
                     mk_subtxt(a, ['NUM'], 'Number', 1, 1, 'bi');                           // Number Label
                     mk_subtxt(a, ['C1'], creature_subtype(csubtp, 1, 0), 1, 1, 'b');    // C1 - SUBTYPE
                     mk_subtxt(a, ['C2'],creature_subtype(csubtp, 2, 0), 1, 1, 'b');    // C2 - SUBTYPE
