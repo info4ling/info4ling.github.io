@@ -548,12 +548,35 @@ function mk_container(container, items) {
     return box;
 }
 
-var filters = {
+var hue_filter = {
+    ASIN: 40,
+    LIT: 40,
+    PREP: 80,
+    LOC: 120,
+    LEGEND: 120,
+    MEANING: 160,
+    VERB: 200,
+    GLYPH: 240,
+    C0: 270,
+    C1: 280,
+    C2: 290,
+    C3: 300,
+    C4: 310,
+    C5: 320,
+    C6: 330,
+    C7: 340,
+    C8: 350
+};
 
+var bright_filter = {
+    HDR: 70,
+    EVENROW: 80,
 }
 
 function mk_row(tp, item_list, row_class) {
     var row = document.createElement('tr');
+
+
 
     item_list.forEach(i => {
         var item = i[0];
@@ -563,6 +586,30 @@ function mk_row(tp, item_list, row_class) {
         var cl = i[4];
         var cell = document.createElement(tp);
 
+        var attr = { row_class: 1 };
+        cl.forEach(cls => {
+            attr[cls] = 1;
+        });
+
+        var bright_val = 100;
+        if ('HDR' in attr) {
+            bright_val = bright_filter['HDR'];
+        }
+
+        var hue_val = 0;
+        attr.forEach(att => {
+            if (bright_val == 100) {
+                if (att in bright_filter) {
+                    bright_val = bright_filter[att];
+                }
+            }
+            if (att in hue_filter) {
+                hue_val = hue_filter[att];
+            }
+        });
+
+        cell.style.filter = 'brightness(' + bright_val + '%) hue-rotate(' + hue_val + 'deg)';
+        
         if (rows > 1) {
             cell.rowSpan = rows;
         }
@@ -570,18 +617,11 @@ function mk_row(tp, item_list, row_class) {
             cell.colSpan = cols;
         }
         
-        cl.forEach(cls => {
-            if (cls == 'HDR') {
-                cell_div.classList.add(cls);
-            } else {
-                cell.classList.add(cls);
-            }
-        });
         if (is_glyph) {
-            let glyph = getImage(item, IMG_SZ);
-            cell_div.appendChild(glyph);
-        } else {
-            cell_div.appendChild(item);
+            item = getImage(item, IMG_SZ);
+        }
+    
+        cell.appendChild(item);
         }
 
         row.appendChild(cell);
