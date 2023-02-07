@@ -439,7 +439,7 @@ function mk_main_table() {
                     break;
                 case 'rC': // FIRST COL HEADER
                     // line 1
-                    mk_glyph_entry(a, ['HDR', 'BT3', 'BB2', 'BL3'], 'R'+(row-1), 2);                                        // LEFT HALF OF  GLYPH
+                    mk_glyph_entry(a, ['HDR', 'BT3', 'BB2', 'BL3', 'BR1'], 'R'+(row-1), 2);                                        // LEFT HALF OF  GLYPH
                     mk_subtext_say(a, ['LIT', 'HDR', 'BT3', 'BB1', 'BR3'], 'row', row, 0, 1, 1, 'b');                         // LIT<say>
 
                     // line 2
@@ -463,28 +463,32 @@ function mk_main_table() {
                     num_list.push(nvals);
 
                     // line 1
-                    mk_glyph_entry(a, [], 'R'+(row-1)+'C'+(col-1), 2);                  // FULL GLYPH
-                    mk_subtext_say(a, ['LIT'], 'cell', row, col, 2);                             // LIT<say>
-                    mk_subtxt(a, ['NUM'], num);                   // Number
-                    mk_subtxt(a, ['C1'], creature_subtype(csubtp, 1, row));             // C1 - SUBTYPE
-                    mk_subtxt(a, ['C2'], creature_subtype(csubtp, 2, row));             // C2 - SUBTYPE
+                    mk_glyph_entry(a, ['BB2', 'BR1'], 'R'+(row-1)+'C'+(col-1), 2);                  // 1, 1 FULL GLYPH
+                    mk_subtext_say(a, ['LIT', 'BB2', 'BR2'], 'cell', row, col, 2);                  // 1, 2 LIT<say>
+                    mk_subtxt(a, ['NUM', 'BB1'], num);                                              // 1, 3 Number
+                    mk_subtxt(a, ['C1', 'BB1', 'BL2', 'BR1'], creature_subtype(csubtp, 1, row));    // 1, 4 C1 - SUBTYPE
+                    mk_subtxt(a, ['C2', 'BB1', 'BR3'], creature_subtype(csubtp, 2, row));           // 1, 5 C2 - SUBTYPE
 
                     // line 2                   
-                    mk_subtxt(b, ['PREP'], preps[row - 1][col - 1]);                      // preposition
-                    mk_subtxt(b, ['C3'], creature_subtype(csubtp, 3, row));             // C3 - SUBTYPE
-                    mk_subtxt(b, ['C4'], creature_subtype(csubtp, 4, row));             // C4 - SUBTYPE
+                                                                                                    // 2, 1 2nd GLYPH
+                                                                                                    // 2, 2 2nd LIT
+                    mk_subtxt(b, ['PREP', 'BB1'], preps[row - 1][col - 1]);                         // 2, 3 preposition
+                    mk_subtxt(b, ['C3', 'BB1', 'BL2', 'BR1'], creature_subtype(csubtp, 3, row));    // 2, 4 C3 - SUBTYPE
+                    mk_subtxt(b, ['C4', 'BB1', 'BR3'], creature_subtype(csubtp, 4, row));           // 2, 5 C4 - SUBTYPE
 
                     // line 3
-                    mk_subtxt(c, ['LEGEND'], legend[col - 1][row]);                         // legend
-                    mk_subtxt(c, ['MEANING'], meaning[col - 1][row], 2);                        // meaning
-                    mk_subcell(c, ['COLOR'], color_circle(row, col), false, 2);                   // color
-                    mk_subtxt(c, ['C5'], creature_subtype(csubtp, 5, row));             // C5 - SUBTYPE
-                    mk_subtxt(c, ['C6'], creature_subtype(csubtp, 6, row));             // C6 - SUBTYPE
+                    mk_subtxt(c, ['LEGEND', 'BB1', 'BR1'], legend[col - 1][row]);                   // 3, 1 legend
+                    mk_subtxt(c, ['MEANING', 'BB3', 'BR1'], meaning[col - 1][row], 2);              // 3, 2 meaning
+                    mk_subcell(c, ['COLOR'], color_circle(row, col), false, 2);                     // 3, 3 color
+                    mk_subtxt(c, ['C5'], creature_subtype(csubtp, 5, row));                         // 3, 4 C5 - SUBTYPE
+                    mk_subtxt(c, ['C6'], creature_subtype(csubtp, 6, row));                         // 3, 4 C6 - SUBTYPE
 
                     // line 4 
-                    mk_subtxt(d, ['VERB'], verbs[row - 1][col+2]);                     // job/verb/powerword
-                    mk_subtxt(d, ['C7'], creature_subtype(csubtp, 7, row));             // C7 - SUBTYPE
-                    mk_subtxt(d, ['C8'], creature_subtype(csubtp, 8, row));             // C8 - SUBTYPE
+                    mk_subtxt(d, ['VERB'], verbs[row - 1][col + 2]);                                // 4, 1 job/verb/powerword
+                                                                                                    // 4, 2 2nd Meaning
+                                                                                                    // 4, 3 2nd COLOR
+                    mk_subtxt(d, ['C7'], creature_subtype(csubtp, 7, row));                         // C7 - SUBTYPE
+                    mk_subtxt(d, ['C8'], creature_subtype(csubtp, 8, row));                         // C8 - SUBTYPE
                     break;
 
             }
