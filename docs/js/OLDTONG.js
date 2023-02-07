@@ -483,16 +483,16 @@ function mk_main_table() {
                     // line 3
                     mk_subtxt(c, ['LEGEND', 'BB1', 'BR1'], legend[col - 1][row]);                   // 3, 1 legend
                     mk_subtxt(c, ['MEANING', 'BB3', 'BR1'], meaning[col - 1][row], 2);              // 3, 2 meaning
-                    mk_subcell(c, ['COLOR', 'BB3', 'BR1'], color_circle(row, col), false, 2);                     // 3, 3 color
-                    mk_subtxt(c, ['C5', 'BB1', 'BL2', 'BR1'], creature_subtype(csubtp, 5, row));                         // 3, 4 C5 - SUBTYPE
-                    mk_subtxt(c, ['C6', 'BB1', 'BR3'], creature_subtype(csubtp, 6, row));                         // 3, 4 C6 - SUBTYPE
+                    mk_subcell(c, ['COLOR', 'BB3', 'BR1'], color_circle(row, col), false, 2);       // 3, 3 color
+                    mk_subtxt(c, ['C5', 'BB1', 'BL2', 'BR1'], creature_subtype(csubtp, 5, row));    // 3, 4 C5 - SUBTYPE
+                    mk_subtxt(c, ['C6', 'BB1', 'BR3'], creature_subtype(csubtp, 6, row));           // 3, 4 C6 - SUBTYPE
 
                     // line 4 
-                    mk_subtxt(d, ['VERB', 'BB3', 'BR1'], verbs[row - 1][col + 2]);                                // 4, 1 job/verb/powerword
+                    mk_subtxt(d, ['VERB', 'BB3', 'BR1'], verbs[row - 1][col + 2]);                  // 4, 1 job/verb/powerword
                                                                                                     // 4, 2 2nd Meaning
                                                                                                     // 4, 3 2nd COLOR
-                    mk_subtxt(d, ['C7', 'BB3', 'BL2', 'BR1'], creature_subtype(csubtp, 7, row));                         // C7 - SUBTYPE
-                    mk_subtxt(d, ['C8', 'BB3', 'BR3'], creature_subtype(csubtp, 8, row));                         // C8 - SUBTYPE
+                    mk_subtxt(d, ['C7', 'BB3', 'BL2', 'BR1'], creature_subtype(csubtp, 7, row));    // 4, 4 C7 - SUBTYPE
+                    mk_subtxt(d, ['C8', 'BB3', 'BR3'], creature_subtype(csubtp, 8, row));           // 4, 5 C8 - SUBTYPE
                     break;
 
             }
@@ -647,13 +647,19 @@ function mk_row(tp, item_list, row_class) {
     return row;
 }
 
+var button_sum = 0;
 var button_off = {};
 const hide_cell = 'HIDECELL';
 
 function toggle(btn, class_list) {
-    class_list.push('COMMENT');
     var tag = btn.innerText;
-    if (tag in button_off) {
+    if (tag in button_off && button_off[tag] == 1) {
+        if (button_sum == 0) {
+            class_list.push('COMMENT');
+        }
+        button_sum++;
+        button_off[tag] = 0;
+
         class_list.forEach(cls => {
             var list = document.getElementsByClassName(cls);
             [...list].forEach(elem => {
@@ -661,7 +667,11 @@ function toggle(btn, class_list) {
             });
         });
     } else {
+        button_sum--;
         button_off[tag] = 1;
+        if (button_sum == 0) {
+            class_list.push('COMMENT');
+        }
         class_list.forEach(cls => {
             var list = document.getElementsByClassName(cls);
             [...list].forEach(elem => {
