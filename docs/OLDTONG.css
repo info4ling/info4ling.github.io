@@ -21,46 +21,60 @@ table {
     padding: 10px;
 }
 
-th {
-    border: solid #404040 2px;
-    padding: 0;
+/* TOP */
+
+.BT1 {
+    border-top: solid #505050 1px;
 }
 
-td {
-    border: solid #505050 1px;
-    padding: 0;
-} m          
-
 .BT2 {
-    border-top: solid #303030 3px;
+    border-top: solid #404040 2px;
 }
 
 .BT3 {
-    border-top: solid #202020 4px;
+    border-top: solid #202020 3px;
+}
+
+/* BOTTOM */
+
+.BB1 {
+    border-bottom: solid #505050 1px;
 }
 
 .BB2 {
-    border-bottom: solid #303030 3px;
+    border-bottom: solid #404040 2px;
 }
 
 .BB3 {
-    border-bottom: solid #202020 4px;
+    border-bottom: solid #202020 3px;
+}
+
+/* LEFT */
+
+.BL1 {
+    border-left: solid #505050 1px;
 }
 
 .BL2 {
-    border-left: solid #303030 3px;
+    border-left: solid #404040 2px;
 }
 
 .BL3 {
-    border-left: solid #202020 4px;
+    border-left: solid #202020 3px;
+}
+
+/* RIGHT */
+
+.BR1 {
+    border-right: solid #505050 1px;
 }
 
 .BR2 {
-    border-right: solid #303030 3px;
+    border-right: solid #404040 2px;
 }
 
 .BR3 {
-    border-right: solid #202020 4px;
+    border-right: solid #202020 3px;
 }
 
 th,
