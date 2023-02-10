@@ -153,9 +153,9 @@ function saveImage(original, name) {
     stored_images[name] = URI;
 }
 
-function getImage(name, rsz) {
+function getImage(name, rsz, tp='div') {
     var dataURI = stored_images[name];
-    var image = document.createElement('div');
+    var image = document.createElement(tp);
     image.style.width = rsz+'px';
     image.style.height = rsz+'px';
     image.style.backgroundImage ="url("+dataURI+")";

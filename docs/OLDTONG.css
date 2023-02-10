@@ -1,13 +1,15 @@
 html {
-    background-color: #c0c0c0
+    background-color: #c0c0c0;
 }
 
 #container {
-    background-color: #e0e0e0
+    background-color: #e0e0e0;
 }
 
-#glyph_buttons {
+#glyphmap {
     padding: 20px;
+    width: max-content;
+    height: max-content;
 }
 
 .tab_button {
