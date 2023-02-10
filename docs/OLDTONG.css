@@ -23,6 +23,11 @@ table {
     padding: 10px;
 }
 
+.GBUTTON:not(.GLYPH):not(.COLOR) {
+    background-color: transparent;
+    border: none;
+}
+
 /* TOP */
 
 .BT1 {

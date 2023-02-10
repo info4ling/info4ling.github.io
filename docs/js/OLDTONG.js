@@ -238,7 +238,7 @@ function color_circle(row, col) {
     circle.style.minWidth = IMG_W + 'px';
     circle.style.maxHeight = IMG_H + 'px';
     circle.style.maxWidth = IMG_W + 'px';
-    circle.margin = 'auto';
+    circle.style.margin = 'auto';
     return circle;
 }
 
@@ -292,13 +292,20 @@ function mk_subtext_say(arr, cl, what, row, col, rows=1, cols=1, font='') {
     var txt = lit + '(' + say + ')'; // will be a button
     return mk_subtxt(arr, cl, txt, rows, cols, font);
 }
+function base_class(list) {
+    var ret = list[0];
+    if (ret == 'CR' && list[1] != 'C0') {
+            ret = list[1];
+    }
+    return ret;
+}
 
 function mk_subtxt(arr, cl, raw_txt, rows=1, cols=1, font='') {
     var item;
     var tooltip = '';
     var txt = '';
     if (raw_txt == '') {
-        txt = '{<i>' + cl[0] + '</i>}';
+        txt = '{<i>' + base_class(cl) + '</i>}';
     } else {
         let vals = raw_txt.split(/\*/);
         
@@ -494,7 +501,7 @@ function mk_main_table() {
                     // line 3
                     mk_subtxt(c, ['CR', 'LEGEND', 'BB1', 'BR1'], legend[col - 1][row]);                   // 3, 1 legend
                     mk_subtxt(c, ['CR', 'MEANING', 'BB3', 'BR1'], meaning[col - 1][row], 2);              // 3, 2 meaning
-                    mk_subcell(c, ['CR', 'COLOR', 'BB3', 'BR1'], color_circle(row, col), false, 2);       // 3, 3 color
+                    mk_subcell(c, ['CR', 'COLOR', 'BB3', 'BR1'], color_circle(row, col), null, 2);       // 3, 3 color
                     mk_subtxt(c, ['CR', 'C5', 'BB1', 'BL2', 'BR1'], creature_subtype(csubtp, 5, row));    // 3, 4 C5 - SUBTYPE
                     mk_subtxt(c, ['CR', 'C6', 'BB1', 'BR3'], creature_subtype(csubtp, 6, row));           // 3, 4 C6 - SUBTYPE
 
@@ -680,10 +687,7 @@ function gbutton(item, glyph_sound, is_hdr, cl) {
     button = document.createElement('button');
     button.appendChild(item);
     button.classList.add('GBUTTON', ...item.classList);
-    let tgt = cl[0]
-    if (tgt == 'CR' && cl[1] != 'C0') {
-        tgt = cl[1];
-    }
+    let tgt = base_class(cl);
 
     var hide_class = 'GCELL';
     var show_class = tgt;
