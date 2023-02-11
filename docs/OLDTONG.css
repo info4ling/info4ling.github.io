@@ -25,7 +25,7 @@ table {
 
 .GBUTTON:not(.GLYPH):not(.COLOR) {
     background-color: transparent;
-    border: none;
+    border: none transparent 0;
 }
 
 /* TOP */
