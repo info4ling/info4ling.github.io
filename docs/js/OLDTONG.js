@@ -486,7 +486,7 @@ function mk_main_table() {
                     mk_subtxt(d, ['CR', 'C1', 'HDR', 'BB1', 'BL3', 'BR1'], '');    // 1, 4 C1 - SUBTYPE
                     mk_subtxt(d, ['CR', 'C2', 'HDR', 'BB1', 'BR1'], '');           // 1, 5 C2 - SUBTYPE
                     mk_subtxt(d, ['CR', 'C3', 'HDR', 'BB1', 'BR1'], '');    // 2, 4 C3 - SUBTYPE
-                    mk_subtxt(d, ['CR', 'C4', 'HDR', 'BT2', 'BB1', 'BR3'], '');           // 2, 5 C4 - SUBTYPE
+                    mk_subtxt(d, ['CR', 'C4', 'HDR', 'BB1', 'BR3'], '');           // 2, 5 C4 - SUBTYPE
 
                     // line 3.5
                     mk_subtxt(e, ['CR', 'C5', 'HDR', 'BB3', 'BL3', 'BR1'], '');    // 3, 4 C5 - SUBTYPE

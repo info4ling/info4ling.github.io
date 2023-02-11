@@ -67,7 +67,7 @@ table {
 }
 
 .BL3 {
-    border-left: ridge #202020 5px;
+    border-left: solid #202020 5px;
 }
 
 /* RIGHT */
@@ -81,7 +81,7 @@ table {
 }
 
 .BR3 {
-    border-right: ridge #202020 5px;
+    border-right: solid #202020 5px;
 }
 
 th,
