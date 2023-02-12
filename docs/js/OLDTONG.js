@@ -517,7 +517,7 @@ function mk_main_table() {
                     num_list.push(nvals);
 
                     // line 1
-                    mk_glyph_entry(a, ['GLYPH', 'SKIP', 'GCELL', 'LIT', 'NUM', 'PREP', 'HDR', 'BT3', 'BB1', 'BL3', 'BR1'], row, col, 2);
+                    mk_glyph_entry(a, ['GLYPH', 'SKIP', 'GCELL', 'LIT', 'NUM', 'PREP', 'BB1', 'BR1'], row, col, 2);
                     mk_subtext_say(a, ['LIT', 'BB1', 'BR1'], 'cell', row, col, 2);                  // 1, 2 LIT<say>
                     mk_subtxt(a, ['NUM', 'BB1', 'BR1'], num, 2);                                              // 1, 3 Number
                     mk_subtxt(a, ['PREP', 'BB1', 'BR3'], preps[row - 1][col - 1], 2);                         // 2, 3 preposition
@@ -525,14 +525,14 @@ function mk_main_table() {
                     // line 1.5 -- Nothing
 
                     // line 2
-                    mk_glyph_entry(c, ['GLYPH', 'HIDECELL', 'GCELL', 'LOC', 'MEANING', 'VERB', 'COLOR', 'HDR', 'BT3', 'BB1', 'BL3', 'BR1'], row, col, 2);
+                    mk_glyph_entry(c, ['GLYPH', 'HIDECELL', 'GCELL', 'LOC', 'MEANING', 'VERB', 'COLOR', 'BB1', 'BR1'], row, col, 2);
                     mk_subtxt(c, ['LOC', 'BB2', 'BR1'], legend[col - 1][row],2);                   // 3, 1 legend
                     mk_subtxt(c, ['MEANING', 'BB2', 'BR1'], meaning[col - 1][row], 2);              // 3, 2 meaning
                     mk_subtxt(c, ['VERB', 'BB2', 'BR1'], verbs[row - 1][col + 2], 2);                  // 4, 1 job/verb/powerword
                     mk_subcell(c, ['COLOR', 'GCELL', 'BB2', 'BR3'], color_circle(row, col), null, 2);       // 3, 3 color
 
                     // line 3 
-                    mk_glyph_entry(d, ['GLYPH', 'HIDECELL', 'GCELL', 'CR', 'C1', 'C2', 'C3', 'C4', 'HDR', 'BT3', 'BB1', 'BL3', 'BR1'], row, col, 2);
+                    mk_glyph_entry(d, ['GLYPH', 'HIDECELL', 'GCELL', 'CR', 'C1', 'C2', 'C3', 'C4', 'BB1', 'BR1'], row, col, 2);
                     mk_subtxt(d, ['CR', 'C1', 'BB1', 'BR1'], creature_subtype(csubtp, 1, row), 2);    // 1, 4 C1 - SUBTYPE
                     mk_subtxt(d, ['CR', 'C2', 'BB1', 'BR1'], creature_subtype(csubtp, 2, row), 2);           // 1, 5 C2 - SUBTYPE
                     mk_subtxt(d, ['CR', 'C3', 'BB1', 'BR1'], creature_subtype(csubtp, 3, row), 2);    // 2, 4 C3 - SUBTYPE
@@ -724,44 +724,41 @@ function gbutton(item, glyph_sound, is_hdr, cl) {
     button.classList.add('GBUTTON', ...item.classList);
     let tgt = base_class(cl);
 
-    var hide_class = 'GCELL';
+    var hide_class = true;
     var show_class = tgt;
 
     button.onclick = function () {
-        // Hide all Cells
-        var hide = document.getElementsByClassName(hide_class);
-        [...hide].forEach(elem => {
-            elem.classList.add(hide_cell);
-        });
-        // Unhide the tgt Cells
-        var list = document.getElementsByClassName(show_class);
-        [...list].forEach(elem => {
-            elem.classList.remove(hide_cell);
-        });
-
-        if (hide_class == 'GCELL') {
-            var hide = document.getElementsByClassName('SKIP');
-            [...hide].forEach(elem => {
-                elem.classList.add(hide_cell);
-            });
+        if (hide_class) {
+            // Hide all Cells
+            add_class('GCELL', hide_cell);
+            // Unhide the tgt Cells
+            rm_class(tgt, hide_cell);
         } else {
-            var hide = document.getElementsByClassName('GLYPH');
-            [...hide].forEach(elem => {
-                elem.classList.add(hide_cell);
-            });
-            var list = document.getElementsByClassName('SKIP');
-            [...list].forEach(elem => {
-                elem.classList.remove(hide_cell);
-            });
+            rm_class('GCELL', hide_cell);
+            add_class('GLYPH', hide_cell);
+            rm_class('SKIP', hide_cell);
         }
 
-        var tmp = hide_class;
-        hide_class = show_class;
-        show_class = tmp;
+        hide_class = !hide_class;
     };
 
     return button;
 }
+
+function add_class(add_to, what) {
+    var hide = document.getElementsByClassName(add_to);
+    [...hide].forEach(elem => {
+        elem.classList.add(what);
+    });
+}
+
+function rm_class(rm_from, what) {
+    var hide = document.getElementsByClassName(rm_from);
+    [...hide].forEach(elem => {
+        elem.classList.remove(what);
+    });
+}
+
 
 /*
 function get_ctext(row, col, is_data = true) {
