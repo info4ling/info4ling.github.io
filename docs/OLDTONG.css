@@ -107,6 +107,7 @@ span {
     background-color: #707070;
 }
 
+.CX,
 .NUM,
 tr > :not(.COLOR) {
     background-color: #d0c0c0;
