@@ -279,14 +279,14 @@ function mk_subtxt(arr, cl, raw_txt, rows=1, cols=1, font='') {
     var tooltip = '';
     var txt = '';
     if (raw_txt == null) {
-        txt = cl.join('-');
+        txt = ''; // cl.join('-');
     } else if (raw_txt == '') {
         var bc = base_class(cl);
         if (bc != 'CX') {
             txt = '{<i>' + bc + '</i>}';
         }
     } else {
-        let vals = raw_txt.split(/\*/);
+        let vals = raw_txt.replace(/\//, '/ ').split(/\*/);
         
         if (vals.length > 1) {
             txt = '<b>'+vals[0] + '</b> *';
@@ -406,20 +406,19 @@ function mk_main_table() {
 
                     // line 2
                     mk_subtxt(c, ['BLANK', 'GLYPH', 'HIDECELL', 'GCELL', 'LOC', 'MEANING', 'VERB', 'COLOR'], null, 2);
-                    mk_subtxt(c, ['LOC', 'BLANK'], null, 2);                  // 3, 1 legend
                     mk_subtxt(c, ['VERB', 'BLANK'], null, 2);                             // 4, 1 'verb' label
                     mk_subtxt(c, ['MEANING', 'BLANK'], null, 2);                        // 3, 2 Meaning
+                    mk_subtxt(c, ['LOC', 'BLANK'], null, 2);                  // 3, 1 legend
                     mk_subtxt(c, ['COLOR', 'BLANK'], null, 2);                                            // 3, 3 Color Label
 
                     // line X
 
                     mk_subtxt(x, ['BLANK', 'GCELL'], null, 1, 4);                    // 0, 2 Creature type 
-                    mk_subtxt(x, ['CR', 'C0', 'BLANK', 'GLYPH', 'HIDECELL'], null, 1, 2);
+                    mk_subtxt(x, ['CR', 'C0', 'BLANK', 'GLYPH', 'HIDECELL'], null, 1);
 
 
                     // line 3
                     mk_subtxt(d, ['BLANK', 'GLYPH', 'HIDECELL', 'GCELL', 'CR', 'C1', 'C2', 'C3', 'C4'], null, 1);
-                    mk_subtxt(d, ['CR', 'GCELL', 'HIDECELL', 'BLANK', 'GLYPH'], null, 1);
                     mk_subtxt(d, ['C1', 'BLANK'], null, 1);    // 1, 4 C1 - SUBTYPE
                     mk_subtxt(d, ['C2', 'BLANK'], null, 1);            // 1, 5 C2 - SUBTYPE
                     mk_subtxt(d, ['C3', 'BLANK'], null, 1);           // 2, 4 C3 - SUBTYPE
@@ -427,7 +426,6 @@ function mk_main_table() {
 
                     // line 3.5
                     mk_subtxt(e, ['BLANK', 'GLYPH', 'HIDECELL', 'GCELL', 'CR', 'C5', 'C6', 'C7', 'C8'], null, 1);
-                    mk_subtxt(e, ['CR', 'GCELL', 'HIDECELL', 'BLANK', 'GLYPH'], null, 1);
                     mk_subtxt(e, ['C5', 'BLANK'], null, 1);           // 3, 4 C5 - SUBTYPE
                     mk_subtxt(e, ['C6', 'BLANK'], null, 1);                  // 3, 5 C6 - SUBTYPE
                     mk_subtxt(e, ['C7', 'BLANK'], null, 1);           // 4, 4 C7 - SUBTYPE
@@ -435,7 +433,7 @@ function mk_main_table() {
                     
                     break;
                 case 'Rc+': // TOP ROW HEADER - Comment
-                    mk_subtxt(a, ['COMMENT', 'BT3', 'BB3', 'BL3', 'BR3'], 'Comment RH', 7, 1, 'b');    // row column
+                    mk_subtxt(a, ['COMMENT', 'BT3', 'BB3', 'BL3', 'BR3'], 'Comment RH', 8, 1, 'b');    // row column
                     break;
                 case 'Rc': // TOP ROW HEADER
                     row_class = 'HDR';
@@ -452,20 +450,20 @@ function mk_main_table() {
 
 
                     // line 2
-                    mk_glyph_entry(c, ['GLYPH', 'HIDECELL', 'GCELL', 'LOC', 'MEANING', 'VERB', 'COLOR', 'HDR', 'BT3', 'BB1', 'BL3', 'BR1'], row, col, 2);
-                    mk_subtxt(c, ['LOC', 'GCELL', 'BB2', 'BL3', 'BR1'], legend[col - 1][0], 2, 1, 'b');                  // 3, 1 legend
-                    mk_subtxt(c, ['VERB', 'GCELL', 'BB2', 'BR1'], 'Verb', 2, 1, 'bi');                             // 4, 1 'verb' label
+                    mk_glyph_entry(c, ['GLYPH', 'HIDECELL', 'GCELL', 'LOC', 'MEANING', 'VERB', 'COLOR', 'HDR', 'BT3', 'BB3', 'BL3', 'BR1'], row, col, 2);
+                    mk_subtxt(c, ['VERB', 'GCELL', 'BB2', 'BL3', 'BR1'], 'Verb', 2, 1, 'bi');                             // 4, 1 'verb' label
                     mk_subtxt(c, ['MEANING', 'GCELL', 'BB2', 'BR1'], meaning[col - 1][0], 2, 1, 'b');                        // 3, 2 Meaning
+                    mk_subtxt(c, ['LOC', 'GCELL', 'BB2',  'BR1'], legend[col - 1][0], 2, 1, 'b');                  // 3, 1 legend
                     mk_subtxt(c, ['COLOR', 'GCELL', 'BB2', 'BR3'], 'Color', 2, 1, 'bi');                                            // 3, 3 Color Label
 
                     // line X
 
-                    mk_glyph_entry(x, ['GLYPH', 'HIDECELL', 'GCELL', 'CR', 'HDR', 'BT3', 'BB1', 'BL3', 'BR1'], row, col, 5);
+                    mk_glyph_entry(x, ['GLYPH', 'HIDECELL', 'GCELL', 'CR', 'HDR', 'BT3', 'BB3', 'BL3', 'BR1'], row, col, 5);
                     mk_subtxt(x, ['CR', 'C0', 'GCELL', 'BB1', 'BL3', 'BR3'], ctype, 1, 4, 'b');                    // 0, 2 Creature type                                                                                                // 4, 2 2nd Meaning
 
 
                     // line 3
-                    mk_glyph_entry(d, ['GLYPH', 'HIDECELL', 'GCELL', 'C1', 'C2', 'C3', 'C4', 'HDR', 'BT3', 'BB1', 'BL3', 'BR1'], row, col, 2);
+                    mk_glyph_entry(d, ['GLYPH', 'HIDECELL', 'GCELL', 'C1', 'C2', 'C3', 'C4', 'HDR', 'BT3', 'BB3', 'BL3', 'BR1'], row, col, 2);
                     mk_subtxt(d, ['CR', 'C1', 'CGELL', 'BB1', 'BL3', 'BR1'], creature_subtype(csubtp, 1, 0), 1, 1, 'b');    // 1, 4 C1 - SUBTYPE
                     mk_subtxt(d, ['CR', 'C2', 'GCELL', 'BB1', 'BR1'], creature_subtype(csubtp, 2, 0), 1, 1, 'b');            // 1, 5 C2 - SUBTYPE
                     mk_subtxt(d, ['CR', 'C3', 'GCELL', 'BB1', 'BR1'], creature_subtype(csubtp, 3, 0), 1, 1, 'b');           // 2, 4 C3 - SUBTYPE
@@ -496,27 +494,27 @@ function mk_main_table() {
 
                     // line 2
                     mk_glyph_entry(c, ['GLYPH', 'HIDECELL', 'GCELL', 'LOC', 'MEANING', 'VERB', 'COLOR', 'HDR', 'BT3', 'BB1', 'BL3', 'BR1'], row, col, 2);             // 1, 1 LEFT HALF OF  GLYPH
-                    mk_subtxt(c, ['LOC', 'HDR', 'BB2', 'BL3', 'BR1'], locations[row-1], 2, 1, 'b');     // 3, 1 Location
+                    mk_subtxt(c, ['VERB', 'HDR', 'BB2', 'BL3', 'BR1'], 'Verb', 2, 1, 'bi');   // 4, 1 job/verb/powerword
                     mk_subtxt(c, ['MEANING', 'HDR', 'BB2', 'BR1'], 'Meaning', 2, 1, 'bi');              // 3, 2 meaning
-                    mk_subtxt(c, ['VERB', 'HDR', 'BB2', 'BR1'], 'Verb', 2, 1, 'bi');   // 4, 1 job/verb/powerword
+                    mk_subtxt(c, ['LOC', 'HDR', 'BB2', 'BR1'], locations[row - 1], 2, 1, 'b');     // 3, 1 Location
                     mk_subtxt(c, ['COLOR', 'HDR', 'BB2', 'BR3'], 'Color', 2, 1, 'bi');
 
                     // line 3
-                    mk_glyph_entry(d, ['GLYPH', 'HIDECELL', 'GCELL', 'CR', 'HDR', 'BT3', 'BB1', 'BL3', 'BR1'], row, col, 4);
+                    mk_glyph_entry(d, ['GLYPH', 'HIDECELL', 'GCELL', 'CR', 'HDR', 'BT3', 'BB1', 'BL3', 'BR3'], row, col, 4);
                     mk_glyph_entry(d, ['GLYPH', 'HIDECELL', 'GCELL', 'C1', 'C2', 'C3', 'C4', 'HDR', 'BT3', 'BB1', 'BL3', 'BR1'], row, col, 2);             // 1, 1 LEFT HALF OF  GLYPH
-                    mk_subtxt(d, ['CX', 'CR', 'C1', 'C2', 'C3', 'C4', 'HDR', 'BL3'], '', 2);    // 1, 4 C1 - SUBTYPE
+                    mk_subtxt(d, ['CX', 'HDR', 'BL3'], '', 2);    // 1, 4 C1 - SUBTYPE
                     mk_subtxt(d, ['CX', 'HDR', 'GCELL', 'BR3'], '', 2, 3);
 
                     // line 3.5
                     mk_glyph_entry(e, ['GLYPH', 'HIDECELL', 'GCELL', 'C5', 'C6', 'C7', 'C8'], row, col, 2);
-                    mk_subtxt(e, ['CX', 'CR', 'C5', 'C6', 'C7', 'C8', 'HDR', 'BL3'], '', 2);    // 1, 4 C1 - SUBTYPE
-                    mk_subtxt(e, ['CX', 'HDR', 'GCELL', 'BR3'], '', 2, 3);
+                    mk_subtxt(e, ['CX', 'C5', 'C6', 'C7', 'C8', 'HDR', 'BL3'], '', 2);    // 1, 4 C1 - SUBTYPE
+                    mk_subtxt(e, ['CX', 'BR3', 'HDR'], '', 2, 3);
                     break;
                 case 'rc*': // CELL
                     mk_subtxt(a, ['COMMENT', 'BB3', 'BL3', 'BR3'], 'Comment COL', 1, 4, 'bi');              // comment column
                     break;
                 case 'rc+': // CELL
-                    mk_subtxt(a, ['COMMENT', 'BT3', 'BB3', 'BR3'], 'Comment ROW', 1, 1, 'bi');              // comment row
+                    mk_subtxt(a, ['COMMENT', 'BT3', 'BB3', 'BR3'], 'Comment ROW', 9, 1, 'bi');              // comment row
                     break;
                 case 'rc': // CELL
                     var num = numbers[row - 1][col];
@@ -526,16 +524,16 @@ function mk_main_table() {
                     // line 1
                     mk_glyph_entry(a, ['GLYPH', 'SKIP', 'GCELL', 'LIT', 'NUM', 'PREP', 'BB1', 'BR1'], row, col, 2);
                     mk_subtext_say(a, ['LIT', 'BB1', 'BR1'], 'cell', row, col, 2);                  // 1, 2 LIT<say>
-                    mk_subtxt(a, ['NUM', 'BB1', 'BR1'], num, 2);                                              // 1, 3 Number
+                    mk_subtxt(a, ['NUM', 'BB1', 'BR1'], num, 2, 1, 'b');                                              // 1, 3 Number
                     mk_subtxt(a, ['PREP', 'BB1', 'BR3'], preps[row - 1][col - 1], 2);                         // 2, 3 preposition
 
                     // line 1.5 -- Nothing
 
                     // line 2
                     mk_glyph_entry(c, ['GLYPH', 'HIDECELL', 'GCELL', 'LOC', 'MEANING', 'VERB', 'COLOR', 'BB1', 'BR1'], row, col, 2);
-                    mk_subtxt(c, ['LOC', 'BB2', 'BR1'], legend[col - 1][row],2);                   // 3, 1 legend
+                    mk_subtxt(c, ['VERB', 'BB2', 'BL3', 'BR1'], verbs[row - 1][col + 2], 2);                  // 4, 1 job/verb/powerword
                     mk_subtxt(c, ['MEANING', 'BB2', 'BR1'], meaning[col - 1][row], 2);              // 3, 2 meaning
-                    mk_subtxt(c, ['VERB', 'BB2', 'BR1'], verbs[row - 1][col + 2], 2);                  // 4, 1 job/verb/powerword
+                    mk_subtxt(c, ['LOC', 'BB2', 'BR1'], legend[col - 1][row], 2);                   // 3, 1 legend
                     mk_subcell(c, ['COLOR', 'GCELL', 'BB2', 'BR3'], color_circle(row, col), null, 2);       // 3, 3 color
 
                     // line 3
@@ -638,9 +636,9 @@ function mk_container(container, items) {
 }
 
 var hue_filter = {
-    GLYPH: 0, LOC: 20, C1: 40, C5: 50,
+    GLYPH: 0, VERB: 20, C1: 40, C5: 50,
     LIT: 80, MEANING: 100, C2: 120, C6: 130,
-    NUM: 160, VERB: 180, C3: 200, C7: 210,
+    NUM: 160, LOC: 180, C3: 200, C7: 210,
     PREP: 240, C4: 260, C8: 280,
     C0: 310, CX: 320,
 };
@@ -719,6 +717,7 @@ function gbutton(item, glyph_sound, is_hdr, cl) {
     var button = item;
     if (glyph_sound!=null) {
         button = getImage(item, IMG_SZ, 'button');
+        button.classList.add('GLYPHBUTTON');
         button.onclick = function () {
             do_say(glyph_sound);
         };

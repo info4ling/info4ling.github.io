@@ -23,7 +23,19 @@ table {
     padding: 10px;
 }
 
-.GBUTTON:not(.GLYPH):not(.COLOR) {
+.GBUTTON:not(.COLOR) {
+    background-color: transparent;
+    border: none transparent 0;
+}
+
+.GBUTTON > span,
+.GBUTTON {
+    width: min-content;
+    max-width: min-content;
+    overflow-wrap: break-word;
+}
+
+.GLYPHBUTTON {
     background-color: transparent;
     border: none transparent 0;
 }
