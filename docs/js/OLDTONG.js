@@ -502,12 +502,13 @@ function mk_main_table() {
                     mk_subtxt(c, ['COLOR', 'HDR', 'BB2', 'BR3'], 'Color', 2, 1, 'bi');
 
                     // line 3
-                    mk_glyph_entry(d, ['GLYPH', 'HIDECELL', 'GCELL', 'CR', 'C1', 'C2', 'C3', 'C4', 'HDR', 'BT3', 'BB1', 'BL3', 'BR1'], row, col, 2);             // 1, 1 LEFT HALF OF  GLYPH
+                    mk_glyph_entry(d, ['GLYPH', 'HIDECELL', 'GCELL', 'CR', 'HDR', 'BT3', 'BB1', 'BL3', 'BR1'], row, col, 4);
+                    mk_glyph_entry(d, ['GLYPH', 'HIDECELL', 'GCELL', 'C1', 'C2', 'C3', 'C4', 'HDR', 'BT3', 'BB1', 'BL3', 'BR1'], row, col, 2);             // 1, 1 LEFT HALF OF  GLYPH
                     mk_subtxt(d, ['CX', 'CR', 'C1', 'C2', 'C3', 'C4', 'HDR', 'BL3'], '', 2);    // 1, 4 C1 - SUBTYPE
                     mk_subtxt(d, ['CX', 'HDR', 'GCELL', 'BR3'], '', 2, 3);
 
                     // line 3.5
-                    mk_glyph_entry(e, ['GLYPH', 'HIDECELL', 'GCELL', 'CR', 'C5', 'C6', 'C7', 'C8'], row, col, 2);
+                    mk_glyph_entry(e, ['GLYPH', 'HIDECELL', 'GCELL', 'C5', 'C6', 'C7', 'C8'], row, col, 2);
                     mk_subtxt(e, ['CX', 'CR', 'C5', 'C6', 'C7', 'C8', 'HDR', 'BL3'], '', 2);    // 1, 4 C1 - SUBTYPE
                     mk_subtxt(e, ['CX', 'HDR', 'GCELL', 'BR3'], '', 2, 3);
                     break;
@@ -537,15 +538,16 @@ function mk_main_table() {
                     mk_subtxt(c, ['VERB', 'BB2', 'BR1'], verbs[row - 1][col + 2], 2);                  // 4, 1 job/verb/powerword
                     mk_subcell(c, ['COLOR', 'GCELL', 'BB2', 'BR3'], color_circle(row, col), null, 2);       // 3, 3 color
 
-                    // line 3 
-                    mk_glyph_entry(d, ['GLYPH', 'HIDECELL', 'GCELL', 'CR', 'C1', 'C2', 'C3', 'C4', 'BB1', 'BR1'], row, col, 2);
+                    // line 3
+                    mk_glyph_entry(d, ['GLYPH', 'HIDECELL', 'GCELL', 'CR', 'BB1', 'BR1'], row, col, 4);
+                    mk_glyph_entry(d, ['GLYPH', 'HIDECELL', 'GCELL', 'C1', 'C2', 'C3', 'C4', 'BB1', 'BR1'], row, col, 2);
                     mk_subtxt(d, ['CR', 'C1', 'BB1', 'BR1'], creature_subtype(csubtp, 1, row), 2);    // 1, 4 C1 - SUBTYPE
                     mk_subtxt(d, ['CR', 'C2', 'BB1', 'BR1'], creature_subtype(csubtp, 2, row), 2);           // 1, 5 C2 - SUBTYPE
                     mk_subtxt(d, ['CR', 'C3', 'BB1', 'BR1'], creature_subtype(csubtp, 3, row), 2);    // 2, 4 C3 - SUBTYPE
                     mk_subtxt(d, ['CR', 'C4', 'BB1', 'BR3'], creature_subtype(csubtp, 4, row), 2);           // 2, 5 C4 - SUBTYPE
 
                     // line 3.5
-                    mk_glyph_entry(e, ['GLYPH', 'HIDECELL', 'GCELL', 'CR', 'C5', 'C6', 'C7', 'C8'], row, col, 2);
+                    mk_glyph_entry(e, ['GLYPH', 'HIDECELL', 'GCELL', 'C5', 'C6', 'C7', 'C8'], row, col, 2);
                     mk_subtxt(e, ['CR', 'C5', 'BB3', 'BR1'], creature_subtype(csubtp, 5, row), 2);    // 3, 4 C5 - SUBTYPE
                     mk_subtxt(e, ['CR', 'C6', 'BB3', 'BR1'], creature_subtype(csubtp, 6, row), 2);           // 3, 4 C6 - SUBTYPE
                     mk_subtxt(e, ['CR', 'C7', 'BB3', 'BR1'], creature_subtype(csubtp, 7, row), 2);    // 4, 4 C7 - SUBTYPE
