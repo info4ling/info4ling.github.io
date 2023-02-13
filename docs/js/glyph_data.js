@@ -158,11 +158,11 @@ function getImage(name, rsz = IMG_SZ, tp = 'div') {
     if (Array.isArray(name)) {
         var part_div = document.createElement('div');
         part_div.classList.add('GLYPHLIST');
-        names.forEach(nm => {
+        name.forEach(nm => {
             var part = getImage(nm, rsz, 'div');
-            part_div.addChild(part);
+            part_div.appendChild(part);
         });
-        image.addChild(part_div);
+        image.appendChild(part_div);
     } else {
         var dataURI = stored_images[name];
 

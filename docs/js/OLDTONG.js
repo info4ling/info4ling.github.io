@@ -799,7 +799,8 @@ function gbutton(item, glyph_sound, is_hdr, cl, extra) {
     if (glyph_sound != null) {
         var item_list = item;
         if (extra != '') {
-            item_list = [extra, item];
+            let extra_name = 'R' + extra[0] + 'C' + extra[1];
+            item_list = [extra_name, item];
         }
         button = getImage(item_list, IMG_SZ, 'button');
         button.classList.add('GLYPHBUTTON');

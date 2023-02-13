@@ -127,6 +127,13 @@ tr > :not(.COLOR) {
     display:none;
 }
 
+.GLYPHLIST {
+    display: flex;
+}
+
+.GLYPHLIST > div {
+    flex 1;
+}
 tr > :not(.HIDECELL) {
     display: table-cell;
 }
