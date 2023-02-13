@@ -769,7 +769,9 @@ function mk_row(tp, item_list, row_class) {
 }
 
 function do_say(what) {
-    alert(what);
+    let utterance = new SpeechSynthesisUtterance(what);
+    utterance.lang = 'de-DE';
+    speechSynthesis.speak(utterance);
 }
 
 function class_to_row_column(tgt_class) {
@@ -814,13 +816,15 @@ function gbutton(item, is_hdr, cl) {
         var item_list = [];
         var glyph_tool = '';
         var glyph_sound = '';
+        var soundsep = '';
 
         if (Array.isArray(item[0])) {
             item.forEach(i => {
                 let irec = glyph_data(i);
                 item_list.push(irec[0]);
                 glyph_tool += irec[1];
-                glyph_sound += irec[2];
+                glyph_sound += soundsep + irec[2];
+                soundsep = '-';
             });
         } else {
             let rec = glyph_data(item);
