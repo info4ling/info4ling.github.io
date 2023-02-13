@@ -153,7 +153,7 @@ function saveImage(original, name) {
     stored_images[name] = URI;
 }
 
-function getImage(name, rsz, tp='div') {
+function getImage(name, rsz = IMG_SZ, tp='div') {
     var dataURI = stored_images[name];
     var image = document.createElement(tp);
     image.style.width = rsz+'px';
