@@ -153,12 +153,23 @@ function saveImage(original, name) {
     stored_images[name] = URI;
 }
 
-function getImage(name, rsz = IMG_SZ, tp='div') {
-    var dataURI = stored_images[name];
+function getImage(name, rsz = IMG_SZ, tp = 'div') {
     var image = document.createElement(tp);
-    image.style.width = rsz+'px';
-    image.style.height = rsz+'px';
-    image.style.backgroundImage ="url("+dataURI+")";
+    if (name.isArray()) {
+        var part_div = document.createElement('div');
+        part_div.classList.add('GLYPHLIST');
+        names.forEach(nm => {
+            var part = getImage(nm, rsz, 'div');
+            part_div.addChild(part);
+        });
+        image.addChild(part_div);
+    } else {
+        var dataURI = stored_images[name];
+
+        image.style.width = rsz + 'px';
+        image.style.height = rsz + 'px';
+        image.style.backgroundImage = "url(" + dataURI + ")";
+    }
     return image;
 }
 
