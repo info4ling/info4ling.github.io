@@ -155,7 +155,7 @@ function saveImage(original, name) {
 
 function getImage(name, rsz = IMG_SZ, tp = 'div') {
     var image = document.createElement(tp);
-    if (name.isArray()) {
+    if (Array.isArray(name)) {
         var part_div = document.createElement('div');
         part_div.classList.add('GLYPHLIST');
         names.forEach(nm => {
