@@ -274,7 +274,7 @@ function color_circle(row, col) {
     return circle;
 }
 
-function mk_subcell(arr, cl, item, rows=1, cols=1, extra='') {
+function mk_subcell(arr, cl, item, rows=1, cols=1) {
     let ret = [item, rows, cols, cl];
     arr.push(ret);
 }
@@ -341,7 +341,7 @@ function mk_subtxt(arr, cl, raw_txt, rows=1, cols=1, font='') {
         item.setAttribute('title', tooltip);
     }
 
-    return mk_subcell(arr, [...cl, 'GCELL'], item, null, rows, cols);
+    return mk_subcell(arr, [...cl, 'GCELL'], item, rows, cols);
 }
 
 function mk_hidden_glyph(arr, class_name, more, row, col, depth=2, do_prepend=false) {
@@ -789,9 +789,20 @@ const hide_cell = 'HIDECELL';
 function glyph_data(rec) {
     let row = rec[0];
     let col = rec[1];
-    let name = 'R' + row + 'C' + col;
-    let ttip = sounds['C'][row][0] + sounds['V'][col][0];
-    let sound = sounds['C'][row][1] + sounds['V'][col][1];
+    let name = '';
+    let ttip = '';
+    let sound = '';
+
+    if (row >= 0) {
+        name += 'R' + row;
+        ttip += sounds['C'][row][0];
+        sound += sounds['C'][row][1];
+    }
+    if (col >= 0) {
+        name += 'C' + col;
+        ttip += sounds['V'][col][0];
+        sound += sounds['V'][col][1];
+    }
 
     return [name, ttip, sound];
 }
