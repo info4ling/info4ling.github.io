@@ -14,9 +14,7 @@ html {
     height: min-content;
 }
 
-#ctable > * > tr > * {
-    max-width: 100px;
-}
+
 
 .tab_button {
     border: 0 none;
@@ -34,11 +32,26 @@ table {
     border: none transparent 0;
 }
 
-.GBUTTON > span,
-.GBUTTON {
-    width: min-content;
-    max-width: min-content;
+#ctable > * > tr > *,
+#ctable > * > tr > * > .GBUTTON,
+#ctable > * > tr > * > .GBUTTON > span, 
+#ctable > * > tr > * > .GBUTTON > span * {
+    box-sizing: border-box;
+    max-width: 100px;
+    min-width: min-content;
+    width: max-content;
+    margin: auto;
+}
+
+.GBUTTON,
+.GBUTTON > span, 
+.GBUTTON > span * {
+    padding: 0;
+    margin: auto;
+    display: block;
     overflow-wrap: break-word;
+    word-break: break-word;
+    hyphens: auto;
 }
 
 .GLYPHBUTTON {

@@ -318,13 +318,13 @@ function mk_subtxt(arr, cl, raw_txt, rows=1, cols=1, font='') {
             txt = '{<i>' + bc + '</i>}';
         }
     } else {
-        let vals = raw_txt.replace(/\//, '/ ').split(/\*/);
+        let vals = raw_txt.replace(/\//g, '/<wbr>').split(/\*/);
         
         if (vals.length > 1) {
             txt = '<b>'+vals[0] + '</b> *';
             tooltip = vals[1];
         } else {
-            txt = raw_txt;
+            txt = vals[0];
         }
     }
     switch (font) {
