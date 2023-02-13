@@ -4,12 +4,18 @@ html {
 
 #container {
     background-color: #e0e0e0;
+    width: min-content;
+    height: min-content;
 }
 
 #glyphmap {
     padding: 20px;
-    width: max-content;
-    height: max-content;
+    width: min-content;
+    height: min-content;
+}
+
+#ctable > * > tr > * {
+    max-width: 100px;
 }
 
 .tab_button {

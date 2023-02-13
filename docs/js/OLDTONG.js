@@ -590,7 +590,7 @@ function mk_main_table() {
                     mk_subtxt(c, ['MEANING', 'BB2', 'BL3', 'BR1'], meaning[col - 1][row], 2);              // 3, 2 meaning
                     mk_subtxt(c, ['VERB', 'BB2', 'BR1'], verbs[row - 1][col + 2], 2);                  // 4, 1 job/verb/powerword
                     mk_subtxt(c, ['LOC', 'BB2', 'BR1'], legend[col - 1][row], 2);                   // 3, 1 legend
-                    mk_subcell(c, ['COLOR', 'GCELL', 'BB2', 'BR3'], color_circle(row, col), null, 2);       // 3, 3 color
+                    mk_subcell(c, ['COLOR', 'GCELL', 'BB2', 'BR3'], color_circle(row, col), 2);       // 3, 3 color
 
                     // line 3
                     mk_hidden_glyph(d, 'CR', [], row, col, 4);
@@ -817,7 +817,7 @@ function gbutton(item, is_hdr, cl) {
 
         if (Array.isArray(item[0])) {
             item.forEach(i => {
-                let irec = glyph_data(item);
+                let irec = glyph_data(i);
                 item_list.push(irec[0]);
                 glyph_tool += irec[1];
                 glyph_sound += irec[2];
@@ -830,6 +830,8 @@ function gbutton(item, is_hdr, cl) {
         }
         button = getImage(item_list, IMG_SZ, 'button');
         button.classList.add('GLYPHBUTTON');
+        button.setAttribute('title', glyph_tool);
+
         button.onclick = function () {
             do_say(glyph_sound);
         };
