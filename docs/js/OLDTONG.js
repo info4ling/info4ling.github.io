@@ -93,7 +93,17 @@ function load_gsound(skip, line) {
     }
     sounds[what].push(data);
 }
+var cat_map = {
+    NUM: 'NUMBER',
+    PREP: 'PREPOSITION',
+    LOC: 'LEGEND',
+    COLOR: 'COLOR',
+    VERB: 'VERB',
+};
+
 var meaning_start = 0;
+var creature_start = 0;
+
 function load_cols(row_number, line) {
     if (row_number == null) {
         row_number = 1;
@@ -120,9 +130,9 @@ function load_cols(row_number, line) {
             }
             if (row[4] == 'Category') {
                 for (let c = 5; c < row.length; c++) {
-                    let what = row[c].split(/\*/)[0];
+                    let what = row[c].split(/\*/)[0].toUpperCase();
                     if (what != '') {
-                        category[what] = [row_number-meaning_start, c - 5];
+                        category[what] = [c - 5, row_number - meaning_start]; // cols is transverse C, R instead of R, C
                     }
                 }
             }
@@ -152,8 +162,10 @@ function load_cols(row_number, line) {
             is_comment = false;
             multirow = true;
             if (!(type in creature)) {
+                creature_start++;
                 creature[type] = [];
                 creature_type.push(type);
+                cat_map['C' + creature_start] = type.toUpperCase();
             }
             dest = creature[type];
             break;
@@ -755,9 +767,13 @@ function gbutton(item, glyph_sound, is_hdr, cl) {
     let tgt = base_class(cl);
     let tgt_uc = tgt.toUpperCase();
     var preglyph = null;
-    if (tgt_uc in category) {
-        var rec = category[tgt_uc];
-        preglyph = getImage('R' + rec[0] + 'C' + rec[1]);
+    if (tgt_uc in cat_map) {
+        let tgt_key = cat_map[tgt_uc];
+        if (tgt_key in category) {
+            var rec = category[tgt_key];
+            preglyph = getImage('R' + rec[0] + 'C' + rec[1]);
+            tgt_uc = tgt_key;
+        }
     }
 
     var hide_class = true;
@@ -765,7 +781,7 @@ function gbutton(item, glyph_sound, is_hdr, cl) {
     var hdr= document.getElementById('glyphheader');
     button.onclick = function () {
         if (hide_class) { // One Class
-            hdr.appendChild(bold(tgt));
+            hdr.appendChild(bold(tgt_uc));
             if (preglyph != null) {
                 hdr.appendChild(preglyph);
             }
