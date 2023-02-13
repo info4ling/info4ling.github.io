@@ -274,8 +274,8 @@ function color_circle(row, col) {
     return circle;
 }
 
-function mk_subcell(arr, cl, item, is_glyph, rows=1, cols=1, extra='') {
-    let ret = [item, rows, cols, is_glyph, cl, extra];
+function mk_subcell(arr, cl, item, rows=1, cols=1, extra='') {
+    let ret = [item, rows, cols, cl];
     arr.push(ret);
 }
 
@@ -349,18 +349,12 @@ function mk_hidden_glyph(arr, class_name, more, row, col, depth=2, do_prepend=fa
 }
 
 function mk_glyph_entry(arr, cl, row, col, r = 1, c = 1, extra='') {
-    var label = '';
-    var sound = '';
-    if (row > 0) {
-        label += 'R' + (row - 1);
-        sound+=sounds['C'][row - 1][1];
-    }
-    if (col > 0) {
-        label += 'C' + (col - 1);
-        sound+=sounds['V'][col - 1][1];
+    var glyph_rec=[row-1, col-1];
+    if (extra != '') {
+        glyph_rec = [extra, glyph_rec];
     }
         
-    mk_subcell(arr, cl , label, sound, r, c, extra);
+    mk_subcell(arr, cl , glyph_rec, sound, r, c, extra);
 }
 
 function add_subcell(arr, items) {
@@ -723,9 +717,7 @@ function mk_row(tp, item_list, row_class) {
         var item = i[0];
         var rows = i[1];
         var cols = i[2];
-        var glyph_sound = i[3];
-        var cl = i[4];
-        var extra = i[5];
+        var cl = i[3];
         var cell = document.createElement(tp);
 
         cl.push(row_class);
@@ -770,7 +762,7 @@ function mk_row(tp, item_list, row_class) {
             cell.colSpan = cols;
         }
 
-        cell.appendChild(gbutton(item, glyph_sound, is_header, cl, extra));
+        cell.appendChild(gbutton(item, is_header, cl));
         row.appendChild(cell);
     });
     return row;
@@ -794,13 +786,36 @@ function class_to_row_column(tgt_class) {
 
 const hide_cell = 'HIDECELL';
 
-function gbutton(item, glyph_sound, is_hdr, cl, extra) {
+function glyph_data(rec) {
+    let row = rec[0];
+    let col = rec[1];
+    let name = 'R' + row + 'C' + col;
+    let ttip = sounds['C'][row][0] + sounds['V'][col][0];
+    let sound = sounds['C'][row][1] + sounds['V'][col][1];
+
+    return [name, ttip, sound];
+}
+
+function gbutton(item, is_hdr, cl) {
     var button = item;
-    if (glyph_sound != null) {
-        var item_list = item;
-        if (extra != '') {
-            let extra_name = 'R' + extra[0] + 'C' + extra[1];
-            item_list = [extra_name, item];
+
+    if (Array.isArray(item)) {
+        var item_list = [];
+        var glyph_tool = '';
+        var glyph_sound = '';
+
+        if (Array.isArray(item[0]) {
+            item.forEach(i => {
+                let irec = glyph_data(item);
+                item_list.push(irec[0]);
+                glyph_tool += irec[1];
+                glyph_sound += irec[2];
+            }
+        } else {
+            let rec = glyph_data(item);
+            item_list = rec[0];
+            glyph_tool = rec[1];
+            glyph_sound = rec[2];
         }
         button = getImage(item_list, IMG_SZ, 'button');
         button.classList.add('GLYPHBUTTON');
