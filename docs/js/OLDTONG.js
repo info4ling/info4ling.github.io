@@ -354,7 +354,7 @@ function mk_glyph_entry(arr, cl, row, col, r = 1, c = 1, extra='') {
         glyph_rec = [extra, glyph_rec];
     }
         
-    mk_subcell(arr, cl , glyph_rec, sound, r, c, extra);
+    mk_subcell(arr, cl, glyph_rec, r, c);
 }
 
 function add_subcell(arr, items) {
@@ -804,13 +804,13 @@ function gbutton(item, is_hdr, cl) {
         var glyph_tool = '';
         var glyph_sound = '';
 
-        if (Array.isArray(item[0]) {
+        if (Array.isArray(item[0])) {
             item.forEach(i => {
                 let irec = glyph_data(item);
                 item_list.push(irec[0]);
                 glyph_tool += irec[1];
                 glyph_sound += irec[2];
-            }
+            });
         } else {
             let rec = glyph_data(item);
             item_list = rec[0];
