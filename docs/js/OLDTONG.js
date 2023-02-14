@@ -65,7 +65,7 @@ function handle_blobs(values) {
     }, 0);
     
     setTimeout(() => {
-        mk_main_table();
+        setup_screen();
     }, 100);
 }
 
@@ -375,7 +375,29 @@ const col_for_comment = col_max - 1;
 
 var num_list = [];
 
-function mk_main_table() {
+
+var voice_lookup = {};
+
+function setup_screen() {
+    window.speechSynthesis.onvoiceschanged = function () {
+        var voices = window.speechSynthesis.getVoices();
+
+        for (let i = 0; i < voices.length; i++) {
+            const option = document.createElement('option');
+            var txt = `${voices[i].name} (${voices[i].lang})`;
+
+            if (voices[i].default) {
+                txt += ' — DEFAULT';
+            }
+
+            option.textContent = txt;
+            voice_lookup[txt] = voices[i];
+            option.setAttribute('data-lang', voices[i].lang);
+            option.setAttribute('data-name', voices[i].name);
+            document.getElementById("voiceSelect").appendChild(option);
+        }
+    };
+
     var tbl = document.getElementById('ctable');
     var tbl_display = tbl.style.display;
     tbl.style.display = 'none';
@@ -792,11 +814,19 @@ var sound_fix = {
 
 function do_say(what) {
     speechSynthesis.cancel();
-    if (what in sound_fix) {
-        what = sound_fix[what];
-    }
+
+var selvoice = document.getElementById('voiceSelect').selectedOptions[0].textContent;
+
     let utterance = new SpeechSynthesisUtterance(what);
     utterance.lang = 'en-US';
+    utterance.pitch = 1;
+    utterance.rate = .6;
+    utterance.volume = 1;
+    if (selvoice != null) {
+        utterance.voice = voice_lookup[voiceSelect.value];
+    }
+
+
     speechSynthesis.speak(utterance);
 }
 
@@ -832,6 +862,10 @@ function glyph_data(rec) {
         sound += sounds['V'][col][1];
     }
 
+    if (sound in sound_fix) {
+        sound = sound_fix[sound];
+        ttip += ' {' + sound + '}';
+    }
     return [name, ttip, sound];
 }
 
