@@ -33,13 +33,14 @@ var creature = {}; // D
 var creature_type = []; // D
 
 var sounds = {};
+var sound_fix = {};
 
 var numbers = [];
 var preps = [];
 var verbs = [];
 
 
-var data = {
+var global_data = {
     'locations': locations,
     'meaning': meaning,
     'category': category,
@@ -49,6 +50,7 @@ var data = {
     'creature': creature,
     'creature_type': creature_type,
     'sounds': sounds,
+    'sound_fix': sound_fix,
     'numbers': numbers,
     'preps': preps,
     'verbs': verbs,
@@ -58,7 +60,7 @@ var data = {
 //////////////////////////////// Functions
 
 function handle_blobs(values) {
-    console.log('GOT:', values, data);
+    console.log('GOT:', values, global_data);
 
     setTimeout(() => {
         cache_glyphs();
@@ -88,10 +90,14 @@ function load_gsound(skip, line) {
 
     var data = [lit, say, example];
 
-    if (!(what in sounds)) {
-        sounds[what] = [];
+    if (what == 'X') {
+        sound_fix[lit] = say;
+    } else {
+        if (!(what in sounds)) {
+            sounds[what] = [];
+        }
+        sounds[what].push(data);
     }
-    sounds[what].push(data);
 }
 var cat_map = {
     NUM: 'NUMBER',
@@ -790,28 +796,6 @@ function mk_row(tp, item_list, row_class) {
     return row;
 }
 
-var sound_fix = {
-    Bay: 'Baye',
-    Bew: 'Byew',
-    Choe: 'Cho',
-    Dau: 'Dow',
-    Grah: 'Gra', //
-    Kew: 'Koo', //
-    Loe: 'Lo', //
-    Nee: 'Knee',
-    Prau: 'Prow', //
-    Prew: 'Pru', //
-    Skau: 'Skow', //
-    Thah: 'Tha', //
-    Thoy: 'Thoyh', //
-    Vau: 'Vow',
-    Vew: 'Voo',
-    Zau: 'Zhow', //
-    Zew: 'Zoo',
-    Zoe: 'Zo',
-    Zoy: 'Szoi', //
-}
-
 function do_say(what) {
     speechSynthesis.cancel();
 
@@ -855,11 +839,15 @@ function glyph_data(rec) {
         name += 'R' + row;
         ttip += sounds['C'][row][0];
         sound += sounds['C'][row][1];
+    } else {
+        sound += sounds['C'][(col*5)%16][1]; // For Vowel sound
     }
     if (col >= 0) {
         name += 'C' + col;
         ttip += sounds['V'][col][0];
         sound += sounds['V'][col][1];
+    } else {
+        sound += sounds['V'][(row*5)%8][1]; // For Consonate sound
     }
 
     if (sound in sound_fix) {
