@@ -768,9 +768,35 @@ function mk_row(tp, item_list, row_class) {
     return row;
 }
 
+var sound_fix = {
+    Bay: 'Baye',
+    Choe: 'Cho',
+    Frah: 'Fra',
+    Froy: 'Froi',
+    Glah: 'Gulah', 
+    Gleh: 'Guleh', 
+    Gloy: 'Gloi',
+    Keh: 'Kheh',
+    Nee: 'Knee',
+    Plah: 'Pulah',
+    Pleh: 'Puleh',
+    Shoe: 'Show',
+    Shoy: 'Shoi',
+    Thah: 'Thah',
+    Thoy: 'Thuhoi',
+    Vew: 'Voo',
+    Zew: 'Zoo',
+    Zoe: 'Zo',
+    Zuh: 'Szuh',
+}
+
 function do_say(what) {
+    speechSynthesis.cancel();
+    if (what in sound_fix) {
+        what = sound_fix[what];
+    }
     let utterance = new SpeechSynthesisUtterance(what);
-    utterance.lang = 'de-DE';
+    utterance.lang = 'en-US';
     speechSynthesis.speak(utterance);
 }
 
