@@ -595,9 +595,9 @@ function setup_screen() {
                     mk_subtxt(a, ['MEANING', 'GLYPH', 'HIDECELL', 'BB3', 'BL3', 'BR3'], meaning[col - 1][row], 1, 2, 'bi');              // comment column
                     break;
                 case 'rc+': // CELL
-                    mk_subtxt(a, ['NUMBER', 'BT3', 'BB1', 'BR3'], numbers[row - 1][col], 2, 1, 'bi');              // comment row
+                    mk_subtxt(a, ['NUM', 'BT3', 'BB1', 'BR3'], numbers[row - 1][col], 2, 1, 'bi');              // comment row
                     mk_subtxt(c, ['VERB', 'BB1', 'BR3'], verbs[row - 1][col + 2], 2, 1, 'bi');              // comment row
-                    mk_subtxt(x, ['COMMENT', 'BB3', 'BR3'], '', 5, 1, 'bi');              // comment row
+                    mk_subtxt(d, ['COMMENT', 'BT1', 'BB3', 'BR3'], '', 4, 1, 'bi');              // comment row
                     break;
                 case 'rc': // CELL
                     var num = numbers[row - 1][col];
