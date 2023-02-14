@@ -792,24 +792,24 @@ function mk_row(tp, item_list, row_class) {
 
 var sound_fix = {
     Bay: 'Baye',
+    Bew: 'Byew',
     Choe: 'Cho',
-    Frah: 'Fra',
-    Froy: 'Froi',
-    Glah: 'Gulah', 
-    Gleh: 'Guleh', 
-    Gloy: 'Gloi',
-    Keh: 'Kheh',
+    Dau: 'Dow',
+    Grah: 'Gra', //
+    Kew: 'Koo', //
+    Loe: 'Lo', //
     Nee: 'Knee',
-    Plah: 'Pulah',
-    Pleh: 'Puleh',
-    Shoe: 'Show',
-    Shoy: 'Shoi',
-    Thah: 'Thah',
-    Thoy: 'Thuhoi',
+    Prau: 'Prow', //
+    Prew: 'Pru', //
+    Skau: 'Skow', //
+    Thah: 'Tha', //
+    Thoy: 'Thoyh', //
+    Vau: 'Vow',
     Vew: 'Voo',
+    Zau: 'Zhow', //
     Zew: 'Zoo',
     Zoe: 'Zo',
-    Zuh: 'Szuh',
+    Zoy: 'Szoi', //
 }
 
 function do_say(what) {
