@@ -1,5 +1,5 @@
 H, lit, say, ex
-C, B,, Boy
+C, Bl,, BLah
 C, Sk,, SKy
 C, H,, Hi
 C, T,, To
@@ -16,7 +16,7 @@ C, Pr,, Pry
 C, Th,, Thin
 C, N,, No
 V, ow,au, hOW
-V, oo,ew, dEW
+V, oo,, Boo,
 V, ee,, bEEt
 V, oy,, plOY
 V, ey, ay, hEY
@@ -24,35 +24,34 @@ V, oe,, tOE
 V, ur,, bURn
 V, ah,, blAH
 X, Bay, Baye,
-X, Bew, Byew,
 X, Choe, Cho,
 X, Chur, Chir,
 X, Dau, Dow,
+X, Hoo, Hue
 X, Grah, Greh,
 X, Grur, Gror,
-X, Kew, Koo,
 X, Kur, Ker,
 X, Loe, Lo,
 X, Lur, Ler,
-X, Mew, Moo,
 X, Mur, Murr,
 X, Nar, Nur,
 X, Nee, Knee,
+X, Noo, New,
 X, Prah, Preh,
 X, Prau, Prow,
-X, Prew, Pru,
+X, Proo, Pru,
 X, Prur, Prir,
 X, Rur, Rurr,
 X, Skau, Skow,
+X, Skoe, Sko,
 X, Tur, Ter,
 X, Thah, Theh,
 X, Thay, They,
+X, Thoo, Thew,
 X, Thoy, Thoyh,
 X, Thur, Thurr,
 X, Vau, Vow,
-X, Vew, Voo,
 X, Zau, Zhow,
-X, Zew, Zoo,
 X, Zoe, Zo,
 X, Zoy, Szoi,
 X, Zur, Zir,
