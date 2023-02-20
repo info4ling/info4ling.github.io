@@ -7,7 +7,7 @@ C, V,, Vat
 C, Gr,, Grip
 C, Ch,, CHat
 C, K,, King
-C, Z,, Zip
+C, Sz,, GroSZ
 C, R,, Rod
 C, D,, Day
 C, L,, Low
@@ -44,6 +44,7 @@ X, Prur, Prir,
 X, Rur, Rurr,
 X, Skau, Skow,
 X, Skoe, Sko,
+X, Szau, Szhow,
 X, Tur, Ter,
 X, Thah, Theh,
 X, Thay, They,
@@ -51,7 +52,4 @@ X, Thoo, Thew,
 X, Thoy, Thoyh,
 X, Thur, Thurr,
 X, Vau, Vow,
-X, Zau, Zhow,
-X, Zoe, Zo,
-X, Zoy, Szoi,
-X, Zur, Zir,
+
