@@ -14,8 +14,6 @@ html {
     height: min-content;
 }
 
-
-
 .tab_button {
     border: 0 none;
     border-top-left-radius: 10px;
@@ -32,10 +30,11 @@ table {
     border: none transparent 0;
 }
 
-#ctable > * > tr > *,
-#ctable > * > tr > * > .GBUTTON,
-#ctable > * > tr > * > .GBUTTON > span, 
-#ctable > * > tr > * > .GBUTTON > span * {
+.WIDE {
+    max-width: 500px !important;
+}
+
+#ctable > * > tr > *, #ctable > * > tr > * > .GBUTTON, #ctable > * > tr > * > .GBUTTON > span, #ctable > * > tr > * > .GBUTTON > span * {
     box-sizing: border-box;
     max-width: 100px;
     min-width: min-content;
@@ -43,9 +42,7 @@ table {
     margin: auto;
 }
 
-.GBUTTON,
-.GBUTTON > span, 
-.GBUTTON > span * {
+.GBUTTON, .GBUTTON > span, .GBUTTON > span * {
     padding: 0;
     margin: auto;
     display: block;
@@ -60,9 +57,8 @@ table {
 }
 
 /* TOP */
-
-.BT1 {
-    border-top: solid #505050 1px;
+.GCELL {
+    border: solid #505050 1px;
 }
 
 .BT2 {
@@ -74,7 +70,6 @@ table {
 }
 
 /* BOTTOM */
-
 .BB1 {
     border-bottom: solid #505050 1px;
 }
@@ -88,7 +83,6 @@ table {
 }
 
 /* LEFT */
-
 .BL1 {
     border-left: solid #505050 1px;
 }
@@ -97,12 +91,11 @@ table {
     border-left: ridge #404040 4px;
 }
 
-.BL3 {
-    border-left: solid #202020 5px;
+.HDR:has(+ .HIDECELL + .HIDECELL + .HIDECELL + :not(.HDR)), .HDR:has(+ .HIDECELL + .HIDECELL + :not(.HDR)), .HDR:has(+ .HIDECELL + :not(.HDR)), .HDR:has(+ :not(.HDR)) {
+    border-right: solid #202020 5px;
 }
 
 /* RIGHT */
-
 .BR1 {
     border-right: solid #505050 1px;
 }
@@ -115,8 +108,7 @@ table {
     border-right: solid #202020 5px;
 }
 
-th,
-td {
+th, td {
     font-weight: normal;
     text-align: center;
     box-sizing: border-box;
@@ -143,7 +135,7 @@ tr > :not(.COLOR) {
 }
 
 .HIDECELL {
-    display:none;
+    display: none;
 }
 
 .GLYPHLIST {
@@ -151,33 +143,27 @@ tr > :not(.COLOR) {
 }
 
 .GLYPHLIST > div {
-    flex 1;
-}
-tr > :not(.HIDECELL) {
+    flex 1; }
+
+tr > : not(.HIDECELL) {
     display: table-cell;
 }
 
-#pro-glyph,
-#glyphy {
+#pro-glyph, #glyphy {
     min-height: 50px;
     margin-left: 10px;
 }
 
-#pro-eng,
-#pro-lit,
-#math,
-#lit {
+#pro-eng, #pro-lit, #math, #lit {
     min-height: 3ex;
     margin: 20px;
 }
 
-#pro-glyph > div,
-#glyphy > div {
+#pro-glyph > div, #glyphy > div {
     padding: 4px !important;
 }
 
-#count,
-#count2 {
+#count, #count2 {
     margin-top: 25px;
     margin-bottom: 25px;
 }
@@ -185,4 +171,3 @@ tr > :not(.HIDECELL) {
 tr:has(>td>.solo:not(:checked)) > td > input[type="radio"] {
     display: none;
 }
-

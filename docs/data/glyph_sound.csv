@@ -16,10 +16,10 @@ C, Pr,, Pry
 C, Th,, Thin
 C, N,, No
 V, ow,au, hOW
-V, ew,, dEW
+V, oo,ew, dEW
 V, ee,, bEEt
 V, oy,, plOY
-V, ay,, grAY
+V, ey, ay, hEY
 V, oe,, tOE
 V, ur,, bURn
 V, ah,, blAH
@@ -34,6 +34,7 @@ X, Kew, Koo,
 X, Kur, Ker,
 X, Loe, Lo,
 X, Lur, Ler,
+X, Mew, Moo,
 X, Mur, Murr,
 X, Nar, Nur,
 X, Nee, Knee,
@@ -45,6 +46,7 @@ X, Rur, Rurr,
 X, Skau, Skow,
 X, Tur, Ter,
 X, Thah, Theh,
+X, Thay, They,
 X, Thoy, Thoyh,
 X, Thur, Thurr,
 X, Vau, Vow,
