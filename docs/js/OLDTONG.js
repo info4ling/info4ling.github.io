@@ -955,7 +955,8 @@ function mk_row(tp, item_list, row_class) {
 
         cell.appendChild(gbutton(item, is_header, cl));
         row.appendChild(cell);
-    });
+    }
+    );
     return row;
 }
 
@@ -1055,8 +1056,8 @@ function gbutton(item, is_hdr, cl) {
 
         button.onclick = function () {
             do_say(glyph_sound);
-        };
-
+        }
+            ;
         return button;
     } else if (!is_hdr) {
         return item;
@@ -1071,29 +1072,37 @@ function gbutton(item, is_hdr, cl) {
     let tgt = base_class(cl);
     var show_single = true;
 
+    var hdr = document.getElementById('glyphheader');
     button.onclick = function () {
         var gc = document.getElementsByClassName('GCELL');
-        if (!show_single) {
+        if (show_single) {
+            // One Class
+
+            for (const elem of gc) {
+                var cls = new Set(elem.classList);
+                if (cls.has(tgt)) {
+                    elem.classList.remove(hide_cell);
+                } else {
+                    elem.classList.add(hide_cell);
+                }
+            }
+        } else {
             // Full Table
-            tgt = 'GROUPHIDE';
+            for (const elem of gc) {
+                var cls = new Set(elem.classList);
+                if (cls.has('GROUPHIDE')) {
+                    elem.classList.add(hide_cell);
+                } else {
+                    elem.classList.remove(hide_cell);
+                }
+            }
         }
 
-        for (const elem of gc) {
-            if (has_class(elem, tgt, show_single)) {
-                elem.classList.add(hide_cell);
-            } else {
-                elem.classList.remove(hide_cell);
-            }
-            show_single = !show_single;
-        }
-    };
+        show_single = !show_single;
+    }
+        ;
 
     return button;
-}
-
-function has_class(elem, cl, dir) {
-    var cls = new Set(elem.classList);
-    return cls.has(cl) == dir;
 }
 
 function show_count(counter, maxc, idiv, pdiv) {
