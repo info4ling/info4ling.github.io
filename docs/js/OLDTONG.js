@@ -23,6 +23,13 @@ var calc_glyph = null;
 var calc_math = null;
 var calc_lit = null;
 
+function set_calc_fields() {
+    input = document.getElementById('number');
+    calc_glyph = document.getElementById('glyph');
+    calc_math = document.getElementById('math');
+    calc_lit = document.getElementById('lit');
+}
+
 var locations = [];
 // H
 var meaning = [];
@@ -401,6 +408,7 @@ var num_list = [];
 var voice_lookup = {};
 
 function setup_screen() {
+    set_calc_fields();
     window.speechSynthesis.onvoiceschanged = function () {
         var voices = window.speechSynthesis.getVoices();
 
