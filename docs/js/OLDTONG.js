@@ -746,16 +746,21 @@ function setup_screen() {
                     mk_hidden_glyph(c, 'VERB', [], row, col, 2, true);
                     mk_hidden_glyph(c, 'COLOR', [], row, col, 2, true)
                     let meaning_txt = meaning[col - 1][row];
-                    const currency_repeat = 3;
+
+                    const currency_coins = [1, 3, 11, 18];
+                    const currency_all = 44;
+                    const currency_repeat = currency_coins.length;
                     if (col == 1) { //currency
-                        currency_val=currency_val.map(function (c) { return c * 5; }); // mult all by 5
-                        if (currency_count % currency_repeat == 0) {
+                        let coin = currency_count % currency_repeat;
+                        if (coin == 0) {
                             currency_name.push(glyph_name(row, col));
+                            currency_val = currency_val.map(function (c) { return c * currency_all; }); // mult all by 5
                             currency_val.push(1);
                         }
                         let currency_sep = '';
+                        let currency_mult = currency_coins[coin];
                         for (let cx = currency_name.length-1; cx >= 0; cx--) {
-                            meaning_txt += currency_sep + currency_val[cx] + ' ' + currency_name[cx];
+                            meaning_txt += currency_sep + (currency_val[cx] * currency_mult) + ' ' + currency_name[cx];
                             currency_sep = ', ';
                         }
                         currency_count++;
