@@ -304,7 +304,7 @@ function mk_subcell(arr, cl, item, rows = 1, cols = 1) {
     arr.push(ret);
 }
 
-function mk_subtext_say(arr, cl, what, row, col, rows = 1, cols = 1, font = '') {
+function glyph_name(row, col, what = 'cell', dosay=false) {
     var lit = '';
     var say = '';
 
@@ -320,7 +320,16 @@ function mk_subtext_say(arr, cl, what, row, col, rows = 1, cols = 1, font = '') 
         say += scols[1];
     }
 
-    var txt = lit + '(' + say + ')';
+    var txt = lit;
+    if (dosay && (txt != say)) {
+        txt += '(' + say + ')';
+    }
+
+    return txt;
+}
+
+function mk_subtext_say(arr, cl, what, row, col, rows = 1, cols = 1, font = '') {
+    var txt = glyph_name(row, col, what, true)
     // will be a button
     return mk_subtxt(arr, cl, txt, rows, cols, font);
 }
@@ -434,6 +443,10 @@ function setup_screen() {
     tbl.style.display = 'none';
     var hdr = document.getElementById('chead');
     var body = document.getElementById('cbody');
+
+    var currency_count = 0;
+    var currency_name = [];
+    var currency_val = [];
 
     var row_comment = '';
     var row_hdr = 'R';
@@ -732,7 +745,22 @@ function setup_screen() {
                     mk_hidden_glyph(c, 'MEANING', [], row, col, 2, true);
                     mk_hidden_glyph(c, 'VERB', [], row, col, 2, true);
                     mk_hidden_glyph(c, 'COLOR', [], row, col, 2, true)
-                    mk_subtxt(c, ['MEANING'], meaning[col - 1][row], 2);
+                    let meaning_txt = meaning[col - 1][row];
+                    const currency_repeat = 3;
+                    if (col == 1) { //currency
+                        currency_val=currency_val.map(function (c) { return c * 5; }); // mult all by 5
+                        if (currency_count % currency_repeat == 0) {
+                            currency_name.push(glyph_name(row, col));
+                            currency_val.push(1);
+                        }
+                        let currency_sep = '';
+                        for (let cx = currency_name.length-1; cx >= 0; cx--) {
+                            meaning_txt += currency_sep + currency_val[cx] + ' ' + currency_name[cx];
+                            currency_sep = ', ';
+                        }
+                        currency_count++;
+                    }
+                    mk_subtxt(c, ['MEANING'], meaning_txt, 2);
                     // 3, 2 meaning
                     mk_subtxt(c, ['VERB'], verbs[row - 1][col + 2], 2);
                     // 4, 1 job/verb/powerword
