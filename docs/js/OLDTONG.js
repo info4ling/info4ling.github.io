@@ -9,7 +9,7 @@ const skip = [[], spaces];
 
 const PAD_SZ = (IMG_W + IMG_H) / 10;
 
-const SB = [[100, 60], [100, 90], [100, 80], [60, 70], [40, 50], [100, 30], [60, 20], [80, 8]];
+const SB = [[85, 70], [80, 50], [70, 40], [50, 30], [40, 20], [60, 10], [80, 5]];
 
 // Globals that change
 
@@ -258,21 +258,27 @@ function do_add(dest, row, start, last, is_multirow) {
     }
 }
 
+const ROWADJ = [
+    0, 0, 0, 0,
+    0, 10, 20, 20,
+    20, 20, 20, 20,
+    22, 30, 60, 230
+];
+
 function create_color(row, col) {
+    row--;
+    col--;
     var H = 0;
     var S = 0;
     var B = 0;
     var adj = 0;
-    if (row == 0) {
+    if (col == 0) {
         // Greyscale
-        B = (7 - col) * 100 / 7;
+        B = row * 100 / 15;
     } else {
-        if (row > 6) {
-            adj = 15;
-        }
-        H = adj + ((row - 1) * 360 / 18);
-        S = SB[col - 1][0];
-        B = SB[col - 1][1];
+        H = ROWADJ[row] + (row * 360 / 16);
+        S = SB[col-1][0]-(row*2);
+        B = SB[col-1][1]+(row*2);
     }
     return `hsl(${H} ${S}% ${B}%)`;
 }
@@ -285,6 +291,7 @@ function force_size(node, img_h, img_w) {
 }
 
 function color_circle(row, col) {
+   return wrap(create_color(row, col));
     var circle = document.createElement('div');
     circle.style.borderRadius = '50% 5% 50%';
     // elliptical
@@ -354,7 +361,8 @@ function mk_subtxt(arr, cl, raw_txt, rows = 1, cols = 1, font = '') {
             txt = '{<i>' + bc + '</i>}';
         }
     } else {
-        let vals = raw_txt.replace(/\//g, '/<wbr>').split(/\*/);
+        
+        let vals = raw_txt.replace(/(?<!<\s*)\//g, '/<wbr>').split(/\*/);
 
         if (vals.length > 1) {
             txt = '<b>' + vals[0] + '</b> *';
@@ -750,17 +758,25 @@ function setup_screen() {
                     const currency_coins = [1, 3, 11, 18];
                     const currency_all = 44;
                     const currency_repeat = currency_coins.length;
-                    if (col == 1) { //currency
+                    meaning_txt = '';
+                    if (col == 2) { //currency
                         let coin = currency_count % currency_repeat;
+                        let dobold = false;
                         if (coin == 0) {
                             currency_name.push(glyph_name(row, col));
                             currency_val = currency_val.map(function (c) { return c * currency_all; }); // mult all by 5
                             currency_val.push(1);
+                            dobold = true;
                         }
                         let currency_sep = '';
                         let currency_mult = currency_coins[coin];
-                        for (let cx = currency_name.length-1; cx >= 0; cx--) {
-                            meaning_txt += currency_sep + (currency_val[cx] * currency_mult) + ' ' + currency_name[cx];
+                        for (let cx = currency_name.length - 1; cx >= 0; cx--) {
+                            if (dobold) {
+                                meaning_txt += '<b>1 ' + currency_name[cx] + '</b><br>';
+                                dobold = false;
+                            } else {
+                                meaning_txt += currency_sep + (currency_val[cx] * currency_mult) + ' ' + currency_name[cx];                               
+                            }
                             currency_sep = ', ';
                         }
                         currency_count++;
