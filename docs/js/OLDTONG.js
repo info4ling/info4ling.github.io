@@ -9,7 +9,7 @@ const skip = [[], spaces];
 
 const PAD_SZ = (IMG_W + IMG_H) / 10;
 
-const SB = [[85, 70], [80, 50], [70, 40], [50, 30], [40, 20], [60, 10], [80, 5]];
+const SB = [[100, 60], [80, 50], [70, 40], [50, 30], [40, 20], [60, 10], [80, 5]];
 
 // Globals that change
 
@@ -275,6 +275,10 @@ function create_color(row, col) {
     if (col == 0) {
         // Greyscale
         B = row * 100 / 15;
+    } else if (row == 15) {
+        H = ((col+3) * 360 / 7);
+        S = 100;
+        B = 90;
     } else {
         H = ROWADJ[row] + (row * 360 / 16);
         S = SB[col-1][0]-(row*2);
@@ -291,7 +295,7 @@ function force_size(node, img_h, img_w) {
 }
 
 function color_circle(row, col) {
-   return wrap(create_color(row, col));
+   // return wrap(create_color(row, col));
     var circle = document.createElement('div');
     circle.style.borderRadius = '50% 5% 50%';
     // elliptical
@@ -755,10 +759,10 @@ function setup_screen() {
                     mk_hidden_glyph(c, 'COLOR', [], row, col, 2, true)
                     let meaning_txt = meaning[col - 1][row];
 
-                    const currency_coins = [1, 3, 11, 18];
-                    const currency_all = 44;
+                    const currency_coins = [1, 5, 12, 28];
+                    const currency_all = 71;
                     const currency_repeat = currency_coins.length;
-                    meaning_txt = '';
+
                     if (col == 2) { //currency
                         let coin = currency_count % currency_repeat;
                         let dobold = false;
