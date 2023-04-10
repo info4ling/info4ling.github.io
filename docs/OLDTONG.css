@@ -25,70 +25,31 @@ table {
     padding: 10px;
 }
 
-.GBUTTON:not(.COLOR) {
-    background-color: transparent;
-    border: none transparent 0;
-}
-
 .WIDE {
     min-width: 500px !important;
     max-width: 500px !important;
     width: 500px !important;
 }
 
-#ctable > * > tr > *, #ctable > * > tr > * > .GBUTTON, #ctable > * > tr > * > .GBUTTON > span, #ctable > * > tr > * > .GBUTTON > span * {
+tr > * {
     box-sizing: border-box;
     max-width: 120px;
     min-width: 120px;
     width: 120px;
     margin: auto;
-}
-
-.GBUTTON, .GBUTTON > span, .GBUTTON > span * {
+    border: solid #505050 1px;
     padding: 0;
     margin: auto;
-    display: block;
     overflow-wrap: break-word;
     word-break: break-word;
     hyphens: auto;
-}
-
-.GLYPHBUTTON {
-    background-color: transparent;
-    border: none transparent 0;
-}
-
-.GCELL {
-    border: solid #505050 1px;
-}
-
-.HEADER2 {
-    border-top: ridge #404040 4px;
-}
-
-.VLINE {
-    background-color: #202020 !important;
-    min-width: 3px !important;
-    width: 3px !important;
-    max-width: 3px !important;
-    border: none 0 !important;
-    padding: 0 !important;
-}
-
-.HLINE {
-    background-color: #202020 !important;
-    min-height: 3px;
-    height: 3px;
-    max-height: 3px;
-    border: none 0 !important;
-    width: 100%;
-    padding: 0;
-}
-
-th, td {
     font-weight: normal;
     text-align: center;
-    box-sizing: border-box;
+}
+
+th {
+    border: solid #303030 1px;
+    font-weight: bold;
 }
 
 span {
@@ -96,34 +57,6 @@ span {
     overflow-wrap: break-word;
     width: 100%;
     margin: auto;
-}
-
-.BLANK {
-    visibility: hidden;
-    border: 0;
-}
-
-.COLOR {
-    background-color: #707070;
-}
-
-tr > :not(.COLOR) {
-    background-color: #d0c0c0;
-}
-
-.HIDECELL {
-    display: none;
-}
-
-.GLYPHLIST {
-    display: flex;
-}
-
-.GLYPHLIST > div {
-    flex 1; }
-
-tr > : not(.HIDECELL) {
-    display: table-cell;
 }
 
 #pro-glyph, #glyphy {

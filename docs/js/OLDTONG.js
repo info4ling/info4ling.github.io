@@ -105,10 +105,13 @@ function load_gsound(SKIP, line) {
 }
 
 var HEADERS = [];
+var LEFT_HEADER = [];
+var MAP_HEADER = {};
 var SHOW_HEADER = {};
 var COMMENT = [];
-var CATEGORY = [];
+var PREFIX = {};
 
+const BASE = 'CORE';
 function load_cols(retval, line) {
     if (retval == null) {
         assert_value_grid();
@@ -130,26 +133,33 @@ function load_cols(retval, line) {
         y = 0;
     }
 
-    
-    var type = linedata[3];
-    var subtype = linedata[4];
+    var which = linedata[2].toLowerCase();
+    var type = linedata[3].toLowerCase();
+    var subtype = linedata[4].toLowerCase();
     var hdr = subtype;
     let last_x = linedata.length;
+
+    if (!(BASE in MAP_HEADER)) {
+        MAP_HEADER[BASE] = [];
+        HEADERS.push(BASE);
+        LEFT_HEADER.push(BASE);
+        SHOW_HEADER[BASE] = true;
+    }
 
     switch (cur) {
         case 'WL':
             for (let x = 5; x < linedata.length; x++) {
                 H_ROW_LABEL.push(linedata[x]);
             }
+            break;
         case 'WN':
             for (let x = 5; x < linedata.length; x++) {
                 H_ROW_VALUE.push(linedata[x]);
             }
+            break;
         case 'C':
-            let iscat = (hdr = 'Category');
-  
-            HEADERS.push(hdr);
-            SHOW_HEADER[hdr] = true;
+            let iscurr = (hdr == 'currency');
+            let iscat = (hdr == 'category');
             let comment = '';
             
             if (last_x >= 5 + 16) {
@@ -157,51 +167,54 @@ function load_cols(retval, line) {
                 comment = linedata[last_x];
             }
             COMMENT.push(comment);
+            MAP_HEADER[BASE].push(hdr);
             
             for (let x = 5; x < last_x; x++) {
-                let what = linedata[x].split(/\*/);
-                if (iscat) {
-                    CATEGORY.push(what[0].toLowerCase());
+                let what = linedata[x];
+                if (iscurr) {
+                    what = mk_currency();
+                } else if (iscat) {
+                    PREFIX[what.toLowerCase()] = [x - 5, y];
                 }
 
-                values[x-5][y][hdr] = what;
+                values[x-5][y][BASE] = what;
             }
             break;
         case 'V':
+        case 'D':           
             if (type == '') {
                 type = subtype;
             } else if (subtype == '') {
                 subtype = type;
             }
-            if (type != last2) {
-                last2 = type;
-                y = 0;
-            }
             
-            hdr = 'category.' + type.toLowerCase() + '.' + subtype.toLowerCase();
-            if (last_x >= 5 + 16) {
-                last_x = 5 + 16 - 1;
-            }
-            for (let x = 5; x < last_x; x++) {
-                let what = linedata[x].split(/\*/);
+            let left_hdr = which + '.' + type;
 
-                values[x - 5][y][hdr] = what;
-            }
-            break;
-        case 'D':
-            if (type != last2) {
-                last2 = type;
+            if (left_hdr != last2) {
+                last2 = left_hdr;
                 y = 0;
+                HEADERS.push(left_hdr);
+                SHOW_HEADER[left_hdr] = true;
+                let empty = [];
+                MAP_HEADER[left_hdr] = empty;
             }
 
-            hdr = 'creature.' + type.toLowerCase() + '.' + subtype.toLowerCase();
+            hdr = left_hdr + '.' + subtype;
+            MAP_HEADER[left_hdr].push(hdr);
+
             if (last_x >= 5 + 16) {
                 last_x = 5 + 16 - 1;
             }
+            let iscreature = (subtype == 'creature');
+            
             for (let x = 5; x < last_x; x++) {
-                let what = linedata[x].split(/\*/);
-
-                values[x - 5][y][hdr] = what;
+                let what = linedata[x];
+                if (type == 'color') {
+                    what = create_color(x - 5, y);
+                } else if (iscreature) {
+                    PREFIX['creature.' + what.toLowerCase()]=[x - 5, y];
+                }
+                values[x - 5][y][left_hdr] = what;
             }
             break;
         default:
@@ -212,8 +225,6 @@ function load_cols(retval, line) {
 }
 
 function create_color(row, col) {
-    row--;
-    col--;
     var H = 0;
     var S = 0;
     var B = 0;
@@ -236,12 +247,12 @@ function force_size(node, img_h, img_w) {
     node.style.maxWidth = img_w + 'px';
 }
 
-function color_circle(row, col) {
+function color_circle(hsl) {
    // return wrap(create_color(row, col));
     var circle = document.createElement('div');
     circle.style.borderRadius = '50% 5% 50%';
     // elliptical
-    circle.style.backgroundColor = create_color(row, col);
+    circle.style.backgroundColor = hsl;
     circle.style.border = '5px ridge grey';
     force_size(circle, IMG_H, IMG_W);
     circle.style.minHeight = IMG_H + 'px';
@@ -252,12 +263,321 @@ function color_circle(row, col) {
     return circle;
 }
 
+const currency_coins = [1, 5, 12, 28];
+const currency_all = 71;
+const currency_repeat = currency_coins.length;
+var currency_count = 0;
+var coin_count = 0;
+var currency_val = [];
+
+function glyph_name(row, col, what = 'cell') {
+    var lit = '';
+    var say = '';
+
+    if (what == 'row' || what == 'cell') {
+        var srows = sounds['C'][row];
+        lit = srows[0];
+        say = srows[1];
+    }
+
+    if (what == 'col' || what == 'cell') {
+        var scols = sounds['V'][col];
+        lit += scols[0];
+        say += scols[1];
+    }
+
+    return [lit, say];
+}
+
+/*
+function mk_currency(row, col) {
+    let curtext = '';
+    let coin = currency_count % currency_repeat;
+    let dobold = false;
+    if (coin == 0) {
+        currency_name.push(glyph_name(row, col)[0]);
+        currency_val = currency_val.map(function (c) { return c * currency_all; }); // mult all by 5
+        currency_val.push(1);
+        dobold = true;
+    }
+    let currency_sep = '';
+    let currency_mult = currency_coins[coin];
+    for (let cx = currency_name.length - 1; cx >= 0; cx--) {
+        if (dobold) {
+            curtext += '<b>1 ' + currency_name[cx] + '</b><br>';
+            dobold = false;
+        } else {
+            curtext += currency_sep + (currency_val[cx] * currency_mult) + ' ' + currency_name[cx];
+        }
+        currency_sep = ', ';
+    }
+    currency_count++;
+
+    return curtext;
+}
+*/
+
+function mk_currency() {
+    let curtext = '';
+    let coin = currency_count % currency_repeat;
+    let dobold = false;
+    if (coin == 0) {
+        coin_count++;
+        currency_val = currency_val.map(function (c) { return c * currency_all; }); // mult all by 5
+        currency_val.push(1);
+        dobold = true;
+    }
+    let currency_sep = '';
+    let currency_mult = currency_coins[coin];
+    for (let cx = coin_count - 1; cx >= 0; cx--) {
+        if (dobold) {
+            curtext += '<b>1 COIN' + cx + '</b><br>';
+            dobold = false;
+        } else {
+            curtext += currency_sep + (currency_val[cx] * currency_mult) + ' COIN' + cx;
+        }
+        currency_sep = ', ';
+    }
+    currency_count++;
+
+    return curtext;
+}
+
+var voice_lookup = {};
+
+function setup_sound() {
+    window.speechSynthesis.onvoiceschanged = function () {
+        var voices = window.speechSynthesis.getVoices();
+
+        for (let i = 0; i < voices.length; i++) {
+            const option = document.createElement('option');
+            var txt = `${voices[i].name} (${voices[i].lang})`;
+
+            if (voices[i].default) {
+                txt += ' — DEFAULT';
+            }
+
+            option.textContent = txt;
+            voice_lookup[txt] = voices[i];
+            option.setAttribute('data-lang', voices[i].lang);
+            option.setAttribute('data-name', voices[i].name);
+            document.getElementById("voiceSelect").appendChild(option);
+        }
+    }
+}
+
+function setup_screen() {
+    set_calc_fields();
+    setup_sound();
+    setup_currency();  
+    init_cell_choice();
+    draw_glyph_table();
+}
+
+function setup_currency() {
+    // mk_currency(row, col)
+}
+
+function init_cell_choice() {
+    // create checkboxes
+}
+
+
+function clear_div(div) {
+    while (div.firstChild) {
+        div.removeChild(div.firstChild);
+    }
+}
+
+function add_tile(td, txt, tag, row, col) {
+    let grid = document.createElement('div');
+    grid.style.display = 'flex';
+    grid.style.flexDirection = 'column';
+
+    let glyphs = [];
+
+    let hier = tag.split(/\./);
+    let creature_glyph = PREFIX['creature'];
+    switch (hier[0]) {
+        case 'category':
+            if (hier[1] in PREFIX) {
+                glyphs.push(PREFIX[hier[1]]);
+            }
+            break;
+        case 'creature':
+            glyphs.push(creature_glyph);
+            let which_name = hier[0] + '.' + hier[1];
+            let which_creature = PREFIX[which_name];
+            glyphs.push(which_creature);
+            break;
+    }
+
+    let cur_glyph = [row, col];
+    glyphs.push(cur_glyph);
+
+    let glyph_text = '';
+    let glyph_say = '';
+
+    for (let g = 0; g < glyphs.length; g++) {
+        let r = glyphs[g][0];
+        let c = glyphs[g][1];
+        let name = glyph_name(r, c);
+        glyph_text += name[0];
+        glyph_say += name[1];
+    }
+
+    let gtxt = glyph_text + ' (' + glyph_say + ')';
+    let gdiv = document.createElement('div');
+    let gspan = document.createElement('span');
+    gspan.innerHTML = gtxt;
+    gdiv.appendChild(gspan);
+    grid.appendChild(gdiv);
+
+    let vdiv = document.createElement('div');
+    if (tag == 'category.color.color') {
+        let cdiv = color_circle(txt);
+        vdiv.appendChild(cdiv);
+    } else {
+        let vspan = document.createElement('span');
+        vspan.innerHTML = txt;
+        vdiv.appendChild(vspan);
+    }
+    grid.appendChild(vdiv);
+
+    td.appendChild(grid);
+}
+
+function draw_glyph_table() {
+    let div = document.getElementById('glyphtable');
+    clear_div(div);
+   
+    let cur_hdr = [];
+    for (let h = 0; h < HEADERS.length; h++) {
+        let hdr = HEADERS[h];
+        if (SHOW_HEADER[hdr]) {
+            cur_hdr.push(hdr);
+        }
+    }
+
+    if (cur_hdr.length == 0) {
+        let span = document.createElement('span');
+        span.innerHTML = 'Nothing Chosen';
+        div.appendChild(span);
+        return;
+    }
+
+    let thead = document.createElement('thead');
+    let tbody = document.createElement('tbody');
+
+    const max_cols = 4;
+    // empty_cols is how many cells are empty at the bottom
+    let empty_cols = (max_cols - (cur_hdr.length % max_cols)) % max_cols;
+
+    if (cur_hdr.length < max_cols) {
+        max_cols = cur_hdr.length;
+        empty_cols = 0;
+    }
+
+    for (let e = 0; e < empty_cols; ++e) {
+        cur_hdr.push('EMPTY');
+    }
+
+    let top_blank = [];
+    let top_cells = [[], [], [], [], [], [], [], []];
+
+    for (let h = 0; h < cur_hdr.length; h++) {
+        let tb = document.createElement('th');
+        top_blank.push(tb);
+        let hval = cur_hdr[h];
+        for (let col = 0; col < 8; col++) {
+            let th = document.createElement('th');
+            let hspan = document.createElement('span');
+            let tag = hval;
+            if (hval in MAP_HEADER && MAP_HEADER[hval].length > col) {
+                tag = MAP_HEADER[hval][col];
+            }
+
+            hspan.innerHTML = tag;
+            th.appendChild(hspan);
+            top_cells[col].push(th);
+        }
+        if ((h + 1) % max_cols == 0) {
+            let tr = document.createElement('tr');
+            for (let b = 0; b < top_blank.length; b++) {
+                tr.appendChild(top_blank[b]);
+            }
+            for (let ch = 0; ch < top_cells.length; ch++) {
+                for (let hv = 0; hv < top_cells[ch].length; hv++) {
+                    tr.appendChild(top_cells[ch][hv]);
+                }
+            }
+            thead.appendChild(tr);
+            top_blank = [];
+            top_cells = [[], [], [], [], [], [], [], []];
+        }
+    }
+
+    for (let row = 0; row < 16; row++) {
+        let hdrs = [];
+        let cells = [[],[],[],[],[],[],[],[]];
+        for (let h = 0; h < cur_hdr.length; h++) {
+            let th = document.createElement('th');
+            let hspan = document.createElement('span');
+            let hval = cur_hdr[h];
+            hspan.innerHTML = hval;
+            th.appendChild(hspan);
+            hdrs.push(th);
+            for (let col = 0; col < 8; col++) {
+                let td = document.createElement('td');
+                
+                let tag = hval;
+                if (hval in MAP_HEADER && MAP_HEADER[hval].length > col) {
+                    tag = MAP_HEADER[hval][col];
+                }
+                let txt = '';
+                if (hval in values[row][col]) {
+                    txt = values[row][col][hval];
+                }
+                if (txt == '') {
+                    txt = '{' + tag + '}';
+                    let dspan = document.createElement('span');
+                    dspan.innerHTML = txt;
+                    td.appendChild(dspan);
+                } else {
+                    add_tile(td, txt, tag, row, col);
+                }
+                   
+                cells[col].push(td);
+            }
+            if ((h+1) % max_cols == 0) {
+                let tr = document.createElement('tr');
+                for (let hh = 0; hh < hdrs.length; hh++) {
+                    tr.appendChild(hdrs[hh]);
+                }
+                for (let cc = 0; cc < cells.length; cc++) {
+                    for (let cv = 0; cv < cells[cc].length; cv++) {
+                        tr.appendChild(cells[cc][cv]);
+                    }
+                }
+                tbody.appendChild(tr);
+                hdrs = [];
+                cells = [[], [], [], [], [], [], [], []];
+            }
+        }
+    }
+    let table = document.createElement('table');
+    table.appendChild(thead);
+    table.appendChild(tbody);
+    div.appendChild(table);
+}
+
+/*
 function mk_subcell(arr, cl, item, rows = 1, cols = 1) {
     let ret = [item, rows, cols, cl];
     arr.push(ret);
 }
 
-function glyph_name(row, col, what = 'cell', dosay=false) {
+function glyph_name(row, col, what = 'cell') {
     var lit = '';
     var say = '';
 
@@ -273,12 +593,7 @@ function glyph_name(row, col, what = 'cell', dosay=false) {
         say += scols[1];
     }
 
-    var txt = lit;
-    if (dosay && (txt != say)) {
-        txt += '(' + say + ')';
-    }
-
-    return txt;
+    return [lit, say];
 }
 
 function mk_subtext_say(arr, cl, what, row, col, rows = 1, cols = 1, font = '') {
@@ -308,7 +623,7 @@ function mk_subtxt(arr, cl, raw_txt, rows = 1, cols = 1, font = '') {
         }
     } else {
         
-        let vals = raw_txt.replace(/(?<!<\s*)\//g, '/<wbr>').split(/\*/);
+        let vals = raw_txt.replace(/(?<!<\s*)\//g, '/<wbr>').split(/\*./);
 
         if (vals.length > 1) {
             txt = '<b>' + vals[0] + '</b> *';
@@ -368,28 +683,10 @@ const col_for_comment = col_max - 1;
 
 var num_list = [];
 
-var voice_lookup = {};
+
 
 function setup_screen() {
-    set_calc_fields();
-    window.speechSynthesis.onvoiceschanged = function () {
-        var voices = window.speechSynthesis.getVoices();
 
-        for (let i = 0; i < voices.length; i++) {
-            const option = document.createElement('option');
-            var txt = `${voices[i].name} (${voices[i].lang})`;
-
-            if (voices[i].default) {
-                txt += ' — DEFAULT';
-            }
-
-            option.textContent = txt;
-            voice_lookup[txt] = voices[i];
-            option.setAttribute('data-lang', voices[i].lang);
-            option.setAttribute('data-name', voices[i].name);
-            document.getElementById("voiceSelect").appendChild(option);
-        }
-    }
         ;
 
     var tbl = document.getElementById('ctable');
@@ -541,7 +838,7 @@ function setup_screen() {
                     mk_subtxt(b, ['LIT'], sounds['V'][col - 1][2], 1, 1, 'b');
                     // 2, 2 as in
 
-                    // line 2
+                    // line 2 
                     mk_hidden_glyph(c, 'LOC', [], row, col);
                     mk_hidden_glyph(c, 'MEANING', [], row, col);
                     mk_hidden_glyph(c, 'VERB', [], row, col);
@@ -835,8 +1132,6 @@ function add_row(arr, obj, tp, cl) {
     obj.appendChild(row);
 }
 
-on_ready_blobs([['data/datacols.csv', 'cols', load_cols], ['data/glyph_data.csv', 'gdata', load_gdata], ['data/glyph_sound.csv', 'gsound', load_gsound], //    ['badfile.csv', 'bf', simple_csv_to_arr_of_arr], // TEST BAD FILE
-], handle_blobs);
 
 function wrap(text) {
     var span = document.createElement("span");
@@ -1822,3 +2117,6 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 */
+
+on_ready_blobs([['data/datacols.csv', 'cols', load_cols], ['data/glyph_data.csv', 'gdata', load_gdata], ['data/glyph_sound.csv', 'gsound', load_gsound], //    ['badfile.csv', 'bf', simple_csv_to_arr_of_arr], // TEST BAD FILE
+], handle_blobs);

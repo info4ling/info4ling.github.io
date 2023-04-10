@@ -8,11 +8,15 @@ C,4,,,Pronoun,Last Subject,Last Object,Ordinal Tag,Royal,1st Person (Singular)*P
 C,5,,,Conjunction,Then,Otherwise,Therefore,Because,In order to,So that,Instead Of,Before,After,While,Until,,,,,,Must follow a 'Joined' Verb<BR>BR>A Choice can be used as well
 C,6,,,When,Always,Never,Sometimes,Once Upon a time,Distant Past,Past,Recent Past,Present,Soon,Future,Continuous,Perfect,Joined,,,,There is no tense - when is used instead<BR><BR>Continuous/Perfect can be added<BR><BR>Joined for If-Then-Otherwise/Before Choice for And/But(Not)/Or(inclusive or exclusive)
 C,7,,,Royal,Empire Royal *like an Emperor or Empress,Country Royal *like a President or Queen or Chairman,State Noble *like a Govenor or Duchess,County Noble *like a Marquis,District Noble *like a Countess or an Earl,Borough Noble *like a Viscount or Baron,Estate Noble (with Castle) *like a Lord or Knight,Estate Head (without Castle) Head *like Gentry,City Head [Citizen] *like a Mayor,Town Head [Merchant],Village Elder [Farmer],Noble Spouse *Will not inherit,Uncrowned,Usurper,Advisor,Commoner,Names are:<BR><BR>TITLE:<BR>ROLE:(Spouse / Advisor / Usurper / Commoner)<BR>SCOPE: (Empire / Country / State / County / District Leader/ District / Estate Noble / Estate Head / City / Town / Village)<BR>LOCALE: (Administrive Area at tat SCOPE)<BR><BR>Spouse's Character<BR><BR>Father's Character<BR><BR>Mother's Character's<BR><BR>FOLLOWED By the number corresponding to their Birth Order<BR><BR>And Finally their Family Name<BR>Their Mother's Spouse Name<BR>Their Father's Spouse Name<BR><BR>A baby has just their TITLE, one character for their birth order and their Family Name.  At a year the mother adds a character before their brith order. At maturity the father adds a character before the mother's. During the wedding the spouse adds a character before the father's<BR><BR> City / Town / Village are at the same administrive level. Commoners use this level but it means Citizen / Merchant / Farmer and they use it only in formal settings. Nobles and Royals have Castles and Commoners living in a Castle use the Commoner character then that Noble's TITLE but it means Servant. Estates include associated farms and wild lands like forrests, lakes or mountains. Several Estates make a Borough. Several Boroughs make a District... make a County... make a State... make a Country... make an Empire<BR><BR>Uncrowned means next in line or current before the ceremony<BR>BR>Usurper is bestowed by a Noble or Royal, generally for treason but can be arbitrary and it can be revoked. In public the title must be used, but may be used alone<BR><BR>Spouse / Advisor may have their own line so the noble section repeats for that line, but only one line is carried over.<BR><BR>Most Spouses are commoners. Advisors are always royal or Noble.<BR><BR>Upon ascention of a new ruler: the ruler picks one character to precede the Spouse's chosen character, Rulers may not be crowned if they are unmarried, but they can have as many spouses as they want. Those not direct descendants of the ruler are stripped of their current SCOPE and become Estate Nobles. The new Ruler chooses the level below and may raise non descendants to that SCOPE even if they are commoners. The same occurs if one of his directs dies with no heirs.  This then occurs for each level in succession down to Borough Noble. They may pick new Estate Heads but cannot remove an Estate Noble. Estates and below are otherwise unaffected. 
-C,8,,,Category,Creature,Label,Preposition,Adjective,Verb-Job,Verb-Life,Item*Noun,CEM*Noun (Creature Environment Military),Number,Location,,,,,,Color,
-,,,,,,,,,,,,,,,,,,,,,
-V,1,Category,,Label,Category,Number,Color,Creature,Punctuation,Currency,Grammar,Pronoun,Conjunction,When,Royal,Military,,,,,
-V,2,Category,,Label,'Creature','Label','Preposition','Adjective','Verb-Job','Item','Environment','CEM','Number','Location','','','','','','Color',
-V,3,Category,,Label,Name,Profession,Energy,Material,Guardian,Elemental,Monster,Spirit/Fae,Tools,Drink,Food,Transportation,Housing,Clothing,Utensils,,
+C,8,,,Category,Creature,Label,Preposition,Adjective,Verb-Job,Verb-Life,Items*Noun,CEM*Noun (Creature Environment Military),Number,Location,,,,,,Color,
+V,1,Category,Label,BASE,Category,Number,Color,Creature,Punctuation,Currency,Grammar,Pronoun,Conjunction,When,Royal,Military,,,,,
+V,2,Category,Label,Category,'Creature','Label','Preposition','Adjective','Verb-Job','Item','Environment','CEM','Number','Location',,,,,,'Color',
+V,3,Category,Label,Subcategory,Name,Profession,Energy,Material,Guardian,Elemental,Monster,Spirit/Fae,Tools,Drink,Food,Transportation,Housing,Clothing,Utensils,,
+V,4,Category,Label,Creature,Tree,Bush,Herb,Hair,Pelt,Feather,Shell,Smooth,,,,,,,,,
+V,5,Category,Label,,,,,,,,,,,,,,,,,,
+V,6,Category,Label,,,,,,,,,,,,,,,,,,
+V,7,Category,Label,,,,,,,,,,,,,,,,,,
+V,8,Category,Label,,,,,,,,,,,,,,,,,,
 V,1,Category,CEM,Creature,Tree,Bush,Herb,Hair,Pelt,Feather,Shell,Smooth,,,,,,,,,
 V,2,Category,CEM,Weather,Breeze,Wind,Gale,Drizzle,Rain,Downpour,Sunny,Cloudy,Snow,Sleet,Hail,Muck,,,,,
 V,3,Category,CEM,Elevation,,,,,,,,,,,,,,,,,
@@ -70,7 +74,7 @@ V,6,Category,Number,,10,150,350,550,3750,8750,13750,93750,218750,1593750,3718750
 V,7,Category,Number,,15,175,375,575,4375,9375,14375,109375,234375,1859375,3984375,31609375,67734375,537359375,1151484375,negative,
 V,8,Category,Number,,20,200,400,600,5000,10000,15000,125000,250000,2125000,4250000,36125000,72250000,614125000,1228250000,zero,
 V,1,Category,Location,Name,Island,Swamp,Marsh/Bog,Mountain/Volcano,Desert,Grasslands,Shrubland,Woodland,Forest,Jungle,Stream,River,Lake,Ocean,Reef,Tundra,
-V,2,Category,Location,Profession,Maid* vs Cook,Assassin* vs Potionist,Summoner* vs Healer,Miner* vs Farmer,Smith* vs Torturer,Farmer* vs Miner,Herder* vs Soldier,Soldier* vs Herder,Healer* vs Summoner,Performer* vs Pirate,Potionist* vs Assassin,Porter* vs Jailer,Cook* vs Maid,Pirate* vs Performer,Jailor* vs Porter,Torturer* vs Smith
+V,2,Category,Location,Profession,Maid* vs Cook,Assassin* vs Potionist,Summoner* vs Healer,Miner* vs Farmer,Smith* vs Torturer,Farmer* vs Miner,Herder* vs Soldier,Soldier* vs Herder,Healer* vs Summoner,Performer* vs Pirate,Potionist* vs Assassin,Porter* vs Jailer,Cook* vs Maid,Pirate* vs Performer,Jailor* vs Porter,Torturer* vs Smith,
 V,3,Category,Location,Energy,Weather,Death,Portal,Heat,Light,Earth,Animal,Plant,Balance,Healing,Metal,Turbulence,Peace,Wave,Shadow,Cold,
 V,4,Category,Location,Material,Clay,Rot,Brick,Metal,Sand,Grass,Thorns,Wood,Bark,Flesh,Stone,Gems,Water,Salt,Coral,Ice,
 V,5,Category,Location,Guardian,,,,,,,,,,,,,,,,,
@@ -78,6 +82,13 @@ V,6,Category,Location,Elemental,,,,Efreet,Djin,,,,,,,,,,,,
 V,7,Category,Location,Monster,Scylla,,,Phoenix,,Basilisk,,Ent,,,,,,Kraken,,,
 V,8,Category,Location,Spirit/Fae,,,,,,,,,,,,,,,,,
 V,1,Category,Color,,,,,,,,,,,,,,,,,,
+V,2,Category,Color,,,,,,,,,,,,,,,,,,
+V,3,Category,Color,,,,,,,,,,,,,,,,,,
+V,4,Category,Color,,,,,,,,,,,,,,,,,,
+V,5,Category,Color,,,,,,,,,,,,,,,,,,
+V,6,Category,Color,,,,,,,,,,,,,,,,,,
+V,7,Category,Color,,,,,,,,,,,,,,,,,,
+V,8,Category,Color,,,,,,,,,,,,,,,,,,
 M,,,Power Word,Profession,Maid,Assassin,Summoner,Miner,Smith,Farmer,Herder,Soldier,Healer,Performer,Potionist,Porter,Cook,Pirate,Jailor,Torturer,SKIP
 M,,,Power Word,Opposite,Cook,Potionist,Healer,Farmer,Torturer,Miner,Soldier,Herder,Summoner,Pirate,Assassin,Jailer,Maid,Performer,Porter,Smith,SKIP
 D,1,CREATURE,Tree,Nut,,,,,,,,,,,,,,,,,
