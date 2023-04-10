@@ -9,7 +9,10 @@ const skip = [[], spaces];
 
 const PAD_SZ = (IMG_W + IMG_H) / 10;
 
-const SB = [[100, 60], [80, 50], [70, 40], [50, 30], [40, 20], [60, 10], [80, 5]];
+const SB = [[0, 0, "Grey Scale"], [80, 50, "Full Color"], [70, 70, "Pale Color"], [60, 50, "Muted Color"], [50, 40, "Medium Color"], [40, 30, "Dim Color",], [60, 12, "Dark Color"], [100, 90, "Glowing"]];
+const H_ROW = [[280, "Indigo-Violet"], [300, "Violet"], [330, "Violet-Red"], [0, "Red"], [15, "Red-Orange"], [30, "Orange"], [40, "Yellow-Orange"], [50, "Yellow"],
+    [70, "Yellow-Green"], [90, "Green"], [130, "Green-Aqua"], [180, "Aqua"], [200, "Aqua-Blue"], [220, "Blue"], [240, "Blue-Indigo"], [260, "Indigo"]]; // cold
+
 
 // Globals that change
 
@@ -265,6 +268,7 @@ const ROWADJ = [
     22, 30, 60, 230
 ];
 
+
 function create_color(row, col) {
     row--;
     col--;
@@ -275,14 +279,11 @@ function create_color(row, col) {
     if (col == 0) {
         // Greyscale
         B = row * 100 / 15;
-    } else if (row == 15) {
-        H = ((col+3) * 360 / 7);
-        S = 100;
-        B = 90;
     } else {
-        H = ROWADJ[row] + (row * 360 / 16);
-        S = SB[col-1][0]-(row*2);
-        B = SB[col-1][1]+(row*2);
+       // H = ROWADJ[row] + (row * 360 / 16);
+        H = H_ROW[row][0];
+        S = SB[col][0];
+        B = SB[col][1];
     }
     return `hsl(${H} ${S}% ${B}%)`;
 }
@@ -610,7 +611,7 @@ function setup_screen() {
                     // 4, 1 'verb' label
                     mk_subtxt(c, ['LOC'], legend[col - 1][0], 2, 1, 'b');
                     // 3, 1 legend
-                    mk_subtxt(c, ['COLOR'], 'Color', 2, 1, 'bi');
+                    mk_subtxt(c, ['COLOR'], SB[col - 1][2], 2, 1, 'bi');
                     // 3, 3 Color Label
 
                     // line X
@@ -688,7 +689,7 @@ function setup_screen() {
                     // 4, 1 job/verb/powerword
                     mk_subtxt(c, ['LOC', 'HDR'], locations[row - 1], 2, 1, 'b');
                     // 3, 1 Location
-                    mk_subtxt(c, ['COLOR', 'HDR'], 'Color', 2, 1, 'bi');
+                    mk_subtxt(c, ['COLOR', 'HDR'], H_ROW[row-1][1], 2, 1, 'bi');
 
                     // line 3
                     show_vline(d, ['CR', 'C1', 'C2', 'C3', 'C4']);

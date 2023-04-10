@@ -31,14 +31,16 @@ table {
 }
 
 .WIDE {
+    min-width: 500px !important;
     max-width: 500px !important;
+    width: 500px !important;
 }
 
 #ctable > * > tr > *, #ctable > * > tr > * > .GBUTTON, #ctable > * > tr > * > .GBUTTON > span, #ctable > * > tr > * > .GBUTTON > span * {
     box-sizing: border-box;
-    max-width: 100px;
-    min-width: min-content;
-    width: max-content;
+    max-width: 120px;
+    min-width: 120px;
+    width: 120px;
     margin: auto;
 }
 
@@ -66,11 +68,11 @@ table {
 
 .VLINE {
     background-color: #202020 !important;
-    min-width: 3px;
-    width: 3px;
-    max-width: 3px;
+    min-width: 3px !important;
+    width: 3px !important;
+    max-width: 3px !important;
     border: none 0 !important;
-    padding: 0;
+    padding: 0 !important;
 }
 
 .HLINE {
