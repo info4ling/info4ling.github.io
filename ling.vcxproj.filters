@@ -12,9 +12,6 @@
     <None Include="docs\data\datacols.csv">
       <Filter>docs</Filter>
     </None>
-    <None Include="docs\data\datarows.csv">
-      <Filter>docs</Filter>
-    </None>
     <None Include="docs\data\glyph_data.csv">
       <Filter>docs</Filter>
     </None>

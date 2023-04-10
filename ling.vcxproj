@@ -142,7 +142,6 @@
     <None Include="docs\data\datacols.csv" />
     <None Include="docs\js\GTRtabs.js" />
     <None Include="docs\data\glyph_data.csv" />
-    <None Include="docs\data\datarows.csv" />
     <None Include="docs\js\glyph_data.js" />
     <None Include="docs\js\GTR.js" />
     <None Include="docs\OLDTONG.css" />

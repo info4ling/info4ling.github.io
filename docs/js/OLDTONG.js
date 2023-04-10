@@ -10,8 +10,7 @@ const skip = [[], spaces];
 const PAD_SZ = (IMG_W + IMG_H) / 10;
 
 const SB = [[0, 0, "Grey Scale"], [80, 50, "Full Color"], [70, 70, "Pale Color"], [60, 50, "Muted Color"], [50, 40, "Medium Color"], [40, 30, "Dim Color",], [60, 12, "Dark Color"], [100, 90, "Glowing"]];
-const H_ROW = [[280, "Indigo-Violet"], [300, "Violet"], [330, "Violet-Red"], [0, "Red"], [15, "Red-Orange"], [30, "Orange"], [40, "Yellow-Orange"], [50, "Yellow"],
-    [70, "Yellow-Green"], [90, "Green"], [130, "Green-Aqua"], [180, "Aqua"], [200, "Aqua-Blue"], [220, "Blue"], [240, "Blue-Indigo"], [260, "Indigo"]]; // cold
+const H_ROW = [];
 
 
 // Globals that change
