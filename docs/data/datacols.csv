@@ -1,6 +1,6 @@
 H,,CLASS,TYPE,SUBTYPE,Island,Swamp,Marsh/Bog,Mountain/Volcano,Desert,Grasslands,Shrubland,Woodland,Forest,Jungle,Stream,River,Lake,Ocean,Reef,Tundra,Comment
-W,,,,ColorName,Indigo-Violet,Violet,Violet-Red,Red,Red-Orange,Orange,Yellow-Orange,Yellow,Yellow-Green,Green,Aqua-Green,Aqua,Aqua-Blue,Blue,Blue-Indigo,Indigo,
-W,,,,ColorValue,280,300,330,0,15,30,40,50,70,90,130,180,200,220,240,260,
+WL,,,,ColorName,Indigo-Violet,Violet,Violet-Red,Red,Red-Orange,Orange,Yellow-Orange,Yellow,Yellow-Green,Green,Aqua-Green,Aqua,Aqua-Blue,Blue,Blue-Indigo,Indigo,
+WN,,,,ColorValue,280,300,330,0,15,30,40,50,70,90,130,180,200,220,240,260,
 C,1,,,Punctuation,STOP '.',Start Paren '(',Start Quote '\'",Question '?',Excitement '!',End Paren ')',End Quote '\'",Elipses '...',Sarcastic,Rhetorical,Who [q],What [q],Where [q],When [q],How [q],Is [q],Question/Excitement/Sarcasm/Rhetorical goes at the front
 C,2,,,Currency,,,,,,,,,,,,,,,,,
 C,3,,,Grammar,Verb (Any Verb)',Powerword (Verb-Job Only)',Gerund (Any Verb)',Subject (noun),Object (noun),Adjective,Adverb*Adjective + 'ly',Interjection (emotion),Preposition,Choice:and*A and B,Choice:inclusive or*A or B or Both A and B,Choice:exclusive or*A or B but NOT A and B,Choice:not (but)*NOT A,,,,[Joined/Conjunction]<BR><BR>[When]<BR><BR>[Punctuation: Question/Excitement/Sarcastic/Rhetorical]<BR><BR>Interjection<BR><BR>Question word ([q] - Adjective/Prep Phrase)<BR><BR>Verb(Adverb) <BR><BR>Subject(Subject - Adjective/Prep Phrase)...<BR><BR>(Choice Subject - Adjective/Prep Phrase)... <BR><BR>Object(Object - Adjective/Prep Phrase)...<BR><BR>(Choice Object - Adjective/Prep Phrase)...<BR><BR>[Punctuation: STOP/Elipses/Repeat of punctuation at start for emphasis]<BR><BR><BR><BR>Note: to use a Verb as a noun (a gerund): Subject/Object Gerund (Verb)
@@ -70,13 +70,14 @@ V,6,Category,Number,,10,150,350,550,3750,8750,13750,93750,218750,1593750,3718750
 V,7,Category,Number,,15,175,375,575,4375,9375,14375,109375,234375,1859375,3984375,31609375,67734375,537359375,1151484375,negative,
 V,8,Category,Number,,20,200,400,600,5000,10000,15000,125000,250000,2125000,4250000,36125000,72250000,614125000,1228250000,zero,
 V,1,Category,Location,Name,Island,Swamp,Marsh/Bog,Mountain/Volcano,Desert,Grasslands,Shrubland,Woodland,Forest,Jungle,Stream,River,Lake,Ocean,Reef,Tundra,
-V,2,Category,Location,Profession,15* vs 20,175* vs 200,375* vs 400,575* vs 600,4375* vs 5000,9375* vs 10000,14375* vs 15000,109375* vs 125000,234375* vs 250000,1859375* vs 2125000,3984375* vs 4250000,31609375* vs 36125000,67734375* vs 72250000,537359375* vs 614125000,1151484375* vs 1228250000,negative* vs zero,
+V,2,Category,Location,Profession,Maid* vs Cook,Assassin* vs Potionist,Summoner* vs Healer,Miner* vs Farmer,Smith* vs Torturer,Farmer* vs Miner,Herder* vs Soldier,Soldier* vs Herder,Healer* vs Summoner,Performer* vs Pirate,Potionist* vs Assassin,Porter* vs Jailer,Cook* vs Maid,Pirate* vs Performer,Jailor* vs Porter,Torturer* vs Smith
 V,3,Category,Location,Energy,Weather,Death,Portal,Heat,Light,Earth,Animal,Plant,Balance,Healing,Metal,Turbulence,Peace,Wave,Shadow,Cold,
 V,4,Category,Location,Material,Clay,Rot,Brick,Metal,Sand,Grass,Thorns,Wood,Bark,Flesh,Stone,Gems,Water,Salt,Coral,Ice,
 V,5,Category,Location,Guardian,,,,,,,,,,,,,,,,,
 V,6,Category,Location,Elemental,,,,Efreet,Djin,,,,,,,,,,,,
 V,7,Category,Location,Monster,Scylla,,,Phoenix,,Basilisk,,Ent,,,,,,Kraken,,,
 V,8,Category,Location,Spirit/Fae,,,,,,,,,,,,,,,,,
+V,1,Category,Color,,,,,,,,,,,,,,,,,,
 M,,,Power Word,Profession,Maid,Assassin,Summoner,Miner,Smith,Farmer,Herder,Soldier,Healer,Performer,Potionist,Porter,Cook,Pirate,Jailor,Torturer,SKIP
 M,,,Power Word,Opposite,Cook,Potionist,Healer,Farmer,Torturer,Miner,Soldier,Herder,Summoner,Pirate,Assassin,Jailer,Maid,Performer,Porter,Smith,SKIP
 D,1,CREATURE,Tree,Nut,,,,,,,,,,,,,,,,,

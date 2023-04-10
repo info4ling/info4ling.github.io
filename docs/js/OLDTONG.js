@@ -5,16 +5,16 @@ const BOOL = [false, true];
 
 const spaces = ' &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp';
 
-const skip = [[], spaces];
-
+const SKIP = [[], spaces];
 const PAD_SZ = (IMG_W + IMG_H) / 10;
 
+//color
 const SB = [[0, 0, "Grey Scale"], [80, 50, "Full Color"], [70, 70, "Pale Color"], [60, 50, "Muted Color"], [50, 40, "Medium Color"], [40, 30, "Dim Color",], [60, 12, "Dark Color"], [100, 90, "Glowing"]];
-const H_ROW = [];
-
+// name, hue
+var H_ROW_VALUE = [];
+var H_ROW_LABEL = [];
 
 // Globals that change
-
 var valc = 0;
 var count_in_glyphs_row = 0;
 
@@ -32,49 +32,34 @@ function set_calc_fields() {
     calc_lit = document.getElementById('lit');
 }
 
-var locations = [];
-// H
-var meaning = [];
-var category = {};
-var prof = [];
-// M
-var prof_opp = [];
-// M
-var legend = [];
-// L
-var creature = {};
-// D
-var creature_type = [];
-// D
+var number_glyph = '';
+var number_to_glyph = [];
 
+var values = null;
 var sounds = {};
 var sound_fix = {};
 
-var numbers = [];
-var preps = [];
-var verbs = [];
+function assert_value_grid() {
+    if (values == null) {
+        values = [];
+        for (let row = 0; row < 16; row++) {
+            let newrow = [];
+            for (let col = 0; col < 8; col++) {
+                let hash = {};
+                hash.row = row;
+                hash.col = col;
 
-var global_data = {
-    'locations': locations,
-    'meaning': meaning,
-    'category': category,
-    'prof': prof,
-    'prof_opp': prof_opp,
-    'legend': legend,
-    'creature': creature,
-    'creature_type': creature_type,
-    'sounds': sounds,
-    'sound_fix': sound_fix,
-    'numbers': numbers,
-    'preps': preps,
-    'verbs': verbs,
-    'glyph_data': glyph_data,
-    'stored_images': stored_images,
-};
+                newrow.push(hash);
+            }
+            values.push(newrow);
+        }
+    }
+}
+
 //////////////////////////////// Functions
 
-function handle_blobs(values) {
-    console.log('GOT:', values, global_data);
+function handle_blobs(rets) {
+    console.log('GOT:', rets, values);
 
     setTimeout(() => {
         cache_glyphs();
@@ -87,16 +72,19 @@ function handle_blobs(values) {
         , 100);
 }
 
-function load_gdata(skip, line) {
+function load_gdata(SKIP, line) {
     var row = comma_split(line);
     set_glyph_data(row);
 }
 
-function load_gsound(skip, line) {
+function load_gsound(SKIP, line) {
     var row = comma_split(line);
 
     // WHAT, lit, say, example
     var what = row[0];
+    if (what == 'H') {
+        return;
+    }
     var lit = row[1];
     var say = row[2];
     if (say == '') {
@@ -115,158 +103,113 @@ function load_gsound(skip, line) {
         sounds[what].push(data);
     }
 }
-var cat_map = {
-    NUM: 'NUMBER',
-    PREP: 'PREPOSITION',
-    LOC: 'LEGEND',
-    COLOR: 'COLOR',
-    VERB: 'VERB',
-};
 
-var meaning_start = 0;
-var creature_start = 0;
+var HEADERS = [];
+var SHOW_HEADER = {};
+var COMMENT = [];
+var CATEGORY = [];
 
-function load_cols(row_number, line) {
-    if (row_number == null) {
-        row_number = 1;
+function load_cols(retval, line) {
+    if (retval == null) {
+        assert_value_grid();
+        retval = ['', 0, ''];
     }
 
-    var row = comma_split(line);
+    let last = retval[0];
+    let y = retval[1];
+    let last2 = retval[2];
 
-    var dest;
-    var is_header;
-    var is_comment;
-    var multirow;
+    var linedata = comma_split(line);
+    if (linedata.length < 6) {
+        return retval;
+    }
+    let cur = linedata[0];
+    if (cur == last) {
+        y++;
+    } else {
+        y = 0;
+    }
 
-    switch (row[0]) {
-        case 'H':
-            dest = locations;
-            is_header = false;
-            is_comment = false;
-            multirow = false;
-            break;
+    
+    var type = linedata[3];
+    var subtype = linedata[4];
+    var hdr = subtype;
+    let last_x = linedata.length;
+
+    switch (cur) {
+        case 'WL':
+            for (let x = 5; x < linedata.length; x++) {
+                H_ROW_LABEL.push(linedata[x]);
+            }
+        case 'WN':
+            for (let x = 5; x < linedata.length; x++) {
+                H_ROW_VALUE.push(linedata[x]);
+            }
         case 'C':
-            dest = meaning;
-            if (meaning_start == 0) {
-                meaning_start = row_number;
+            let iscat = (hdr = 'Category');
+  
+            HEADERS.push(hdr);
+            SHOW_HEADER[hdr] = true;
+            let comment = '';
+            
+            if (last_x >= 5 + 16) {
+                last_x = 5 + 16 - 1;
+                comment = linedata[last_x];
             }
-            if (row[4] == 'Category') {
-                for (let c = 5; c < row.length; c++) {
-                    let what = row[c].split(/\*/)[0].toUpperCase();
-                    if (what != '') {
-                        category[what] = [c - 5, row_number - meaning_start];
-                        // cols is transverse C, R instead of R, C
-                    }
+            COMMENT.push(comment);
+            
+            for (let x = 5; x < last_x; x++) {
+                let what = linedata[x].split(/\*/);
+                if (iscat) {
+                    CATEGORY.push(what[0].toLowerCase());
                 }
+
+                values[x-5][y][hdr] = what;
             }
-            is_header = true;
-            is_comment = true;
-            multirow = true;
             break;
-        case 'M':
-            if (row[4] == 'Profession') {
-                dest = prof;
-            } else {
-                dest = prof_opp;
+        case 'V':
+            if (type == '') {
+                type = subtype;
+            } else if (subtype == '') {
+                subtype = type;
             }
-            is_header = false;
-            is_comment = false;
-            multirow = false;
-            break;
-        case 'L':
-            dest = legend;
-            is_header = true;
-            is_comment = false;
-            multirow = true;
+            if (type != last2) {
+                last2 = type;
+                y = 0;
+            }
+            
+            hdr = 'category.' + type.toLowerCase() + '.' + subtype.toLowerCase();
+            if (last_x >= 5 + 16) {
+                last_x = 5 + 16 - 1;
+            }
+            for (let x = 5; x < last_x; x++) {
+                let what = linedata[x].split(/\*/);
+
+                values[x - 5][y][hdr] = what;
+            }
             break;
         case 'D':
-            var type = row[3];
-            is_header = true;
-            is_comment = false;
-            multirow = true;
-            if (!(type in creature)) {
-                creature_start++;
-                creature[type] = [];
-                creature_type.push(type);
-                cat_map['C' + creature_start] = type.toUpperCase();
+            if (type != last2) {
+                last2 = type;
+                y = 0;
             }
-            dest = creature[type];
+
+            hdr = 'creature.' + type.toLowerCase() + '.' + subtype.toLowerCase();
+            if (last_x >= 5 + 16) {
+                last_x = 5 + 16 - 1;
+            }
+            for (let x = 5; x < last_x; x++) {
+                let what = linedata[x].split(/\*/);
+
+                values[x - 5][y][hdr] = what;
+            }
             break;
         default:
-            return row_number;
+            return retval;
     }
 
-    var base = 5;
-    var max_row = 16;
-    var header = is_header ? 1 : 0;
-    var comment = is_comment ? 1 : 0;
-
-    var start = base - header;
-    var last = start + max_row + header + comment;
-    do_add(dest, row, start, last, multirow);
-
-    return row_number + 1;
+    return [cur, y, last2];
 }
-
-function load_rows(skip, line) {
-    var row = comma_split(line);
-
-    var start;
-    var dest;
-    var extra;
-    switch (row[0]) {
-        case 'NUMBER':
-            start = 3;
-            extra = 1;
-            // Comment
-            dest = numbers;
-            break;
-        case 'PREPOSITION':
-            start = 4;
-            extra = 0;
-            dest = preps;
-            break;
-        case 'JOB':
-            // verbs and magic powerwords are based on jobs
-            start = 1;
-            extra = 3;
-            // Name, Create/Destroy, Comment
-            dest = verbs;
-            break;
-        default:
-            return;
-    }
-    var max_row = 8;
-    var last = start + extra + max_row;
-    do_add(dest, row, start, last, true);
-}
-
-const empty = '';
-
-function do_add(dest, row, start, last, is_multirow) {
-    var add;
-    if (is_multirow) {
-        add = [];
-        dest.push(add);
-    } else {
-        add = dest;
-    }
-    for (var c = start; c < last; c++) {
-        if (c < row.length) {
-            add.push(row[c]);
-        } else {
-            add.push(empty);
-        }
-    }
-}
-
-const ROWADJ = [
-    0, 0, 0, 0,
-    0, 10, 20, 20,
-    20, 20, 20, 20,
-    22, 30, 60, 230
-];
-
 
 function create_color(row, col) {
     row--;
@@ -274,13 +217,12 @@ function create_color(row, col) {
     var H = 0;
     var S = 0;
     var B = 0;
-    var adj = 0;
+
     if (col == 0) {
         // Greyscale
         B = row * 100 / 15;
     } else {
-       // H = ROWADJ[row] + (row * 360 / 16);
-        H = H_ROW[row][0];
+        H = H_ROW_VALUE[row];
         S = SB[col][0];
         B = SB[col][1];
     }
@@ -893,7 +835,7 @@ function add_row(arr, obj, tp, cl) {
     obj.appendChild(row);
 }
 
-on_ready_blobs([['data/datacols.csv', 'cols', load_cols], ['data/datarows.csv', 'rows', load_rows], ['data/glyph_data.csv', 'gdata', load_gdata], ['data/glyph_sound.csv', 'gsound', load_gsound], //    ['badfile.csv', 'bf', simple_csv_to_arr_of_arr], // TEST BAD FILE
+on_ready_blobs([['data/datacols.csv', 'cols', load_cols], ['data/glyph_data.csv', 'gdata', load_gdata], ['data/glyph_sound.csv', 'gsound', load_gsound], //    ['badfile.csv', 'bf', simple_csv_to_arr_of_arr], // TEST BAD FILE
 ], handle_blobs);
 
 function wrap(text) {
