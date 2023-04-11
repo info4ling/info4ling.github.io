@@ -8,7 +8,7 @@ const spaces = ' &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp';
 const SKIP = [[], spaces];
 const PAD_SZ = (IMG_W + IMG_H) / 10;
 
-const MAX_COLS = 5;
+var MAX_COLS = 5;
 
 //color
 const SB = [[0, 0, "Grey Scale"], [80, 50, "Full Color"], [70, 70, "Pale Color"], [60, 50, "Muted Color"], [50, 40, "Medium Color"], [40, 30, "Dim Color",], [60, 12, "Dark Color"], [100, 90, "Glowing"]];
@@ -37,7 +37,7 @@ function set_element_globals_by_id() {
     calc_lit = document.getElementById('lit');
     voiceSelect = document.getElementById('voiceSelect');
     glyphtable = document.getElementById('glyphtable');
-    glyphtable = document.getElementById('glyphchoices');
+    glyphchoices = document.getElementById('glyphchoices');
 }
 
 var number_glyph = '';
@@ -397,9 +397,52 @@ function setup_currency() {
     // mk_currency(row, col)
 }
 
+//type
+const CHECKBOX = 'checkbox';
+const RADIOBUTTON = 'radio';
+
+function add_input(container, group, value, label_txt, func=null, type=CHECKBOX, checked = true) {
+    let id = group + '_' + value;
+    let input = document.createElement('input');
+    input.type = type;
+    input.name = group;
+    input.value = value;
+    input.id = id;
+    input.checked = checked;
+    if (func != null) {
+        input.onclick = func;
+    }
+
+    var label = document.createElement('label')
+    label.htmlFor = id;
+    label.appendChild(document.createTextNode(label_txt));
+
+    container.appendChild(input);
+    container.appendChild(label);
+}
+
+function choose_header_count(rb) {
+    rb.checked = true;
+    MAX_COLS = input.value;
+    draw_glyph_table();
+}
+
+function toggle_header(cb) {
+    let toggled = !cb.checked;
+    cb.checked = toggled;
+    let hdr = cb.value;
+    SHOW_HEADER[hdr] = toggled;
+    draw_glyph_table();
+}
+
 function init_cell_choice() {
-    // create checkboxes
-    // glyphchoices
+    for (let n = 2; n <= 8; n++) {
+        let do_check = (n == MAX_COLS);
+        add_input(glyphchoices, 'header_choice', n, n, 'choose_header_count(this)', RADIOBUTTON, do_check);
+    }
+    for (let h = 0; h < HEADERS.length; h++) {
+        add_input(glyphchoices, 'header_choice', HEADERS[h], HEADERS[h], 'toggle_header(this)');
+    }
 }
 
 
