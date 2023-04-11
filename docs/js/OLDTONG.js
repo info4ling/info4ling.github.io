@@ -410,10 +410,10 @@ function add_input(container, group, value, label_txt, func=null, type=CHECKBOX,
     input.id = id;
     input.checked = checked;
     if (func != null) {
-        input.onclick = func;
+        input.addEventListener('click', func);
     }
 
-    var label = document.createElement('label')
+    var label = document.createElement('label');
     label.htmlFor = id;
     label.appendChild(document.createTextNode(label_txt));
 
@@ -421,28 +421,40 @@ function add_input(container, group, value, label_txt, func=null, type=CHECKBOX,
     container.appendChild(label);
 }
 
-function choose_header_count(rb) {
-    rb.checked = true;
-    MAX_COLS = input.value;
+function choose_header_count() {
+    this.checked = true;
+    MAX_COLS = this.value;
     draw_glyph_table();
 }
 
-function toggle_header(cb) {
-    let toggled = !cb.checked;
-    cb.checked = toggled;
-    let hdr = cb.value;
+function toggle_header() {
+    let toggled = this.checked;
+    let hdr = this.value;
     SHOW_HEADER[hdr] = toggled;
     draw_glyph_table();
 }
 
 function init_cell_choice() {
+    let br1 = document.createElement('span');
+    br1.innerHTML = '<BR><BR>';
+    glyphchoices.appendChild(br1);
+
     for (let n = 2; n <= 8; n++) {
         let do_check = (n == MAX_COLS);
-        add_input(glyphchoices, 'header_choice', n, n, 'choose_header_count(this)', RADIOBUTTON, do_check);
+        add_input(glyphchoices, 'count_choice', n, n, choose_header_count, RADIOBUTTON, do_check);
     }
+
+    let br2 = document.createElement('span');
+    br2.innerHTML = '<BR><BR>';
+    glyphchoices.appendChild(br2);
+
     for (let h = 0; h < HEADERS.length; h++) {
-        add_input(glyphchoices, 'header_choice', HEADERS[h], HEADERS[h], 'toggle_header(this)');
+        add_input(glyphchoices, 'header_choice', HEADERS[h], HEADERS[h], toggle_header);
     }
+
+    let br3 = document.createElement('span');
+    br3.innerHTML = '<BR><BR>';
+    glyphchoices.appendChild(br3);
 }
 
 
@@ -524,7 +536,7 @@ function draw_glyph_table() {
     if (cur_hdr.length == 0) {
         let span = document.createElement('span');
         span.innerHTML = 'Nothing Chosen';
-        div.appendChild(span);
+        glyphtable.appendChild(span);
         return;
     }
 
