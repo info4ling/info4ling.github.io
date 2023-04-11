@@ -26,12 +26,18 @@ var input = null;
 var calc_glyph = null;
 var calc_math = null;
 var calc_lit = null;
+var voiceSelect = null;
+var glyphtable = null;
+var glyphchoices = null;
 
-function set_calc_fields() {
+function set_element_globals_by_id() {
     input = document.getElementById('number');
     calc_glyph = document.getElementById('glyph');
     calc_math = document.getElementById('math');
     calc_lit = document.getElementById('lit');
+    voiceSelect = document.getElementById('voiceSelect');
+    glyphtable = document.getElementById('glyphtable');
+    glyphtable = document.getElementById('glyphchoices');
 }
 
 var number_glyph = '';
@@ -374,13 +380,13 @@ function setup_sound() {
             voice_lookup[txt] = voices[i];
             option.setAttribute('data-lang', voices[i].lang);
             option.setAttribute('data-name', voices[i].name);
-            document.getElementById("voiceSelect").appendChild(option);
+            voiceSelect.appendChild(option);
         }
     }
 }
 
 function setup_screen() {
-    set_calc_fields();
+    set_element_globals_by_id();
     setup_sound();
     setup_currency();  
     init_cell_choice();
@@ -393,6 +399,7 @@ function setup_currency() {
 
 function init_cell_choice() {
     // create checkboxes
+    // glyphchoices
 }
 
 
@@ -461,8 +468,7 @@ function add_tile(td, txt, tag, row, col) {
 }
 
 function draw_glyph_table() {
-    let div = document.getElementById('glyphtable');
-    clear_div(div);
+    clear_div(glyphtable);
    
     let cur_hdr = [];
     for (let h = 0; h < HEADERS.length; h++) {
@@ -590,7 +596,7 @@ function draw_glyph_table() {
     let table = document.createElement('table');
     table.appendChild(thead);
     table.appendChild(tbody);
-    div.appendChild(table);
+    glyphtable.appendChild(table);
 }
 
 /*
