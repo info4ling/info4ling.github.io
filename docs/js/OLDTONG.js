@@ -8,6 +8,8 @@ const spaces = ' &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp';
 const SKIP = [[], spaces];
 const PAD_SZ = (IMG_W + IMG_H) / 10;
 
+const MAX_COLS = 5;
+
 //color
 const SB = [[0, 0, "Grey Scale"], [80, 50, "Full Color"], [70, 70, "Pale Color"], [60, 50, "Muted Color"], [50, 40, "Medium Color"], [40, 30, "Dim Color",], [60, 12, "Dark Color"], [100, 90, "Glowing"]];
 // name, hue
@@ -112,6 +114,16 @@ var COMMENT = [];
 var PREFIX = {};
 
 const BASE = 'CORE';
+
+function get_key(str) {
+    let key = str.toLowerCase();
+    let split = key.split(/\*/);
+    if (split.length > 1) {
+        key = split[0];
+    }
+    return key;
+}
+
 function load_cols(retval, line) {
     if (retval == null) {
         assert_value_grid();
@@ -163,7 +175,7 @@ function load_cols(retval, line) {
             let comment = '';
             
             if (last_x >= 5 + 16) {
-                last_x = 5 + 16 - 1;
+                last_x = 5 + 16;
                 comment = linedata[last_x];
             }
             COMMENT.push(comment);
@@ -171,10 +183,11 @@ function load_cols(retval, line) {
             
             for (let x = 5; x < last_x; x++) {
                 let what = linedata[x];
+                
                 if (iscurr) {
                     what = mk_currency();
-                } else if (iscat) {
-                    PREFIX[what.toLowerCase()] = [x - 5, y];
+                } else if (iscat && what != '') {
+                    PREFIX[get_key(what)] = [x - 5, y];
                 }
 
                 values[x-5][y][BASE] = what;
@@ -203,7 +216,7 @@ function load_cols(retval, line) {
             MAP_HEADER[left_hdr].push(hdr);
 
             if (last_x >= 5 + 16) {
-                last_x = 5 + 16 - 1;
+                last_x = 5 + 16;
             }
             let iscreature = (subtype == 'creature');
             
@@ -212,7 +225,7 @@ function load_cols(retval, line) {
                 if (type == 'color') {
                     what = create_color(x - 5, y);
                 } else if (iscreature) {
-                    PREFIX['creature.' + what.toLowerCase()]=[x - 5, y];
+                    PREFIX['creature.' + get_key(what)]=[x - 5, y];
                 }
                 values[x - 5][y][left_hdr] = what;
             }
@@ -469,7 +482,7 @@ function draw_glyph_table() {
     let thead = document.createElement('thead');
     let tbody = document.createElement('tbody');
 
-    const max_cols = 4;
+    var max_cols = MAX_COLS;
     // empty_cols is how many cells are empty at the bottom
     let empty_cols = (max_cols - (cur_hdr.length % max_cols)) % max_cols;
 
@@ -496,7 +509,16 @@ function draw_glyph_table() {
             if (hval in MAP_HEADER && MAP_HEADER[hval].length > col) {
                 tag = MAP_HEADER[hval][col];
             }
-
+            let tagparts = tag.split(/\./);
+            if (tagparts.length > 1) {
+                if (tagparts.lenght == 2) {
+                    tag = tagparts[1];
+                } else if (tagparts[1] == tagparts[2]) {
+                    tag = tagparts[2];
+                } else {
+                    tag = tagparts[1] + ':' + tagparts[2];
+                }
+            }
             hspan.innerHTML = tag;
             th.appendChild(hspan);
             top_cells[col].push(th);
