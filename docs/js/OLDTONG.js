@@ -47,6 +47,8 @@ var values = null;
 var sounds = {};
 var sound_fix = {};
 
+var CURRENCY_COL = null;
+
 function assert_value_grid() {
     if (values == null) {
         values = [];
@@ -177,6 +179,9 @@ function load_cols(retval, line) {
             break;
         case 'C':
             let iscurr = (hdr == 'currency');
+            if (iscurr) {
+                CURRENCY_COL = y;
+            }
             let iscat = (hdr == 'category');
             let comment = '';
             
@@ -267,7 +272,7 @@ function force_size(node, img_h, img_w) {
 }
 
 function color_circle(hsl) {
-   // return wrap(create_color(row, col));
+    // return wrap(create_color(row, col));
     var circle = document.createElement('div');
     circle.style.borderRadius = '50% 5% 50%';
     // elliptical
@@ -281,13 +286,6 @@ function color_circle(hsl) {
     circle.style.margin = 'auto';
     return circle;
 }
-
-const currency_coins = [1, 5, 12, 28];
-const currency_all = 71;
-const currency_repeat = currency_coins.length;
-var currency_count = 0;
-var coin_count = 0;
-var currency_val = [];
 
 function glyph_name(row, col, what = 'cell') {
     var lit = '';
@@ -308,33 +306,17 @@ function glyph_name(row, col, what = 'cell') {
     return [lit, say];
 }
 
-/*
-function mk_currency(row, col) {
-    let curtext = '';
-    let coin = currency_count % currency_repeat;
-    let dobold = false;
-    if (coin == 0) {
-        currency_name.push(glyph_name(row, col)[0]);
-        currency_val = currency_val.map(function (c) { return c * currency_all; }); // mult all by 5
-        currency_val.push(1);
-        dobold = true;
-    }
-    let currency_sep = '';
-    let currency_mult = currency_coins[coin];
-    for (let cx = currency_name.length - 1; cx >= 0; cx--) {
-        if (dobold) {
-            curtext += '<b>1 ' + currency_name[cx] + '</b><br>';
-            dobold = false;
-        } else {
-            curtext += currency_sep + (currency_val[cx] * currency_mult) + ' ' + currency_name[cx];
-        }
-        currency_sep = ', ';
-    }
-    currency_count++;
 
-    return curtext;
-}
-*/
+const currency_coins = [1, 5, 12, 28];
+const currency_all = 71;
+const currency_repeat = currency_coins.length;
+var currency_count = 0;
+var coin_count = 0;
+var currency_val = [];
+
+var CURRENCY_COL = null;
+var CURRENCY_NUM = 0;
+var CURRENCY_ROWS = [];
 
 function mk_currency() {
     let curtext = '';
@@ -345,21 +327,40 @@ function mk_currency() {
         currency_val = currency_val.map(function (c) { return c * currency_all; }); // mult all by 5
         currency_val.push(1);
         dobold = true;
+        CURRENCY_ROWS.push(currency_count);
     }
     let currency_sep = '';
     let currency_mult = currency_coins[coin];
     for (let cx = coin_count - 1; cx >= 0; cx--) {
         if (dobold) {
-            curtext += '<b>1 COIN' + cx + '</b><br>';
+            curtext += '<b>1 COIN' + cx + 'X</b><br>';
             dobold = false;
         } else {
-            curtext += currency_sep + (currency_val[cx] * currency_mult) + ' COIN' + cx;
+            curtext += currency_sep + (currency_val[cx] * currency_mult) + ' COIN' + cx + 'X';
         }
         currency_sep = ', ';
     }
     currency_count++;
 
+    CURRENCY_NUM = coin_count;
+
     return curtext;
+}
+
+function setup_currency() {
+    let gname = [];
+    for (let gc = 0; gc < CURRENCY_NUM; gc++) {
+        let row = CURRENCY_ROWS[gc];
+        let gn = glyph_name(row, CURRENCY_COL);
+        gname.push(gn[0]);
+    }
+    for (let x = 0; x < 16; x++) {
+        let tmp = values[x][CURRENCY_COL]['CORE'];
+        for (let c = 0; c < CURRENCY_NUM; c++) {
+            tmp = tmp.replace('COIN' + c + 'X', gname[c]);
+        }
+        values[x][CURRENCY_COL]['CORE'] = tmp;
+    }
 }
 
 var voice_lookup = {};
@@ -391,10 +392,6 @@ function setup_screen() {
     setup_currency();  
     init_cell_choice();
     draw_glyph_table();
-}
-
-function setup_currency() {
-    // mk_currency(row, col)
 }
 
 //type
@@ -436,7 +433,7 @@ function toggle_header() {
 
 function init_cell_choice() {
     let br1 = document.createElement('span');
-    br1.innerHTML = '<BR><BR>';
+    br1.innerHTML = 'TILE COLUMN #: ';
     glyphchoices.appendChild(br1);
 
     for (let n = 2; n <= 8; n++) {
@@ -445,11 +442,21 @@ function init_cell_choice() {
     }
 
     let br2 = document.createElement('span');
-    br2.innerHTML = '<BR><BR>';
+    br2.innerHTML = '<BR><BR>INCLUDE COLUMNS:';
     glyphchoices.appendChild(br2);
 
+    let last_label_cat = null;
     for (let h = 0; h < HEADERS.length; h++) {
-        add_input(glyphchoices, 'header_choice', HEADERS[h], HEADERS[h], toggle_header);
+        let label = HEADERS[h];
+        let split = label.split(/\./);
+        if (split.lenght == 2) {
+            let cat = split[0];
+            label = split[1];
+            if (cat != last_label_cat) {
+
+            }
+        }
+        add_input(glyphchoices, 'header_choice', HEADERS[h], label, toggle_header);
     }
 
     let br3 = document.createElement('span');
@@ -493,13 +500,18 @@ function add_tile(td, txt, tag, row, col) {
     let glyph_text = '';
     let glyph_say = '';
 
+    let glyph_list = [];
     for (let g = 0; g < glyphs.length; g++) {
         let r = glyphs[g][0];
         let c = glyphs[g][1];
         let name = glyph_name(r, c);
         glyph_text += name[0];
         glyph_say += name[1];
+        glyph_list.push('R' + r + 'C' + c);
     }
+
+    let idiv = getImage(glyph_list);
+    grid.appendChild(idiv);
 
     let gtxt = glyph_text + ' (' + glyph_say + ')';
     let gdiv = document.createElement('div');
