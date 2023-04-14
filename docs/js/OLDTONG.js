@@ -417,7 +417,7 @@ function add_input(container, group, value, label_txt, func=null, type=CHECKBOX,
 
     var label = document.createElement('label');
     label.htmlFor = id;
-    label.appendChild(document.createTextNode(label_txt));
+    label.innerHTML=label_txt+'<BR>';
 
     container.appendChild(input);
     container.appendChild(label);
@@ -446,7 +446,7 @@ function toggle_tile() {
 
 function init_cell_choice() {
     let br0 = document.createElement('span');
-    br0.innerHTML = 'SHOW TILE';
+    br0.innerHTML = 'SHOW TILE:<BR>';
     glyphchoices.appendChild(br0);
 
     Object.keys(SHOW_TILE).forEach(tile => {
@@ -454,7 +454,7 @@ function init_cell_choice() {
     });
 
     let br1 = document.createElement('span');
-    br1.innerHTML = '<BR><BR>TILE COLUMN #: ';
+    br1.innerHTML = '<BR><BR>TILE COLUMN #:<BR>';
     glyphchoices.appendChild(br1);
 
     for (let n = 2; n <= 8; n++) {
@@ -463,18 +463,21 @@ function init_cell_choice() {
     }
 
     let br2 = document.createElement('span');
-    br2.innerHTML = '<BR><BR>INCLUDE COLUMNS:';
+    br2.innerHTML = '<BR><BR>INCLUDE COLUMNS:<BR>';
     glyphchoices.appendChild(br2);
 
     let last_label_cat = null;
     for (let h = 0; h < HEADERS.length; h++) {
         let label = HEADERS[h];
         let split = label.split(/\./);
-        if (split.lenght == 2) {
+        if (split.length == 2) {
             let cat = split[0];
             label = split[1];
             if (cat != last_label_cat) {
-
+                let brc = document.createElement('span');
+                brc.innerHTML = '<BR><BR>'+cat.toUpperCase()+':<BR>';
+                glyphchoices.appendChild(brc);
+                last_label_cat = cat;
             }
         }
         add_input(glyphchoices, 'header_choice', HEADERS[h], label, toggle_header);

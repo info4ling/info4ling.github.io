@@ -12,6 +12,14 @@ html {
     padding: 20px;
     width: min-content;
     height: min-content;
+    display: flex;
+    flex-direction: row;
+}
+
+#glyphchoices {
+    min-width: 200px;
+    width: 200px;
+    max-width:200px;
 }
 
 .GLYPHLIST {
