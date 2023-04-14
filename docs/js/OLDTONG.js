@@ -306,7 +306,6 @@ function glyph_name(row, col, what = 'cell') {
     return [lit, say];
 }
 
-
 const currency_coins = [1, 5, 12, 28];
 const currency_all = 71;
 const currency_repeat = currency_coins.length;
@@ -398,6 +397,12 @@ function setup_screen() {
 const CHECKBOX = 'checkbox';
 const RADIOBUTTON = 'radio';
 
+var SHOW_TILE = {
+    GLYPH: true,
+    TEXT: true,
+    VALUE: true
+}
+
 function add_input(container, group, value, label_txt, func=null, type=CHECKBOX, checked = true) {
     let id = group + '_' + value;
     let input = document.createElement('input');
@@ -424,16 +429,32 @@ function choose_header_count() {
     draw_glyph_table();
 }
 
-function toggle_header() {
-    let toggled = this.checked;
-    let hdr = this.value;
-    SHOW_HEADER[hdr] = toggled;
+function do_toggle(STATES, cbox) {
+    let toggled = cbox.checked;
+    let hdr = cbox.value;
+    STATES[hdr] = toggled;
     draw_glyph_table();
 }
 
+function toggle_header() {
+    do_toggle(SHOW_HEADER, this);
+}
+
+function toggle_tile() {
+    do_toggle(SHOW_TILE, this);
+}
+
 function init_cell_choice() {
+    let br0 = document.createElement('span');
+    br0.innerHTML = 'SHOW TILE';
+    glyphchoices.appendChild(br0);
+
+    Object.keys(SHOW_TILE).forEach(tile => {
+        add_input(glyphchoices, 'tile_choice', tile, tile, toggle_tile);
+    });
+
     let br1 = document.createElement('span');
-    br1.innerHTML = 'TILE COLUMN #: ';
+    br1.innerHTML = '<BR><BR>TILE COLUMN #: ';
     glyphchoices.appendChild(br1);
 
     for (let n = 2; n <= 8; n++) {
@@ -469,6 +490,43 @@ function clear_div(div) {
     while (div.firstChild) {
         div.removeChild(div.firstChild);
     }
+}
+
+function do_say(what) {
+    speechSynthesis.cancel();
+
+    var selvoice = document.getElementById('voiceSelect').selectedOptions[0].textContent;
+
+    let utterance = new SpeechSynthesisUtterance(what);
+    utterance.lang = 'en-US';
+    utterance.pitch = 1;
+    utterance.rate = .6;
+    utterance.volume = 1;
+    if (selvoice != null) {
+        utterance.voice = voice_lookup[voiceSelect.value];
+    }
+
+    speechSynthesis.speak(utterance);
+}
+
+function getImageButton(name, sound, rsz = IMG_SZ) {
+    let button = getImage(name, rsz, 'button');
+    button.onclick = function () {
+        do_say(sound);
+    }
+    return button;
+}
+
+function getTextButton(text, sound, rsz = IMG_SZ) {
+    let button = document.createElement('Button');
+    button.classList.add('GLYPHTEXT');
+    let span = document.createElement('Span');
+    span.innerHTML = text;
+    button.onclick = function () {
+        do_say(sound);
+    }
+    button.appendChild(span);
+    return button;
 }
 
 function add_tile(td, txt, tag, row, col) {
@@ -509,27 +567,38 @@ function add_tile(td, txt, tag, row, col) {
         glyph_say += name[1];
         glyph_list.push('R' + r + 'C' + c);
     }
+    let something = false;
 
-    let idiv = getImage(glyph_list);
-    grid.appendChild(idiv);
-
-    let gtxt = glyph_text + ' (' + glyph_say + ')';
-    let gdiv = document.createElement('div');
-    let gspan = document.createElement('span');
-    gspan.innerHTML = gtxt;
-    gdiv.appendChild(gspan);
-    grid.appendChild(gdiv);
-
-    let vdiv = document.createElement('div');
-    if (tag == 'category.color.color') {
-        let cdiv = color_circle(txt);
-        vdiv.appendChild(cdiv);
-    } else {
-        let vspan = document.createElement('span');
-        vspan.innerHTML = txt;
-        vdiv.appendChild(vspan);
+    if (SHOW_TILE.GLYPH) {
+        let idiv = getImageButton(glyph_list, glyph_say);
+        grid.appendChild(idiv);
+        something = true;
     }
-    grid.appendChild(vdiv);
+
+    if (SHOW_TILE.TEXT) {
+        let gdiv = getTextButton(glyph_text, glyph_say);
+        grid.appendChild(gdiv);
+        something = true;
+    }
+
+    if (SHOW_TILE.VALUE) {
+        let vdiv = document.createElement('div');
+        if (tag == 'category.color.color') {
+            let cdiv = color_circle(txt);
+            vdiv.appendChild(cdiv);
+        } else {
+            let vspan = document.createElement('span');
+            vspan.innerHTML = txt;
+            vdiv.appendChild(vspan);
+        }
+        grid.appendChild(vdiv);
+        something = true;
+    }
+
+    if (!something) {
+        grid = document.createElement('span');
+        span.innerHTML = 'N/A';       
+    }
 
     td.appendChild(grid);
 }
@@ -1353,22 +1422,7 @@ function mk_row(tp, item_list, row_class) {
     return row;
 }
 
-function do_say(what) {
-    speechSynthesis.cancel();
 
-    var selvoice = document.getElementById('voiceSelect').selectedOptions[0].textContent;
-
-    let utterance = new SpeechSynthesisUtterance(what);
-    utterance.lang = 'en-US';
-    utterance.pitch = 1;
-    utterance.rate = .6;
-    utterance.volume = 1;
-    if (selvoice != null) {
-        utterance.voice = voice_lookup[voiceSelect.value];
-    }
-
-    speechSynthesis.speak(utterance);
-}
 
 function class_to_row_column(tgt_class) {
     let tgt_uc = tgt_class.toUpperCase();
