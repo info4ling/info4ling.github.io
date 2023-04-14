@@ -444,27 +444,39 @@ function toggle_tile() {
     do_toggle(SHOW_TILE, this);
 }
 
+function add_br(num, txt='', after=0) {
+    let bt = document.createElement('span');
+    bt.innerHTML = '';
+    
+    for (let b = 0; b < num; b++) {
+        bt.innerHTML += '<BR>';
+    }
+
+    bt.innerHTML += txt;
+
+    for (let a = 0; a < after; a++) {
+        bt.innerHTML += '<BR>';
+    }
+
+    return bt;
+}
+
 function init_cell_choice() {
-    let br0 = document.createElement('span');
-    br0.innerHTML = 'SHOW TILE:<BR>';
-    glyphchoices.appendChild(br0);
+
+    glyphchoices.appendChild(add_br(0, '<b>SHOW TILE</b>:', 2));
 
     Object.keys(SHOW_TILE).forEach(tile => {
         add_input(glyphchoices, 'tile_choice', tile, tile, toggle_tile);
     });
 
-    let br1 = document.createElement('span');
-    br1.innerHTML = '<BR><BR>TILE COLUMN #:<BR>';
-    glyphchoices.appendChild(br1);
+    glyphchoices.appendChild(add_br(3, '<b>TILE COLUMN #:</b>', 2));
 
     for (let n = 2; n <= 8; n++) {
         let do_check = (n == MAX_COLS);
         add_input(glyphchoices, 'count_choice', n, n, choose_header_count, RADIOBUTTON, do_check);
     }
 
-    let br2 = document.createElement('span');
-    br2.innerHTML = '<BR><BR>INCLUDE COLUMNS:<BR>';
-    glyphchoices.appendChild(br2);
+    glyphchoices.appendChild(add_br(3, '<b>INCLUDE COLUMNS:</b>', 2));
 
     let last_label_cat = null;
     for (let h = 0; h < HEADERS.length; h++) {
@@ -474,18 +486,19 @@ function init_cell_choice() {
             let cat = split[0];
             label = split[1];
             if (cat != last_label_cat) {
-                let brc = document.createElement('span');
-                brc.innerHTML = '<BR><BR>'+cat.toUpperCase()+':<BR>';
-                glyphchoices.appendChild(brc);
                 last_label_cat = cat;
+
+                glyphchoices.appendChild(add_br(2));
+
+                let button = document.createElement('button');
+                button.innerHTML = cat.toUpperCase()+':';
+                glyphchoices.appendChild(button);
+
+                glyphchoices.appendChild(add_br(1));
             }
         }
         add_input(glyphchoices, 'header_choice', HEADERS[h], label, toggle_header);
     }
-
-    let br3 = document.createElement('span');
-    br3.innerHTML = '<BR><BR>';
-    glyphchoices.appendChild(br3);
 }
 
 
