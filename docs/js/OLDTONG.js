@@ -161,7 +161,6 @@ function load_cols(retval, line) {
 
     if (!(BASE in MAP_HEADER)) {
         MAP_HEADER[BASE] = [];
-        HEADERS.push(BASE);
         LEFT_HEADER.push(BASE);
         SHOW_HEADER[BASE] = true;
     }
@@ -217,10 +216,10 @@ function load_cols(retval, line) {
             if (left_hdr != last2) {
                 last2 = left_hdr;
                 y = 0;
-                HEADERS.push(left_hdr);
-                SHOW_HEADER[left_hdr] = true;
+                
                 let empty = [];
                 MAP_HEADER[left_hdr] = empty;
+                SHOW_HEADER[left_hdr] = true;
             }
 
             hdr = left_hdr + '.' + subtype;
@@ -421,6 +420,7 @@ function add_input(container, group, value, label_txt, func=null, type=CHECKBOX,
 
     container.appendChild(input);
     container.appendChild(label);
+    return id;
 }
 
 function choose_header_count() {
@@ -460,9 +460,20 @@ function add_br(num, txt='', after=0) {
 
     return bt;
 }
+var CHOICE_TOGGLE = {};
+var CHOICE_TOGGLE_LIST = {};
+
+function set_cbox(STATES, cbox_id, val) {
+    let cbox = document.getElementById(cbox_id);
+    let hdr = cbox.value;
+    cbox.checked = val;
+    STATES[hdr] = val;
+}
 
 function init_cell_choice() {
-
+    Object.keys(MAP_HEADER).forEach(key => {
+        HEADERS.push(key);
+    });
     glyphchoices.appendChild(add_br(0, '<b>SHOW TILE</b>:', 2));
 
     Object.keys(SHOW_TILE).forEach(tile => {
@@ -484,20 +495,36 @@ function init_cell_choice() {
         let split = label.split(/\./);
         if (split.length == 2) {
             let cat = split[0];
-            label = split[1];
+            
             if (cat != last_label_cat) {
                 last_label_cat = cat;
 
+                CHOICE_TOGGLE[cat] = true;
                 glyphchoices.appendChild(add_br(2));
 
                 let button = document.createElement('button');
-                button.innerHTML = cat.toUpperCase()+':';
+                button.innerHTML = cat.toUpperCase() + ':';
+                button.onclick = function () {
+                    let toggle = !CHOICE_TOGGLE[cat];
+                    CHOICE_TOGGLE[cat] = toggle;
+                    let cat_list = CHOICE_TOGGLE_LIST[cat]
+                    for (let b = 0; b < cat_list.length; b++) {
+                        set_cbox(SHOW_HEADER, cat_list[b], toggle);
+                    }
+                    draw_glyph_table();
+                }
                 glyphchoices.appendChild(button);
 
                 glyphchoices.appendChild(add_br(1));
+
+                CHOICE_TOGGLE_LIST[cat] = [];
             }
+            let btn = add_input(glyphchoices, 'header_choice', HEADERS[h], split[1], toggle_header);
+            CHOICE_TOGGLE_LIST[last_label_cat].push(btn);
+
+        } else {
+            add_input(glyphchoices, 'header_choice', HEADERS[h], label, toggle_header);
         }
-        add_input(glyphchoices, 'header_choice', HEADERS[h], label, toggle_header);
     }
 }
 
