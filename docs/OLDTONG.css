@@ -16,12 +16,12 @@ html {
     flex-direction: row;
 }
 
-#glyphtable td {
+#glyphtable td:NOT(.HDR) {
     font-size: 70%;
     border: solid #505050 1px;
 }
 
-#glyphtable th {
+#glyphtable .HDR {
     font-size: 80%;
     font-weight: bold;
     border: solid #303030 1px;
@@ -31,7 +31,7 @@ html {
 #glyphtable tr > * {
     box-sizing: border-box;
     max-width: 122px;
-    min-width: 80px;
+    min-width: 122px;
     width: min-content;
     padding: 0;
     margin: auto;

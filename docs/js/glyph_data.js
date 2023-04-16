@@ -169,6 +169,8 @@ function getImage(name, rsz = IMG_SZ, tp = 'div') {
         image.style.width = rsz + 'px';
         image.style.height = rsz + 'px';
         image.style.backgroundImage = "url(" + dataURI + ")";
+        image.style.backgroundRepeat = "no-repeat";
+        image.style.backgroundSize = "cover";
     }
     return image;
 }

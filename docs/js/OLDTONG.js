@@ -183,40 +183,40 @@ function load_cols(retval, line) {
             }
             let iscat = (hdr == 'category');
             let comment = '';
-            
+
             if (last_x >= 5 + 16) {
                 last_x = 5 + 16;
                 comment = linedata[last_x];
             }
             COMMENT.push(comment);
             MAP_HEADER[BASE].push(hdr);
-            
+
             for (let x = 5; x < last_x; x++) {
                 let what = linedata[x];
-                
+
                 if (iscurr) {
                     what = mk_currency();
                 } else if (iscat && what != '') {
                     PREFIX[get_key(what)] = [x - 5, y];
                 }
 
-                values[x-5][y][BASE] = what;
+                values[x - 5][y][BASE] = what;
             }
             break;
         case 'V':
-        case 'D':           
+        case 'D':
             if (type == '') {
                 type = subtype;
             } else if (subtype == '') {
                 subtype = type;
             }
-            
+
             let left_hdr = which + '.' + type;
 
             if (left_hdr != last2) {
                 last2 = left_hdr;
                 y = 0;
-                
+
                 let empty = [];
                 MAP_HEADER[left_hdr] = empty;
                 SHOW_HEADER[left_hdr] = true;
@@ -229,13 +229,13 @@ function load_cols(retval, line) {
                 last_x = 5 + 16;
             }
             let iscreature = (subtype == 'creature');
-            
+
             for (let x = 5; x < last_x; x++) {
                 let what = linedata[x];
                 if (type == 'color') {
                     what = create_color(x - 5, y);
                 } else if (iscreature) {
-                    PREFIX['creature.' + get_key(what)]=[x - 5, y];
+                    PREFIX['creature.' + get_key(what)] = [x - 5, y];
                 }
                 values[x - 5][y][left_hdr] = what;
             }
@@ -387,7 +387,7 @@ function setup_sound() {
 function setup_screen() {
     set_element_globals_by_id();
     setup_sound();
-    setup_currency();  
+    setup_currency();
     init_cell_choice();
     draw_glyph_table();
 }
@@ -402,7 +402,7 @@ var SHOW_TILE = {
     VALUE: true
 }
 
-function add_input(container, group, value, label_txt, func=null, type=CHECKBOX, checked = true) {
+function add_input(container, group, value, label_txt, func = null, type = CHECKBOX, checked = true) {
     let id = group + '_' + value;
     let input = document.createElement('input');
     input.type = type;
@@ -416,7 +416,7 @@ function add_input(container, group, value, label_txt, func=null, type=CHECKBOX,
 
     var label = document.createElement('label');
     label.htmlFor = id;
-    label.innerHTML=label_txt+'<BR>';
+    label.innerHTML = label_txt + '<BR>';
 
     container.appendChild(input);
     container.appendChild(label);
@@ -444,10 +444,10 @@ function toggle_tile() {
     do_toggle(SHOW_TILE, this);
 }
 
-function add_br(num, txt='', after=0) {
+function add_br(num, txt = '', after = 0) {
     let bt = document.createElement('span');
     bt.innerHTML = '';
-    
+
     for (let b = 0; b < num; b++) {
         bt.innerHTML += '<BR>';
     }
@@ -474,7 +474,7 @@ function init_cell_choice() {
     Object.keys(MAP_HEADER).forEach(key => {
         HEADERS.push(key);
     });
-    glyphchoices.appendChild(add_br(0, '<b>SHOW TILE</b>:', 2));
+    glyphchoices.appendChild(add_br(3, '<b>SHOW TILE</b>:', 2));
 
     Object.keys(SHOW_TILE).forEach(tile => {
         add_input(glyphchoices, 'tile_choice', tile, tile, toggle_tile);
@@ -495,7 +495,7 @@ function init_cell_choice() {
         let split = label.split(/\./);
         if (split.length == 2) {
             let cat = split[0];
-            
+
             if (cat != last_label_cat) {
                 last_label_cat = cat;
 
@@ -573,7 +573,7 @@ function getTextButton(text, sound, rsz = IMG_SZ) {
 
 function draw_glyph_table() {
     clear_div(glyphtable);
-   
+
     let cur_hdr = [];
     for (let h = 0; h < HEADERS.length; h++) {
         let hdr = HEADERS[h];
@@ -605,15 +605,62 @@ function draw_glyph_table() {
         cur_hdr.push('EMPTY');
     }
 
-    let top_blank = [];
-    let top_cells = [[], [], [], [], [], [], [], []];
+    if (SHOW_TILE.GLYPH || SHOW_TILE.TEXT) {
+        let ttr = document.createElement('tr');
+        let ttb = document.createElement('th');
+        ttb.colSpan = max_cols+1;
+        ttr.appendChild(ttb);
+        for (let ttc = 0; ttc < 8; ttc++) {
+            let tth = document.createElement('th');
+            tth.classList.add('HDR');
+            tth.colSpan = max_cols;
+            let ttbutton = document.createElement('Button');
+            ttbutton.style.display = 'flex';
+            ttbutton.style.flexDirection = 'row';
+            ttbutton.style.justifyContent = 'space-around';
+            ttbutton.style.width = '100%';
+            ttbutton.style.backgroundColor = 'transparent';
+            let ttsay = sounds['V'][ttc][0];
+            let ttsound = sounds['V'][ttc][1];
+            let ttasin = sounds['V'][ttc][2];
+            ttbutton.onclick = function () {
+                do_say(ttsound + ' as in ' + ttasin);
+            }
+            let isz = IMG_SZ * 1.5;
+            if (max_cols == 1) {
+                isz = IMG_SZ;
+            }
+            if (SHOW_TILE.GLYPH) {
+                let ttidiv = getImage('C' + ttc, isz, 'div');
+                ttidiv.minWidth=isz;
+                ttbutton.appendChild(ttidiv);
+            }
 
+            if (SHOW_TILE.TEXT) {
+                let ttgdiv1 = document.createElement('Span');
+                ttgdiv1.innerHTML = '<b>' + ttsay + '</b>';
+                ttgdiv1.style.maxWidth = isz+ 'px';
+                ttgdiv1.style.flex = '1 0 max-content';
+                ttbutton.appendChild(ttgdiv1);
+                let ttgdiv2 = document.createElement('Span');
+                ttgdiv2.innerHTML = ' as in <b>' + ttasin + '</b>';
+                ttgdiv2.style.maxWidth = isz + 'px';
+                ttgdiv1.style.flex = '1 0 max-content';
+                ttbutton.appendChild(ttgdiv2);
+            }
+
+            tth.appendChild(ttbutton);
+            ttr.appendChild(tth);
+        }
+        thead.appendChild(ttr);
+    }
+
+    let top_cells = [[], [], [], [], [], [], [], []];
     for (let h = 0; h < cur_hdr.length; h++) {
-        let tb = document.createElement('th');
-        top_blank.push(tb);
         let hval = cur_hdr[h];
         for (let col = 0; col < 8; col++) {
             let th = document.createElement('th');
+            th.classList.add('HDR');
             let hspan = document.createElement('span');
             let tag = hval;
             if (hval in MAP_HEADER && MAP_HEADER[hval].length > col) {
@@ -640,16 +687,18 @@ function draw_glyph_table() {
         }
         if ((h + 1) % max_cols == 0) {
             let tr = document.createElement('tr');
-            for (let b = 0; b < top_blank.length; b++) {
-                tr.appendChild(top_blank[b]);
-            }
+            let blank = document.createElement('th');
+            blank.colSpan = max_cols+1;
+            tr.appendChild(blank);
+
             for (let ch = 0; ch < top_cells.length; ch++) {
                 for (let hv = 0; hv < top_cells[ch].length; hv++) {
-                    tr.appendChild(top_cells[ch][hv]);
+                    let top = top_cells[ch][hv];
+                    tr.appendChild(top);
                 }
             }
             thead.appendChild(tr);
-            top_blank = [];
+
             top_cells = [[], [], [], [], [], [], [], []];
         }
     }
@@ -672,6 +721,7 @@ function draw_glyph_table() {
             }
             let th = document.createElement('th');
             th.rowSpan = height;
+            th.classList.add('HDR');
             let hspan = document.createElement('span');
             let hval = cur_hdr[h];
             if (hval == 'category.color') {
@@ -766,8 +816,49 @@ function draw_glyph_table() {
                     }
                 }
             }
-            if ((h+1) % max_cols == 0) {
+            if ((h + 1) % max_cols == 0) {
                 let tr = document.createElement('tr');
+                if (SHOW_TILE.GLYPH || SHOW_TILE.TEXT) {
+                    th = document.createElement('th');
+                    th.classList.add('HDR');
+                    th.rowSpan = cells.length;
+
+                    let ttsay = sounds['C'][row][0];
+                    let ttsound = sounds['C'][row][1];
+                    let ttasin = sounds['C'][row][2];
+
+                    let ttbutton = document.createElement('button');
+                    ttbutton.onclick = function () {
+                        do_say(ttsound + ' as in ' + ttasin);
+                    }
+
+                    let isz = IMG_SZ * 1.5;
+                    if (max_cols == 1) {
+                        isz = IMG_SZ;
+                    }
+
+                    if (SHOW_TILE.GLYPH) {
+                        let ttidiv = getImage('R' + row, isz, 'div');
+                        ttbutton.appendChild(ttidiv);
+                    }
+
+                    if (SHOW_TILE.TEXT) {
+                        let ttgdiv1 = document.createElement('Span');
+                        ttgdiv1.innerHTML = '<b>' + ttsay + '</b>';
+                        ttgdiv1.style.maxWidth = isz + 'px';
+                        ttgdiv1.style.flex = '1 0 max-content';
+                        ttbutton.appendChild(ttgdiv1);
+                        let ttgdiv2 = document.createElement('Span');
+                        ttgdiv2.innerHTML = ' as in <b>' + ttasin + '</b>';
+                        ttgdiv2.style.maxWidth = isz + 'px';
+                        ttgdiv1.style.flex = '1 0 max-content';
+                        ttbutton.appendChild(ttgdiv2);
+                    }
+
+                    th.appendChild(ttbutton);
+                    tr.appendChild(th);
+
+                }
                 for (let hh = 0; hh < hdrs.length; hh++) {
                     tr.appendChild(hdrs[hh]);
                 }
