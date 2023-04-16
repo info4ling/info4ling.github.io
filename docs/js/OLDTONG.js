@@ -528,7 +528,6 @@ function init_cell_choice() {
     }
 }
 
-
 function clear_div(div) {
     while (div.firstChild) {
         div.removeChild(div.firstChild);
@@ -570,80 +569,6 @@ function getTextButton(text, sound, rsz = IMG_SZ) {
     }
     button.appendChild(span);
     return button;
-}
-
-function add_tile(td, txt, tag, row, col) {
-    let grid = document.createElement('div');
-    grid.style.display = 'flex';
-    grid.style.flexDirection = 'column';
-
-    let glyphs = [];
-
-    let hier = tag.split(/\./);
-    let creature_glyph = PREFIX['creature'];
-    switch (hier[0]) {
-        case 'category':
-            if (hier[1] in PREFIX) {
-                glyphs.push(PREFIX[hier[1]]);
-            }
-            break;
-        case 'creature':
-            glyphs.push(creature_glyph);
-            let which_name = hier[0] + '.' + hier[1];
-            let which_creature = PREFIX[which_name];
-            glyphs.push(which_creature);
-            break;
-    }
-
-    let cur_glyph = [row, col];
-    glyphs.push(cur_glyph);
-
-    let glyph_text = '';
-    let glyph_say = '';
-
-    let glyph_list = [];
-    for (let g = 0; g < glyphs.length; g++) {
-        let r = glyphs[g][0];
-        let c = glyphs[g][1];
-        let name = glyph_name(r, c);
-        glyph_text += name[0];
-        glyph_say += name[1];
-        glyph_list.push('R' + r + 'C' + c);
-    }
-    let something = false;
-
-    if (SHOW_TILE.GLYPH) {
-        let idiv = getImageButton(glyph_list, glyph_say);
-        grid.appendChild(idiv);
-        something = true;
-    }
-
-    if (SHOW_TILE.TEXT) {
-        let gdiv = getTextButton(glyph_text, glyph_say);
-        grid.appendChild(gdiv);
-        something = true;
-    }
-
-    if (SHOW_TILE.VALUE) {
-        let vdiv = document.createElement('div');
-        if (tag == 'category.color.color') {
-            let cdiv = color_circle(txt);
-            vdiv.appendChild(cdiv);
-        } else {
-            let vspan = document.createElement('span');
-            vspan.innerHTML = txt;
-            vdiv.appendChild(vspan);
-        }
-        grid.appendChild(vdiv);
-        something = true;
-    }
-
-    if (!something) {
-        grid = document.createElement('span');
-        span.innerHTML = 'N/A';       
-    }
-
-    td.appendChild(grid);
 }
 
 function draw_glyph_table() {
@@ -704,7 +629,12 @@ function draw_glyph_table() {
                     tag = tagparts[1] + ':' + tagparts[2];
                 }
             }
-            hspan.innerHTML = tag;
+            if (tag == 'color') {
+                let ccat = SB[col][2];
+                hspan.innerHTML = ccat;
+            } else {
+                hspan.innerHTML = tag;
+            }
             th.appendChild(hspan);
             top_cells[col].push(th);
         }
@@ -724,19 +654,35 @@ function draw_glyph_table() {
         }
     }
 
+    let height = (SHOW_TILE.GLYPH ? 1 : 0) + (SHOW_TILE.TEXT ? 1 : 0) + (SHOW_TILE.VALUE ? 1 : 0);
+    if (height == 0) {
+        let nspan = document.createElement('span');
+        nspan.innerHTML = 'No Tile Selected';
+        glyphtable.appendChild(nspan);
+        return;
+    }
     for (let row = 0; row < 16; row++) {
         let hdrs = [];
-        let cells = [[],[],[],[],[],[],[],[]];
+        let cells = [];
+
         for (let h = 0; h < cur_hdr.length; h++) {
+            for (let c = 0; c < height; c++) {
+                let empty = [[], [], [], [], [], [], [], []];
+                cells.push(empty);
+            }
             let th = document.createElement('th');
+            th.rowSpan = height;
             let hspan = document.createElement('span');
             let hval = cur_hdr[h];
-            hspan.innerHTML = hval;
+            if (hval == 'category.color') {
+                let cname = H_ROW_LABEL[row];
+                hspan.innerHTML = cname;
+            } else {
+                hspan.innerHTML = hval;
+            }
             th.appendChild(hspan);
             hdrs.push(th);
             for (let col = 0; col < 8; col++) {
-                let td = document.createElement('td');
-                
                 let tag = hval;
                 if (hval in MAP_HEADER && MAP_HEADER[hval].length > col) {
                     tag = MAP_HEADER[hval][col];
@@ -749,26 +695,93 @@ function draw_glyph_table() {
                     txt = '{' + tag + '}';
                     let dspan = document.createElement('span');
                     dspan.innerHTML = txt;
+                    let td = document.createElement('td');
+                    td.rowSpan = height;
                     td.appendChild(dspan);
+                    cells[0][col].push(td);
                 } else {
-                    add_tile(td, txt, tag, row, col);
+                    let hhh = 0;
+                    let glyphs = [];
+
+                    let hier = tag.split(/\./);
+                    let creature_glyph = PREFIX['creature'];
+                    switch (hier[0]) {
+                        case 'category':
+                            if (hier[1] in PREFIX) {
+                                glyphs.push(PREFIX[hier[1]]);
+                            }
+                            break;
+                        case 'creature':
+                            glyphs.push(creature_glyph);
+                            let which_name = hier[0] + '.' + hier[1];
+                            let which_creature = PREFIX[which_name];
+                            glyphs.push(which_creature);
+                            break;
+                    }
+
+                    let cur_glyph = [row, col];
+                    glyphs.push(cur_glyph);
+
+                    let glyph_text = '';
+                    let glyph_say = '';
+
+                    let glyph_list = [];
+                    for (let g = 0; g < glyphs.length; g++) {
+                        let r = glyphs[g][0];
+                        let c = glyphs[g][1];
+                        let name = glyph_name(r, c);
+                        glyph_text += name[0];
+                        glyph_say += name[1];
+                        glyph_list.push('R' + r + 'C' + c);
+                    }
+
+                    if (SHOW_TILE.GLYPH) {
+                        let idiv = getImageButton(glyph_list, glyph_say);
+                        let td1 = document.createElement('td');
+                        td1.appendChild(idiv);
+                        cells[hhh][col].push(td1);
+                        hhh++;
+                    }
+
+                    if (SHOW_TILE.TEXT) {
+                        let gdiv = getTextButton(glyph_text, glyph_say);
+                        let td2 = document.createElement('td');
+                        td2.appendChild(gdiv);
+                        cells[hhh][col].push(td2);
+                        hhh++;
+                    }
+
+                    if (SHOW_TILE.VALUE) {
+                        let td3 = document.createElement('td');
+                        if (tag == 'category.color.color') {
+                            let cdiv = color_circle(txt);
+                            td3.appendChild(cdiv);
+                        } else {
+                            let vspan = document.createElement('span');
+                            vspan.innerHTML = txt;
+                            td3.appendChild(vspan);
+                        }
+                        cells[hhh][col].push(td3);
+                        hhh++;
+                    }
                 }
-                   
-                cells[col].push(td);
             }
             if ((h+1) % max_cols == 0) {
                 let tr = document.createElement('tr');
                 for (let hh = 0; hh < hdrs.length; hh++) {
                     tr.appendChild(hdrs[hh]);
                 }
-                for (let cc = 0; cc < cells.length; cc++) {
-                    for (let cv = 0; cv < cells[cc].length; cv++) {
-                        tr.appendChild(cells[cc][cv]);
+                for (let tc = 0; tc < cells.length; tc++) {
+                    for (let cc = 0; cc < cells[tc].length; cc++) {
+                        for (let cv = 0; cv < cells[tc][cc].length; cv++) {
+                            tr.appendChild(cells[tc][cc][cv]);
+                        }
                     }
+                    tbody.appendChild(tr);
+                    tr = document.createElement('tr');
                 }
-                tbody.appendChild(tr);
                 hdrs = [];
-                cells = [[], [], [], [], [], [], [], []];
+                cells = [];
             }
         }
     }

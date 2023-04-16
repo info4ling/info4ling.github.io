@@ -16,16 +16,52 @@ html {
     flex-direction: row;
 }
 
+#glyphtable td {
+    font-size: 70%;
+    border: solid #505050 1px;
+}
+
+#glyphtable th {
+    font-size: 80%;
+    font-weight: bold;
+    border: solid #303030 1px;
+}
+
+#glyphtable td > *,
+#glyphtable tr > * {
+    box-sizing: border-box;
+    max-width: 122px;
+    min-width: 80px;
+    width: min-content;
+    padding: 0;
+    margin: auto;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    hyphens: auto;
+    font-weight: normal;
+    text-align: center;
+    background-color: transparent;
+}
+
+#glyphtable th *,
+#glyphtable td * {
+    font-size: 100%;
+    border: none;
+}
+
 #glyphchoices {
     min-width: 200px;
     width: 200px;
     max-width:200px;
     text-align: center;
+    background-color: #FFFFFF;
 }
 
 .GLYPHLIST {
     display:flex;
     flex-direction:row;
+    justify-content: flex-start;
+    height: 100%;
 }
 
 .tab_button {
@@ -43,27 +79,6 @@ table {
     min-width: 500px !important;
     max-width: 500px !important;
     width: 500px !important;
-}
-
-tr > * {
-    box-sizing: border-box;
-    max-width: 120px;
-    min-width: 120px;
-    width: 120px;
-    margin: auto;
-    border: solid #505050 1px;
-    padding: 0;
-    margin: auto;
-    overflow-wrap: break-word;
-    word-break: break-word;
-    hyphens: auto;
-    font-weight: normal;
-    text-align: center;
-}
-
-th {
-    border: solid #303030 1px;
-    font-weight: bold;
 }
 
 span {
